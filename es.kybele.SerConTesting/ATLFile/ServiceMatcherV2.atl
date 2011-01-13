@@ -100,8 +100,7 @@ rule Service2Service {
 		s1 : ASD!ServiceDescription	in Prov	
 	to
 		s : ASD!ServiceDescription (
-			name <- 'S1_' + s1.name -- , -- + ' - S2_' + s2.name
-			-- infotypes <- s1.infotypes
+			name <- 'S1_' + s1.name
 		)
 }
 
@@ -231,10 +230,16 @@ rule InfoTypeNonBoth2InfoType {
 		it : ASD!InfoType (
 			name <- it1.name,
 			message <- it1.message,
-			infoType <- it1.infoType,
+			-- infoType <- it1.infoType,
+			infoType <- it1.infoType->collect(it_mirror | 
+					if (it_mirror.getMatchingElementByName().oclIsUndefined()) then
+						it_mirror
+					else
+						it_mirror.getMatchingElementByName()
+					endif),
 			valueType <- it1.valueType,
 			valueRange <- it1.valueRange,
-			service <- it1.service
+			service <- thisModule.ServiceDescription
 		),
 		a : ASD!Annotation (
 			owner <- it,
@@ -252,24 +257,52 @@ rule InfoTypeNonBoth2InfoType {
 		)	
 }
 
+rule createUnknownAnnotation(object: ASD!NamedElement, unknownParent: String) {
+	to
+		a : ASD!Annotation (
+			owner <- object,
+			key <- 'unknownByInheritance',
+			value <- unknownParent
+		)
+}
+
 endpoint rule CheckCompatibility() {
 	using
 		{
 			annotations : Sequence(ASD!Annotation) = ASD!Annotation.allInstancesFrom('Contract')->select(aux | aux.key = 'isCompatible');
 			status : Boolean = true;
+			operations : Sequence(ASD!Operation) = ASD!Operation.allInstancesFrom('Contract');
+			messages : Sequence(ASD!Message) = ASD!Message.allInstancesFrom('Contract');
 		}	
 	to
 		a : ASD!Annotation (
 			owner <- thisModule.ServiceDescription	
 		)
 	do {
- 		for (a in annotations) {
+ 		-- Add an annotation to the ServiceDescription to describe overall compatibility
+		for (a in annotations) {
  			status <- status and (a.value = 'True' or a.value = 'NonRelevant');
  		}							 
  		a.key <- 'isCompatible';
  		a.value <- status.toString();
+		
+ 		-- for Unknown operations we have to propagate their status to nested objects
+		for (op in operations) {
+ 			if (op.annotations->select(a | a.key = 'isCompatible')->first().value.debug(op.name + '') = 'Unknown')
+ 				for (msg in op.contents) {
+ 					thisModule.createUnknownAnnotation(msg, 'Inherited from Operation ' + op.name);
+ 					for (it in msg.infoType) {
+ 						thisModule.createUnknownAnnotation(it, 'Inherited from Operation ' + op.name);
+ 					}
+ 				}
+ 		}
+ 		
+ 		-- for Unknown messages we have to propagate their status to nested objects
+ 		for (msg in messages) {
+ 			if (msg.annotations->select(a | a.key = 'isCompatible')->first().value.debug(msg.name + '') = 'Unknown')
+ 				for (it in msg.infoType) {
+ 					thisModule.createUnknownAnnotation(it, 'Inherited from Message ' + msg.name);
+ 				}
+ 		}
  	}
  }
-
--- key: toBeConsidered
--- value: unknownByInheritance

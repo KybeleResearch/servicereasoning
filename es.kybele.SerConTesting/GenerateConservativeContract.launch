@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <launchConfiguration type="org.eclipse.m2m.atl.adt.launching.atlTransformation">
-<stringAttribute key="ATL File Name" value="/es.kybele.SerConTesting/ATLFile/ServiceMatcherV2.atl"/>
+<stringAttribute key="ATL File Name" value="/es.kybele.SerConTesting/ATLFile/GenerateConservativeContract.atl"/>
 <stringAttribute key="ATL VM" value="EMF-specific VM"/>
 <stringAttribute key="ATL_COMPILER" value="atl2006"/>
 <booleanAttribute key="IS_REFINING" value="false"/>
 <mapAttribute key="Input">
-<mapEntry key="Cons" value="ASD"/>
-<mapEntry key="Prov" value="ASD"/>
+<mapEntry key="IN" value="ASD"/>
 </mapAttribute>
 <mapAttribute key="Libs"/>
 <mapAttribute key="Model Handler">
@@ -14,9 +13,8 @@
 </mapAttribute>
 <mapAttribute key="ModelType">
 <mapEntry key="ASD" value="METAMODELOUTPUT"/>
-<mapEntry key="Cons" value="MODELINPUT"/>
-<mapEntry key="Contract" value="MODELOUTPUT"/>
-<mapEntry key="Prov" value="MODELINPUT"/>
+<mapEntry key="IN" value="MODELINPUT"/>
+<mapEntry key="OUT" value="MODELOUTPUT"/>
 </mapAttribute>
 <mapAttribute key="Options">
 <mapEntry key="OPTION_CLEAR" value="true"/>
@@ -28,20 +26,18 @@
 <mapEntry key="supportUML2Stereotypes" value="false"/>
 </mapAttribute>
 <listAttribute key="OrderedInput">
-<listEntry value="Prov"/>
-<listEntry value="Cons"/>
+<listEntry value="IN"/>
 </listAttribute>
 <listAttribute key="OrderedOutput">
-<listEntry value="Contract"/>
+<listEntry value="OUT"/>
 </listAttribute>
 <mapAttribute key="Output">
-<mapEntry key="Contract" value="ASD"/>
+<mapEntry key="OUT" value="ASD"/>
 </mapAttribute>
 <mapAttribute key="Path">
 <mapEntry key="ASD" value="uri:http://ASD"/>
-<mapEntry key="Cons" value="/es.kybele.SerConTesting/Models/useCase3.asd"/>
-<mapEntry key="Contract" value="/es.kybele.SerConTesting/Models/output.asd"/>
-<mapEntry key="Prov" value="/es.kybele.SerConTesting/Models/useCase1.asd"/>
+<mapEntry key="IN" value="/es.kybele.SerConTesting/Models/output.asd"/>
+<mapEntry key="OUT" value="/es.kybele.SerConTesting/Models/ConservativeContractGenerated.asd"/>
 </mapAttribute>
 <listAttribute key="Superimpose"/>
 </launchConfiguration>
