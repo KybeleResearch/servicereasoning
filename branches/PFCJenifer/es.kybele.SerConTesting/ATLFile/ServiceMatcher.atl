@@ -1,0 +1,130 @@
+-- @atlcompiler atl2006
+-- @nsURI ASD=http://ASD
+
+module ServiceMatcher;
+create Contract : ASD from Prov : ASD, Cons : ASD;
+
+-- Return all matching Operations (not recursive)
+helper context ASD!Operation def: getSimOperation(): Sequence(ASD!Operation) =
+	ASD!Operation.allInstancesFrom('Cons')->asSequence()->
+		select(aux | aux.name = self.name 
+			and aux.messagePattern = self.messagePattern
+			and aux.contents.size() <= self.contents.size());
+
+-- Return all matching messages (not recursive)
+helper context ASD!Message def: getSimMessage(): Sequence(ASD!Message) =
+	ASD!Message.allInstancesFrom('Cons')->asSequence()->
+		select(aux | aux.name = self.name and self.isSubType(aux).debug('isSubtype()'));
+
+-- To be replaced by the next one
+helper context ASD!Message def: checkMsgRoles(msg: ASD!Message): Boolean =
+	(self.role = msg.role);
+-- 
+--helper context ASD!Message def: checkMsgRoles(msg: ASD!Message): Boolean =
+--	(self.role = #input and msg.role = #output) or 
+--			(self.role = #output and msg.role = #input);
+
+helper context ASD!Message def: checkMsgSubsets(msg: ASD!Message): Boolean =
+	(self.subset = msg.subset);
+
+helper context ASD!Message def: checkMsgInfoTypesRels(msg: ASD!Message): Boolean =
+	(self.subset = #req and 
+		msg.infoType.size()	<= self.infoType.size()) or
+	(self.subset = #pro and 
+		msg.infoType.size()	>= self.infoType.size());
+
+helper context ASD!Message def: isSubType(msg: ASD!Message): Boolean =
+	self.checkMsgInfoTypesRels(msg) and self.checkMsgSubsets(msg) and
+		self.checkMsgRoles(msg);
+
+-- COMPARING INFOTYPES --------------------------------------------------------
+helper context ASD!InfoType def: getSimInfoType(): Sequence(ASD!InfoType) =
+	ASD!InfoType.allInstancesFrom('Cons')->asSequence()->
+		select(aux | aux.name = self.name and self.isSubType(aux).debug('isSubtype()'));
+
+helper context ASD!InfoType def: isSubType(it: ASD!InfoType): Boolean =
+	(self.checkITValues(it) and self.checkITSubsets(it) and self.checkITRels(it));
+	
+-- TO-DO: replace ValueTypes comparison
+helper context ASD!InfoType def: checkITValues(it: ASD!InfoType): Boolean =
+	(self.valueRange = it.valueRange and self.valueType = it.valueType); 
+		
+helper context ASD!InfoType def: checkITSubsets(it: ASD!InfoType): Boolean =
+	(self.subset = it.subset);
+
+helper context ASD!InfoType def: checkITRels(it: ASD!InfoType): Boolean =
+	(self.subset = #req and 
+		it.infoType.size()	<= self.infoType.size()) or
+	(self.subset = #pro and 
+		it.infoType.size()	>= self.infoType.size());
+
+rule Service2Service {
+	from
+		s1 : ASD!ServiceDescription	in Prov	
+	to
+		s : ASD!ServiceDescription (
+			name <- 'S1_' + s1.name, -- + ' - S2_' + s2.name
+			infotypes <- s1.infotypes
+		)
+}
+
+rule Operation2Operation {
+	from
+		o1 : ASD!Operation in Prov(o1.getSimOperation().size() > 0) 
+		-- o2 : ASD!Operation in Cons(o1.name = o2.name)
+	to
+		o : ASD!Operation (
+			name <- o1.name,
+			service <- o1.service,
+			messagePattern <- o1.messagePattern,
+			contents <- o1.contents
+		),
+		a : ASD!Annotation (
+			owner <- o,
+			key <- 'isCompatible', 
+			value <- 'true'  	
+		)
+}
+
+rule Message2Message {
+	from
+		m1 : ASD!Message in Prov (m1.getSimMessage().size() > 0) 
+	to
+		m : ASD!Message (
+			name <- m1.name,
+			operation <- m1.operation,
+			role <- m1.role,
+			subset <- m1.subset,
+			infoType <- m1.infoType
+		),
+		a : ASD!Annotation (
+			owner <- m,
+			key <- 'isCompatible', 
+			value <- 'true'  	
+		)
+}
+
+rule InfoType2InfoType {
+	from
+		it1 : ASD!InfoType in Prov (it1.getSimInfoType().size() > 0) 
+	to
+		it : ASD!InfoType (
+			name <- it1.name,
+			message <- it1.message,
+			infoType <- it1.infoType,
+			valueType <- it1.valueType,
+			valueRange <- it1.valueRange
+		),
+		a : ASD!Annotation (
+			owner <- it,
+			key <- 'isCompatible', 
+			value <- 'true'  	
+		)
+}
+
+--endpoint rule CheckCompatibility {
+-- 	do {
+-- 		
+-- 	}
+-- }
+

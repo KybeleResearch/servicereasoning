@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="SDM"
+    nsURI="SDM" nsPrefix="SDM">
+  <eAnnotations source="gmf">
+    <details key="foo" value="bar"/>
+  </eAnnotations>
+  <eClassifiers xsi:type="ecore:EClass" name="ServiceDescription">
+    <eAnnotations source="gmf.diagram">
+      <details key="foo" value="bar"/>
+      <details key="model.extension" value="model"/>
+      <details key="diagram.extension" value="model_diagram"/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="operations" upperBound="-1"
+        eType="#//Operation" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="infotypes" upperBound="-1"
+        eType="#//InfoType" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Operation">
+    <eAnnotations source="gmf.node">
+      <details key="label" value="name"/>
+      <details key="figure" value="rounded"/>
+      <details key="label.placement" value="external"/>
+      <details key="color" value="135,206,250"/>
+      <details key="border.width" value="4"/>
+      <details key="size" value="200,220"/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="messagePattern" eType="#//EEnumOp"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="contents" lowerBound="1"
+        upperBound="-1" eType="#//Message" containment="true">
+      <eAnnotations source="gmf.compartment">
+        <details key="foo" value="bar"/>
+        <details key="layout" value="list"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Message">
+    <eAnnotations source="gmf.node">
+      <details key="label" value="name"/>
+      <details key="figure" value="rectangle"/>
+      <details key="color" value="193,255,193"/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="role" eType="#//EEnumMes"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="subset" eType="#//EEnumSubset"
+        derived="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Message2Info" lowerBound="1"
+        upperBound="-1" eType="#//InfoType">
+      <eAnnotations source="gmf.link">
+        <details key="target.decoration" value="arrow"/>
+        <details key="style" value="dot"/>
+        <details key="tool.description" value="Relationship between Message and InfoType"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="InfoType">
+    <eAnnotations source="gmf.node">
+      <details key="label" value="name"/>
+      <details key="figure" value="ellipse"/>
+      <details key="color" value="255,255,153"/>
+      <details key="border.color" value="0,0,0"/>
+      <details key="border.style" value="dot"/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="valueType" eType="#//EEnumValueType"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="valueRange" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="subset" eType="#//EEnumSubset"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Info2Info" upperBound="-1"
+        eType="#//InfoType">
+      <eAnnotations source="gmf.link">
+        <details key="source.decoration" value="square"/>
+        <details key="target.decoration" value="square"/>
+        <details key="style" value="dash"/>
+        <details key="tool.description" value="Relationship between InfoTypes"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="EEnumOp">
+    <eLiterals name="oneway"/>
+    <eLiterals name="notification"/>
+    <eLiterals name="requestresponse"/>
+    <eLiterals name="solicitresponse"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="EEnumMes">
+    <eLiterals name="input"/>
+    <eLiterals name="output"/>
+    <eLiterals name="fault"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="EEnumSubset">
+    <eLiterals name="Sreq"/>
+    <eLiterals name="Spro"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="EEnumValueType">
+    <eLiterals name="document" value="4"/>
+    <eLiterals name="int"/>
+    <eLiterals name="float" value="1"/>
+    <eLiterals name="double" value="2"/>
+    <eLiterals name="String" value="5"/>
+    <eLiterals name="date" value="3"/>
+  </eClassifiers>
+</ecore:EPackage>
