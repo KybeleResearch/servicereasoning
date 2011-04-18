@@ -104,7 +104,7 @@
     <eLiterals name="int"/>
     <eLiterals name="float" value="1"/>
     <eLiterals name="double" value="2"/>
-    <eLiterals name="String" value="5"/>
+    <eLiterals name="string" value="5" literal="string"/>
     <eLiterals name="date" value="3"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Profile" eSuperTypes="#//NamedElement">
