@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/WS_ASD/src"
+    modelPluginID="WS_ASD" modelName="ASD" importerID="org.eclipse.emf.importer.ecore"
+    complianceLevel="6.0" copyrightFields="false">
+  <foreignModel>ASD.ecore</foreignModel>
+  <genPackages prefix="ASD" disposableProviderFactory="true" ecorePackage="ASD.ecore#/">
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="ASD.ecore#//EEnumOp">
+      <genEnumLiterals ecoreEnumLiteral="ASD.ecore#//EEnumOp/oneway"/>
+      <genEnumLiterals ecoreEnumLiteral="ASD.ecore#//EEnumOp/notification"/>
+      <genEnumLiterals ecoreEnumLiteral="ASD.ecore#//EEnumOp/requestresponse"/>
+      <genEnumLiterals ecoreEnumLiteral="ASD.ecore#//EEnumOp/solicitresponse"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="ASD.ecore#//EEnumMes">
+      <genEnumLiterals ecoreEnumLiteral="ASD.ecore#//EEnumMes/input"/>
+      <genEnumLiterals ecoreEnumLiteral="ASD.ecore#//EEnumMes/output"/>
+      <genEnumLiterals ecoreEnumLiteral="ASD.ecore#//EEnumMes/fault"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="ASD.ecore#//EEnumSubset">
+      <genEnumLiterals ecoreEnumLiteral="ASD.ecore#//EEnumSubset/req"/>
+      <genEnumLiterals ecoreEnumLiteral="ASD.ecore#//EEnumSubset/pro"/>
+      <genEnumLiterals ecoreEnumLiteral="ASD.ecore#//EEnumSubset/unset"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="ASD.ecore#//EEnumValueType">
+      <genEnumLiterals ecoreEnumLiteral="ASD.ecore#//EEnumValueType/document"/>
+      <genEnumLiterals ecoreEnumLiteral="ASD.ecore#//EEnumValueType/int"/>
+      <genEnumLiterals ecoreEnumLiteral="ASD.ecore#//EEnumValueType/float"/>
+      <genEnumLiterals ecoreEnumLiteral="ASD.ecore#//EEnumValueType/double"/>
+      <genEnumLiterals ecoreEnumLiteral="ASD.ecore#//EEnumValueType/string"/>
+      <genEnumLiterals ecoreEnumLiteral="ASD.ecore#//EEnumValueType/date"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="ASD.ecore#//EEnumlogicalType">
+      <genEnumLiterals ecoreEnumLiteral="ASD.ecore#//EEnumlogicalType/AND"/>
+      <genEnumLiterals ecoreEnumLiteral="ASD.ecore#//EEnumlogicalType/OR"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="ASD.ecore#//EEnumDimensionType">
+      <genEnumLiterals ecoreEnumLiteral="ASD.ecore#//EEnumDimensionType/monotonic"/>
+      <genEnumLiterals ecoreEnumLiteral="ASD.ecore#//EEnumDimensionType/antitonic"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="ASD.ecore#//EEnumIntention">
+      <genEnumLiterals ecoreEnumLiteral="ASD.ecore#//EEnumIntention/promise"/>
+      <genEnumLiterals ecoreEnumLiteral="ASD.ecore#//EEnumIntention/obligation"/>
+    </genEnums>
+    <genClasses ecoreClass="ASD.ecore#//ServiceDescription">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ASD.ecore#//ServiceDescription/operations"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ASD.ecore#//ServiceDescription/infotypes"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ASD.ecore#//ServiceDescription/profiles"/>
+    </genClasses>
+    <genClasses ecoreClass="ASD.ecore#//Operation">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ASD.ecore#//Operation/messagePattern"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ASD.ecore#//Operation/contents"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference ASD.ecore#//Operation/service"/>
+    </genClasses>
+    <genClasses ecoreClass="ASD.ecore#//Message">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ASD.ecore#//Message/role"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ASD.ecore#//Message/subset"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ASD.ecore#//Message/infoType"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference ASD.ecore#//Message/operation"/>
+    </genClasses>
+    <genClasses ecoreClass="ASD.ecore#//InfoType">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ASD.ecore#//InfoType/valueType"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ASD.ecore#//InfoType/valueRange"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ASD.ecore#//InfoType/subset"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ASD.ecore#//InfoType/infoType"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ASD.ecore#//InfoType/ref"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ASD.ecore#//InfoType/message"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference ASD.ecore#//InfoType/service"/>
+    </genClasses>
+    <genClasses ecoreClass="ASD.ecore#//Profile">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ASD.ecore#//Profile/refers"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ASD.ecore#//Profile/sets"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference ASD.ecore#//Profile/service"/>
+    </genClasses>
+    <genClasses ecoreClass="ASD.ecore#//AssertionSet">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ASD.ecore#//AssertionSet/lType"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference ASD.ecore#//AssertionSet/profile"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ASD.ecore#//AssertionSet/assertions"/>
+    </genClasses>
+    <genClasses ecoreClass="ASD.ecore#//Assertion">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ASD.ecore#//Assertion/dimension"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ASD.ecore#//Assertion/dimensionType"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ASD.ecore#//Assertion/role"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ASD.ecore#//Assertion/minVal"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ASD.ecore#//Assertion/maxVal"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ASD.ecore#//Assertion/lType"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference ASD.ecore#//Assertion/set"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ASD.ecore#//Assertion/subset"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="ASD.ecore#//NamedElement">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ASD.ecore#//NamedElement/annotations"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ASD.ecore#//NamedElement/name"/>
+    </genClasses>
+    <genClasses ecoreClass="ASD.ecore#//Annotation">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ASD.ecore#//Annotation/key"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ASD.ecore#//Annotation/value"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference ASD.ecore#//Annotation/owner"/>
+    </genClasses>
+    <genClasses ecoreClass="ASD.ecore#//InfoTypeImported">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ASD.ecore#//InfoTypeImported/url"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>
