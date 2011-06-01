@@ -1,0 +1,403 @@
+library XMLHelpersv2;
+
+-- HELPER:	getAttrVal
+-- Returns 	a string corresponding to the value of the attribute (identified by
+-- 			the string passed as parameter) of the contextual XML!Element.
+-- CONTEXT:	XML!Element
+-- IN:		String
+-- OUT:		String
+helper context XML!Element def: getAttrVal(n:String):String =
+	let d : XML!Attribute = self.getAttr(n) in
+	if d.oclIsUndefined() then
+		OclUndefined
+	else
+		d.value
+	endif;
+
+
+-- HELPER:	getAttr
+-- Returns 	an attribute with name n of the contextual XML!Element.
+-- CONTEXT:	XML!Element
+-- IN:		String
+-- OUT:		Sequence(XML!Attribute)
+helper context XML!Element def: getAttr(n:String):Sequence(XML!Attribute)=
+	self.getChildren(n)->select(e | e.oclIsKindOf(XML!Attribute))->first();
+
+
+-- HELPER:	getChildren
+-- Returns 	a children nodes with name n of the contextual XML!Element.
+-- CONTEXT:	XML!Element
+-- IN:		String
+-- OUT:		Sequence(XML!Node)
+helper context XML!Element def: getChildren(n:String):Sequence(XML!Node)=
+	self.children->select(e | e.name = n or e.name.endsWith(':'+n));
+
+	
+-- HELPER:	getXmlnsAttributes
+-- Returns	a sequence attribute,that corresponding a namespace attributes of 
+--			the contextual XML!Element.
+-- CONTEXT:	XML!Element
+-- OUT:		Sequence(XML!Attribute)
+helper context XML!Element def: getXmlnsAttributes():Sequence(XML!Attribute)=
+	self.children->select(e | e.oclIsKindOf(XML!Attribute))->
+	select(i | i.name.startsWith('xmlns:'));
+
+
+-- HELPER:	getElementsByName
+-- Returns 	the XML!Element corresponding to the children (identified by the
+-- 			string passed as parameter) of the contextual XML!Element.
+-- CONTEXT:	XML!Element
+-- IN:		String
+-- OUT:		Set(XML!Element)
+helper context XML!Element def: getElementsByName(name:String):Set(XML!Element)=
+	self.children->select(c | c.oclIsKindOf(XML!Element) and 
+	(c.name = name or c.name.endsWith(':'+name)));
+
+
+-- HELPER:	getBooleanAttrVal
+-- Returns 	a string true/false value for Boolean attribute (identified by the
+-- 			string passed as parameter) of the contextual XML!Element.
+-- CONTEXT:	XML!Element
+-- IN:		String
+-- OUT:		Boolean
+helper context XML!Element def: getBooleanAttrVal(n:String):Boolean=
+	let v : String = self.getAttrVal(n) in
+	if v.oclIsUndefined() then
+		OclUndefined
+	else
+		if v= 'true' then
+			true
+		else
+			false
+		endif			
+	endif;
+
+
+-- HELPER:	rootElt
+-- Returns 	the Root element of the XML input model.
+-- CONTEXT:	thisModule
+-- OUT:		XML!Root
+helper def: rootElt:XML!Root=
+	XML!Root.allInstances()->asSequence()->first();
+
+
+-- HELPER:	getIntegerAttrVal
+-- Returns 	an integer value for Integer attribute (identified by the
+-- 			string passed as parameter) of the contextual XML!Element.
+-- CONTEXT:	XML!Element
+-- IN:		String
+-- OUT:		Integer
+helper context XML!Element def: getIntegerAttrVal(n:String):Integer=
+	let v : String = self.getAttrVal(n) in
+	if v.oclIsUndefined() then
+		OclUndefined
+	else
+		v.toInteger()
+	endif;
+
+
+-- HELPER:	getXMLReference
+-- Returns 	XML!Element reference that represent the XML Schema elements(identified 
+--			by the name passed as parameter('name') and the value passed as parameter
+--			('value')). 
+-- CONTEXT:	ThisModule
+-- IN:		String,String
+-- OUT:		XML!Element
+helper def: getXMLReference(name:String,value:String):XML!Element= 
+	if value <> OclUndefined then
+		XML!Element.allInstances()->select(e|e.name= name or e.name.endsWith(':'+name))->
+		select(e|e.getAttrVal('name')= value.substring((value.indexOf(':')+2),value
+		.size()) or e.getAttrVal('id')= value.substring((value.indexOf(':')+2),value
+		.size()))->first()
+	else
+		OclUndefined
+	endif;
+
+
+-- HELPER:	getTypeRef
+-- Returns 	XML!Element reference that gives value to attribute type of XML Schema
+--			elements, identified by the value passed as parameter ('value') and mode
+--			passed as parameter('c'=ComplexType or SimpleType, 's'=SimpleType). 
+-- CONTEXT:	ThisModule
+-- IN:		String,String
+-- OUT:		XML!Element
+helper def: getTypeRef(value:String,mode:String):XML!Element= 
+	if value <> OclUndefined then 
+		if not thisModule.isPrimitiveType(value.substring((value.indexOf(':')+2),
+		value.size())) then 
+			if mode='c'then
+				thisModule.getRef(value) 
+			else
+				if mode='s' then 
+					thisModule.getXMLReference('simpleType',value)
+				else
+					OclUndefined 
+				endif 
+			endif
+		else 
+			OclUndefined 
+		endif 
+	else 
+		OclUndefined 
+	endif;
+
+
+-- HELPER:	getRef
+-- Returns 	XML!Element reference that represent the XML Schema elements(ComplexType 
+--			or SimpleType) identified by the value passed as parameter ('value'). 
+-- CONTEXT:	ThisModule
+-- IN:		String
+-- OUT:		XML!Element
+helper def: getRef(value:String):XML!Element= 
+	 XML!Element.allInstances()-> select(e|(e.name='complexType' or 
+	 e.name='simpleType' or e.name.endsWith(':complexType') or 
+	 e.name.endsWith(':simpleType')) and (e.getAttrVal('name')= 
+	 value.substring((value.indexOf(':')+2),value.size()))or (e.getAttrVal('id')= 
+	 value.substring((value.indexOf(':')+2),value.size())))->first();
+
+
+-- HELPER:	getPrimitiveType
+-- Returns 	String that gives value to attribute primitiveType of XML Schema
+--			elements, identified by the value passed as parameter ('value'). 
+-- CONTEXT:	ThisModule
+-- IN:		String
+-- OUT:		String
+helper def: getPrimitiveType(value:String):String= 
+	if value <> OclUndefined then 
+		if thisModule.isPrimitiveType(value.substring((value.indexOf(':')+2),value
+		.size()))then 
+			value
+		else 
+			OclUndefined 
+		endif 
+	else 
+		OclUndefined 
+	endif;
+
+
+-- HELPER:	isPrimitiveType
+-- Returns 	a Boolean,which value is true if type passed as parameter is primitive
+--			or false if isn't a primitive type of XML Schema.
+--			or SimpleType) identified by the value passed as parameter ('value'). 
+-- CONTEXT:	ThisModule
+-- IN:		String
+-- OUT:		Boolean
+helper def: isPrimitiveType(type:String):Boolean =
+	if type='duration' or type='dateTime' or type='date' or type='time' or 
+		type='gYearMonth' or type='gYear' or type='gMonthDay' or type='gDay' or 
+		type='gMonth' or type='NOTATION' or type='QName' or type='anyURI' or 
+		type='double' or type='float' or type='hexBinary' or type='base64Binary' or 
+		type='boolean' or type='string' or type='decimal' or type='integer'	or 
+		type='normalizedString' or type='token' or type='language' or type='Name' or 
+		type='NMTOKEN' or type='NCName' or type='NMTOKENS' or type='ID' or 
+		type='IDREF' or type='IDREFS' or type='ENTITY' or type='ENTITIES' or 
+		type='nonPositiveInteger' or type='long' or type='nonNegativeInteger' or 
+		type='negativeInteger' or type='int' or type='unsignedLong' or 
+		type='positiveInteger' or type='short' or type='byte' or type='unsignedInt'
+		or type='unsignedShort' or type='unsignedByte' then
+			true
+	else
+			false
+	endif;
+
+
+-- HELPER:	getWSDLReference
+-- Returns 	XML!Element reference that represent the WSDL elements(identified 
+--			by the name passed as parameter('name') and the value passed as parameter
+--			('value')). 
+-- CONTEXT:	ThisModule
+-- IN:		String,String
+-- OUT:		XML!Element
+helper def: getWSDLReference(name:String,value:String):XML!Element= 
+	XML!Element.allInstances()->select(e|(e.name=name or e.name.endsWith(':'+name))
+	and e.getAttrVal('name') =
+	if value <> OclUndefined then
+	  	value.substring((value.indexOf(':')+2),value.size())
+	else 
+		OclUndefined
+	endif
+	)->first();
+
+	
+-- HELPER:	getPrefix
+-- Returns 	String that represents then name of element HTTP o SOAP with
+--			the namespace prefix, identified by the type of element 
+--			(type='soap' or 'http') and the name of element. 
+-- CONTEXT:	ThisModule
+-- IN:		String,String
+-- OUT:		String
+helper def: getPrefix (type:String,name:String):String=
+	if thisModule.getPrefixDeclare(type,thisModule.rootElt) <> '' then 
+		thisModule.getPrefixDeclare(type,thisModule.rootElt).concat(':')
+		.concat(name)
+	else
+		type.concat(':').concat(name)
+	endif;
+
+
+-- HELPER:	getPrefixDeclare
+-- Returns 	String that represents the namespace prefix declared in the root, 
+--			identified by the type of element (type='soap' or 'http') and 
+--			the element root. 
+-- CONTEXT:	ThisModule
+-- IN:		String,XML!Element
+-- OUT:		String
+helper def: getPrefixDeclare (type:String,ele:XML!Element):String=
+	if type='wsoap' then
+		thisModule.cleanPrefix(thisModule.getPrefixWSOAP(ele.getXmlnsAttributes()))
+	else
+		thisModule.cleanPrefix(thisModule.getPrefixWHTTP(ele.getXmlnsAttributes()))
+	endif;
+
+
+-- HELPER:	getPrefixWSOAP
+-- Returns 	String that represents the namespace prefix declared in the root
+--			for SOAP. 
+-- CONTEXT:	ThisModule
+-- IN:		Sequence(XML!Attribute)
+-- OUT:		String
+helper def: getPrefixWSOAP (attr: Sequence(XML!Attribute)):String=
+	attr->select(e | e.value ='http://www.w3.org/ns/wsdl/soap').toString();
+	
+
+-- HELPER:	getPrefixWHTTP
+-- Returns 	String that represents the namespace prefix declared in the root
+--			for HTTP. 
+-- CONTEXT:	ThisModule
+-- IN:		Sequence(XML!Attribute)
+-- OUT:		String
+helper def: getPrefixWHTTP (attr: Sequence(XML!Attribute)):String=
+	attr->select(e | e.value ='http://www.w3.org/ns/wsdl/http').toString();
+
+
+-- HELPER:	cleanPrefix
+-- Returns 	a clean String that represents the namespace prefix.
+-- CONTEXT:	ThisModule
+-- IN:		String
+-- OUT:		String
+helper def: cleanPrefix (prefixOrig: String):String=
+	if(prefixOrig <> 'Sequence {}') then
+		let prefix: String = prefixOrig.substring(14,prefixOrig.size()) in
+		let prefixfinal: String =prefix.regexReplaceAll('xmlns:','') in
+			prefixfinal.substring(1,prefixfinal.size()-1)
+	else
+		''
+	endif;
+	
+	
+-- HELPER:	createElements
+-- Returns 	Create a XML!Element that represents a XML Schema element imported 
+-- CONTEXT:	thisModule
+-- OUT:		XML!Element
+	helper def: createElements(): XML!Element=
+		let elements : Sequence(XML!Attribute)=
+		thisModule.getListElement(XML!Attribute.allInstances()-> 
+		select(e|e.name='element' and (e.parent.name='fault' or 
+		e.parent.name.endsWith(':fault') or e.parent.name='input' 
+		or e.parent.name.endsWith(':input') or e.parent.name='output'
+		or e.parent.name.endsWith(':output'))),
+		Sequence{},XML!Attribute.allInstances()->select(e|(e.name='name' or e.name='id') and 
+		(e.parent.name='element'or e.parent.name.endsWith(':element')))) in 
+			elements->iterate(p; y : XML!Attribute = elements->first() |
+				thisModule.createElementImported(p)
+			);	
+	
+
+-- HELPER:	getListElement
+-- Returns 	A sequence of XML!Element that represents a XML Schema element imported, 
+--			that are used by the elements input,output or fault in the attribute element. 
+-- CONTEXT:	ThisModule
+-- IN:		Sequence(XML!Attribute),Sequence(XML!Attribute),Sequence(XML!Attribute)
+-- OUT:		Sequence(XML!Attribute)
+helper def: getListElement (orig: Sequence(XML!Attribute), list: Sequence(XML!Attribute),elementDef: Sequence(XML!Attribute)): Sequence(XML!Attribute)=
+		if orig.toString() = 'Sequence {}' then
+			list
+		else
+			orig->iterate(p; y : XML!Attribute = orig->first() |
+			if ((list->forAll(e|e.value<>p.value))and (elementDef->forAll(e|e.value <> p.value.substring(p.value.indexOf(':')+2,p.value.size()))))then
+				thisModule.getListElement(orig->excluding(p),list->union(Sequence{p}),elementDef)
+			else
+					thisModule.getListElement(orig->excluding(p),list,elementDef)
+			endif)
+		endif;
+
+
+-- HELPER:	getNameElementImported
+-- Returns 	String that represents the name of element imported, identified 
+--			by the value of attribute passed as parameter. 
+-- CONTEXT:	ThisModule
+-- IN:		String
+-- OUT:		String
+helper def: getNameElementImported(i: String): String= 
+	if i <> OclUndefined then
+		i.substring((i.indexOf(':')+2),i.size())
+	else
+		OclUndefined
+	endif;
+
+
+-- HELPER:	getURLElementImported
+-- Returns 	String that represents the URL of element imported, identified 
+--			by the value of attribute passed as parameter. 
+-- CONTEXT:	ThisModule
+-- IN:		String
+-- OUT:		String
+helper def: getURLElementImported(i: String): String= 
+	if i <> OclUndefined then
+		if i.indexOf(':') <> -1 then 
+			 thisModule.rootElt.getAttrVal('xmlns:'.concat(i.substring(1,i.indexOf(':'))))
+		else
+			OclUndefined
+		endif
+	else
+		OclUndefined
+	endif;
+
+
+-- HELPER:	getNamespace
+-- Returns 	String that gives value to attribute namespace of XML Schema element 
+--			imported identified by the value passed as parameter. 
+-- CONTEXT:	ThisModule
+-- IN:		String
+-- OUT:		String
+helper def: getNamespace(i: String): String= 
+	if i <> OclUndefined then
+		if i.indexOf(':')=-1 then
+			OclUndefined
+		else
+			i.substring(1,i.indexOf(':'))
+		endif
+	else
+		OclUndefined
+	endif;
+
+
+-- HELPER:	getListInterface
+-- Returns 	A sequence of XML!Element references that represents a sequence of 
+--			elements interface,that are used by the elements interface in the attribute element. 
+-- CONTEXT:	ThisModule
+-- IN:		String,Sequence(XML!Element)
+-- OUT:		Sequence(XML!Attribute)
+helper def: getListInterface (orig: String,list: Sequence(XML!Element)): Sequence(XML!Element)=
+		if orig= ' ' or orig =OclUndefined then
+			list
+		else
+			if orig.indexOf(' ')>0 then
+				thisModule.getListInterface(orig.substring((orig.indexOf(' ')+2),
+				orig.size()),list->union(
+				Sequence{thisModule.getWSDLReference('interface',orig.substring(1,orig.indexOf(' ')))}))
+			else
+					thisModule.getListInterface(' ',list->
+					union(Sequence{thisModule.getWSDLReference('interface',orig)}))
+			endif
+		endif;
+
+-- HELPER:	getParentElements
+-- Returns 	A sequence of XML!Element references that represents the parents of
+-- 			the attribute passed as parameter.
+-- CONTEXT:	ThisModule
+-- IN:		XML!Attribute
+-- OUT:		Sequence(XML!Element)
+helper def:  getParentElements(i: XML!Attribute): Sequence(XML!Element)=
+		XML!Attribute.allInstances()->select(e|e.name='element'and e.value=i.value)->collect(e|e.parent);
+
