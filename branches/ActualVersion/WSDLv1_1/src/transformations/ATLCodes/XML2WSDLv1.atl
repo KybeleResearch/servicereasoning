@@ -1,0 +1,1592 @@
+module XML2WSDLv1;
+create OUT : WSDL from IN : XML;
+
+uses XMLHelpersv1;
+
+---------------------
+-- XML SCHEMA RULES--
+---------------------
+
+-- WSDL uses a XML Schema types.
+
+-- Rule 'Element2Schema'
+-- Create Element Schema(XML SCHEMA) from XML Element
+rule Element2Schema {	
+	from
+		i : XML!Element	(
+			i.name = 'schema' or i.name.endsWith(':schema')
+		)
+	to
+		o : WSDL!Schema (    
+			targetNamespace <- i.getAttrVal('targetNamespace'),
+			version <- i.getAttrVal('version'),
+			nds <- if i.getXmlnsAttributes()->collect(e|e.name).first()<> OclUndefined
+				   then i.getXmlnsAttributes()->collect(e|e.name).first().concat(
+						'='+ i.getXmlnsAttributes()->collect(e|e.value).first())
+				   else OclUndefined endif,
+			nsSchema <- i.getAttrVal('xmlns'),
+			finalDefault <- i.getAttrVal('finalDefault'),
+			blockDefault <- i.getAttrVal('blockDefault'),
+			id <- i.getAttrVal('id'),
+			elementFormDefault <- i.getAttrVal('elementFormDefault'),
+			attributeFormDefault <- i.getAttrVal('attributeFormDefault'),
+			xml_lang <- i.getAttrVal('xml:lang'),
+			include <- i.getElementsByName('include'),
+			import <- i.getElementsByName('import'),
+			redefine <- i.getElementsByName('redefine'),
+			annotation <- i.getElementsByName('annotation'),
+			simpleType <- i.getElementsByName('simpleType'),
+			complexType <- i.getElementsByName('complexType'),
+			element <- i.getElementsByName('element'),
+			attribute <- i.getElementsByName('attribute'),
+			attributeGroup <- i.getElementsByName('attributeGroup'),
+			group <- i.getElementsByName('group'),
+			notation <- i.getElementsByName('notation')
+		)
+}
+
+-- Rule 'Element2Include'
+-- Create Element Include(XML SCHEMA) from XML Element
+rule Element2Include {	
+	from
+		i : XML!Element	(
+			i.name = 'include' or i.name.endsWith(':include')
+		)
+	to
+		o : WSDL!Include (    
+			schemaLocation <- i.getAttrVal('schemaLocation'),
+			id <- i.getAttrVal('id'),
+			annotation <- i.getElementsByName('annotation').first()
+		)
+}
+
+-- Rule 'Element2ImportXMLSchema'
+-- Create Element Import(XML SCHEMA) from XML Element
+rule Element2ImportXMLSchema {	
+	from
+		i : XML!Element	(
+			(i.name = 'import' or i.name.endsWith(':import')) and  
+			i.parent<>thisModule.rootElt
+		)
+	to
+		o : WSDL!ImportXMLSchema(    
+			namespace <- i.getAttrVal('namespace'),
+			schemaLocation <- i.getAttrVal('schemaLocation'),
+			id <- i.getAttrVal('id'),
+			annotation <- i.getElementsByName('annotation').first()
+		)
+}
+
+-- Rule 'Element2Redefine'
+-- Create Element Redefine(XML SCHEMA) from XML Element
+rule Element2Redefine {	
+	from
+		i : XML!Element	(
+			i.name = 'redefine' or i.name.endsWith(':redefine')
+		)
+	to
+		o : WSDL!Redefine (    
+			schemaLocation <- i.getAttrVal('schemaLocation'),
+			id <- i.getAttrVal('id'),
+			annotation <- i.getElementsByName('annotation'),
+			simpleType <- i.getElementsByName('simpleType'),
+			complexType <- i.getElementsByName('complexType'),
+			attributeGroup <- i.getElementsByName('attributeGroup'),
+			group <- i.getElementsByName('group')
+		)
+}
+
+-- Rule 'Element2Annotation'
+-- Create Element Annotation(XML SCHEMA) from XML Element
+rule Element2Annotation {	
+	from
+		i : XML!Element	(
+			i.name = 'annotation' or i.name.endsWith(':annotation')
+		)
+	to
+		o : WSDL!Annotation (    
+			appinfo <- i.getElementsByName('appinfo'),
+			documentation <- i.getElementsByName('documentation')
+		)
+}
+
+-- Rule 'Element2ComplexType'
+-- Create Element ComplexType(XML SCHEMA) from XML Element
+rule Element2ComplexType {	
+	from
+		i : XML!Element	(
+			i.name = 'complexType' or i.name.endsWith(':complexType')
+		)
+	to
+		o : WSDL!ComplexType (    
+			name <- i.getAttrVal('name'),
+			id <- i.getAttrVal('id'),
+			abstractDef <- i.getBooleanAttrVal('abstract'),
+			final <- i.getAttrVal('final'),
+			block <- i.getAttrVal('block'),
+			mixed <- i.getBooleanAttrVal('mixed'),
+			annotation <- i.getElementsByName('annotation').first(),
+			simpleContent <- i.getElementsByName('simpleContent').first(),
+			complexContent <- i.getElementsByName('complexContent').first(),
+			all <- i.getElementsByName('all').first(),
+			choice <- i.getElementsByName('choice').first(),
+			sequenceDef <- i.getElementsByName('sequence').first(),
+			group <- i.getElementsByName('group').first(),
+			attribute <- i.getElementsByName('attribute'),
+			attributeGroup <- i.getElementsByName('attributeGroup'),
+			anyAttribute <- i.getElementsByName('anyAttribute').first()
+		)
+}
+
+-- Rule 'Element2Element'
+-- Create Element Element(XML SCHEMA) from XML Element
+rule Element2Element {	
+	from
+		i : XML!Element	(
+			i.name = 'element' or i.name.endsWith(':element')
+		)
+	to
+		o : WSDL!Element (    
+			name <- i.getAttrVal('name'),
+			id <- i.getAttrVal('id'),
+			ref <- thisModule.getXMLReference('element',i.getAttrVal('ref')),
+			type <- thisModule.getTypeRef(i.getAttrVal('type'),'c'),
+			primitiveType <- thisModule.getPrimitiveType(i.getAttrVal('type')),
+			minOccurs <- i.getIntegerAttrVal('minOccurs'),
+			maxOccurs <- i.getAttrVal('maxOccurs'),
+			nillable <- i.getBooleanAttrVal('nillable'),
+			substitutionGroup <- thisModule.getXMLReference('element',
+									i.getAttrVal('substitutionGroup')),
+			abstractDef <- i.getBooleanAttrVal('abstract'),
+			final <- i.getAttrVal('final'),
+			block <- i.getAttrVal('block'),
+			default <- i.getAttrVal('default'),
+			fixed <- i.getAttrVal('fixed'),
+			form <- i.getAttrVal('form'),
+			annotation <- i.getElementsByName('annotation').first(),
+			complexType <- i.getElementsByName('complexType').first(),
+			simpleType <- i.getElementsByName('simpleType').first(),
+			uniqueDef <- i.getElementsByName('unique'),
+			key <- i.getElementsByName('key'),
+			keyref <- i.getElementsByName('keyref')
+		)
+}
+
+-- Rule 'Element2Attribute'
+-- Create Element Attribute(XML SCHEMA) from XML Element
+rule Element2Attribute {	
+	from
+		i : XML!Element	(
+			i.name = 'attribute' or i.name.endsWith(':attribute')
+		)
+	to
+		o : WSDL!Attribute (    
+			name <- i.getAttrVal('name'),
+			id <- i.getAttrVal('id'),
+			ref <- thisModule.getXMLReference('attribute',i.getAttrVal('ref')),
+			type <- thisModule.getTypeRef(i.getAttrVal('type'),'s'),
+			primitiveType <- thisModule.getPrimitiveType(i.getAttrVal('type')),
+			use <- i.getAttrVal('use'),
+			default <- i.getAttrVal('default'),
+			fixed <- i.getAttrVal('fixed'),
+			form <- i.getAttrVal('form'),
+			annotation <- i.getElementsByName('annotation').first(),
+			simpleType <- i.getElementsByName('simpleType').first()
+		)
+}
+
+-- Rule 'Element2AttributeGroup'
+-- Create Element AttributeGroup(XML SCHEMA) from XML Element
+rule Element2AttributeGroup {	
+	from
+		i : XML!Element	(
+			i.name = 'attributeGroup' or i.name.endsWith(':attributeGroup')
+		)
+	to
+		o : WSDL!AttributeGroup (    
+			name <- i.getAttrVal('name'),
+			id <- i.getAttrVal('id'),
+			ref <- thisModule.getXMLReference('attributeGroup',i.getAttrVal('ref')),
+			annotation <- i.getElementsByName('annotation').first(),
+			attribute <- i.getElementsByName('attribute'),
+			attributeGroup <- i.getElementsByName('attributeGroup'),
+			anyAttribute <- i.getElementsByName('anyAttribute').first()
+		)
+}
+
+-- Rule 'Element2Group'
+-- Create Element Group(XML SCHEMA) from XML Element
+rule Element2Group {	
+	from
+		i : XML!Element	(
+			i.name = 'group' or i.name.endsWith(':group')
+		)
+	to
+		o : WSDL!Group (    
+			name <- i.getAttrVal('name'),
+			ref <- thisModule.getXMLReference('group',i.getAttrVal('ref')),
+			minOccurs <- i.getIntegerAttrVal('minOccurs'),
+			maxOccurs <- i.getAttrVal('maxOccurs'),
+			id <- i.getAttrVal('id'),
+			annotation <- i.getElementsByName('annotation').first(),
+			all <- i.getElementsByName('all').first(),
+			choice <- i.getElementsByName('choice').first(),
+			sequenceDef <- i.getElementsByName('sequence').first()
+		)
+}
+
+-- Rule 'Element2Notation'
+-- Create Element Notation(XML SCHEMA) from XML Element
+rule Element2Notation {	
+	from
+		i : XML!Element	(
+			i.name = 'notation' or i.name.endsWith(':notation')
+		)
+	to
+		o : WSDL!Notation (    
+			name <- i.getAttrVal('name'),
+			id <- i.getAttrVal('id'),
+			public <- i.getAttrVal('public'),
+			system <- i.getAttrVal('system'),
+			annotation <- i.getElementsByName('annotation').first()
+		)
+}
+
+-- Rule 'Element2SimpleContent'
+-- Create Element SimpleContent(XML SCHEMA) from XML Element
+rule Element2SimpleContent {	
+	from
+		i : XML!Element	(
+			i.name = 'simpleContent' or i.name.endsWith(':simpleContent')
+		)
+	to
+		o : WSDL!SimpleContent (    
+			id <- i.getAttrVal('id'),
+			annotation <- i.getElementsByName('annotation').first(),
+			restriction <-  i.getElementsByName('restriction').first(),
+			extension <- i.getElementsByName('extension').first()
+		)
+}
+
+-- Rule 'Element2ComplexContent'
+-- Create Element ComplexContent(XML SCHEMA) from XML Element
+rule Element2ComplexContent {	
+	from
+		i : XML!Element	(
+			i.name = 'complexContent' or i.name.endsWith(':complexContent')
+		)
+	to
+		o : WSDL!ComplexContent (
+			mixed <- i.getBooleanAttrVal('mixed'),
+			id <- i.getAttrVal('id'),
+			annotation <- i.getElementsByName('annotation').first(),
+			restriction <- i.getElementsByName('restriction').first(),
+			extension <- i.getElementsByName('extension').first()
+		)
+}
+
+-- Rule 'Element2Unique'
+-- Create Element Unique(XML SCHEMA) from XML Element
+rule Element2Unique {	
+	from
+		i : XML!Element	(
+			i.name = 'unique' or i.name.endsWith(':unique')
+		)
+	to
+		o : WSDL!Unique (
+			name <- i.getAttrVal('name'),
+			id <- i.getAttrVal('id'),
+			annotation <- i.getElementsByName('annotation').first(),
+			selector <- i.getElementsByName('selector').first(),
+			field <- i.getElementsByName('field')
+		)
+}
+
+-- Rule 'Element2Key'
+-- Create Element Key(XML SCHEMA) from XML Element
+rule Element2Key {	
+	from
+		i : XML!Element	(
+			i.name = 'key' or i.name.endsWith(':key')
+		)
+	to
+		o : WSDL!Key (
+			name <- i.getAttrVal('name'),
+			id <- i.getAttrVal('id'),
+			annotation <- i.getElementsByName('annotation').first(),
+			selector <- i.getElementsByName('selector').first(),
+			field <- i.getElementsByName('field')
+		)
+}
+
+-- Rule 'Element2KeyRef'
+-- Create Element KeyRef(XML SCHEMA) from XML Element
+rule Element2KeyRef {	
+	from
+		i : XML!Element	(
+			i.name = 'keyref' or i.name.endsWith(':keyref')
+		)
+	to
+		o : WSDL!KeyRef (
+			name <- i.getAttrVal('name'),
+			refer <- thisModule.getXMLReference('key',i.getAttrVal('refer')),
+			id <- i.getAttrVal('id'),
+			annotation <- i.getElementsByName('annotation').first(),
+			selector <- i.getElementsByName('selector').first(),
+			field <- i.getElementsByName('field')
+		)
+}
+
+-- Rule 'Element2AnyAttribute'
+-- Create Element AnyAttribute(XML SCHEMA) from XML Element
+rule Element2AnyAttribute {	
+	from
+		i : XML!Element	(
+			i.name = 'anyAttribute' or i.name.endsWith(':anyAttribute')
+		)
+	to
+		o : WSDL!AnyAttribute (
+			namespace <- i.getAttrVal('namespace'),
+			processContents <- i.getAttrVal('processContents'),
+			id <- i.getAttrVal('id'),
+			annotation <- i.getElementsByName('annotation').first()
+		)
+}
+
+-- Rule 'Element2Extension'
+-- Create Element Extension(XML SCHEMA) from XML Element
+rule Element2Extension {	
+	from
+		i : XML!Element	(
+			i.name = 'extension' or i.name.endsWith(':extension')
+		)
+	to
+		o : WSDL!Extension (
+			base <- thisModule.getTypeRef(i.getAttrVal('base'),'c'),
+			primitiveType <- thisModule.getPrimitiveType(i.getAttrVal('base')),
+			id <- i.getAttrVal('id'),
+			annotation <- i.getElementsByName('annotation').first(),
+			all <- i.getElementsByName('all').first(),
+			choice <- i.getElementsByName('choice').first(),
+			sequenceDef <- i.getElementsByName('sequence').first(),
+			group <- i.getElementsByName('group').first(),
+			attribute <- i.getElementsByName('attribute'),
+			attributeGroup <- i.getElementsByName('attributeGroup'),
+			anyAttribute <- i.getElementsByName('anyAttribute').first()
+		)
+}
+
+-- Rule 'Element2Selector'
+-- Create Element Selector(XML SCHEMA) from XML Element
+rule Element2Selector {	
+	from
+		i : XML!Element	(
+			i.name = 'selector' or i.name.endsWith(':selector')
+		)
+	to
+		o : WSDL!Selector (
+			xpath <- i.getAttrVal('xpath'),
+			id <- i.getAttrVal('id'),
+			annotation <- i.getElementsByName('annotation').first()
+		)
+}
+
+-- Rule 'Element2Field'
+-- Create Element Field(XML SCHEMA) from XML Element
+rule Element2Field {	
+	from
+		i : XML!Element	(
+			i.name = 'field' or i.name.endsWith(':field')
+		)
+	to
+		o : WSDL!Field (
+			xpath <- i.getAttrVal('xpath'),
+			id <- i.getAttrVal('id'),
+			annotation <- i.getElementsByName('annotation').first()
+		)
+}
+
+-- Rule 'Element2AppInfo'
+-- Create Element AppInfo(XML SCHEMA) from XML Element
+rule Element2AppInfo {	
+	from
+		i : XML!Element	(
+			i.name = 'appinfo' or i.name.endsWith(':appinfo')
+		)
+	to
+		o : WSDL!AppInfo (    
+			source <- i.getAttrVal('source'),
+			id <- i.getAttrVal('id'),
+			any <- i.getElementsByName('any').first()
+		)
+}
+
+-- Rule 'Element2DocumentationXMLSchema'
+-- Create Element Documentation(XML SCHEMA) from XML Element
+rule Element2DocumentationXMLSchema {	
+	from
+		i : XML!Element	(
+			(i.name = 'documentation' or i.name.endsWith(':documentation')) and 
+			if i.parent <> OclUndefined then
+				if i.parent.name= 'annotation' or 
+				i.parent.name.endsWith(':annotation')then
+					true
+				else
+					false
+				endif
+			else
+				false
+			endif
+		)
+	to
+		o : WSDL!DocumentationXMLSchema (    
+			source <- i.getAttrVal('source'),
+			id <- i.getAttrVal('id'),
+			xml_lang <- i.getAttrVal('xml:lang'),
+			any <- i.getElementsByName('any').first(),
+			text <- i.getChildren('#text')
+		)
+}
+
+-- Rule 'Element2Any'
+-- Create Element Any(XML SCHEMA) from XML Element
+rule Element2Any {	
+	from
+		i : XML!Element	(
+			i.name = 'any' or i.name.endsWith(':any')
+		)
+	to
+		o : WSDL!Any (    
+			namespace <- i.getAttrVal('namespace'),
+			processContents <- i.getAttrVal('processContents'),
+			minOccurs <- i.getIntegerAttrVal('minOccurs'),
+			maxOccurs <- i.getAttrVal('maxOccurs'),
+			id <- i.getAttrVal('id'),
+			annotation <- i.getElementsByName('annotation').first()
+		)
+}
+
+-- Rule 'Element2All'
+-- Create Element All(XML SCHEMA) from XML Element
+rule Element2All {	
+	from
+		i : XML!Element	(
+			i.name = 'all' or i.name.endsWith(':all')
+		)
+	to
+		o : WSDL!All (    
+			minOccurs <- i.getIntegerAttrVal('minOccurs'),
+			maxOccurs <- i.getAttrVal('maxOccurs'),
+			id <- i.getAttrVal('id'),
+			annotation <- i.getElementsByName('annotation').first(),
+			element <- i.getElementsByName('element')
+		)
+}
+
+-- Rule 'Element2Choice'
+-- Create Element Choice(XML SCHEMA) from XML Element
+rule Element2Choice {	
+	from
+		i : XML!Element	(
+			i.name = 'choice' or i.name.endsWith(':choice')
+		)
+	to
+		o : WSDL!Choice (    
+			minOccurs <- i.getIntegerAttrVal('minOccurs'),
+			maxOccurs <- i.getAttrVal('maxOccurs'),
+			id <- i.getAttrVal('id'),
+			annotation <- i.getElementsByName('annotation').first(),
+			element <- i.getElementsByName('element'),
+			group <- i.getElementsByName('group'),
+			choice <- i.getElementsByName('choice'),
+			sequenceDef <- i.getElementsByName('sequence'),
+			any <- i.getElementsByName('any')
+		)
+}
+
+-- Rule 'Element2SequenceType'
+-- Create Element Sequence(XML SCHEMA) from XML Element
+rule Element2SequenceType {	
+	from
+		i : XML!Element	(
+			i.name = 'sequence' or i.name.endsWith(':sequence')
+		)
+	to
+		o : WSDL!SequenceType (    
+			minOccurs <- i.getIntegerAttrVal('minOccurs'),
+			maxOccurs <- i.getAttrVal('maxOccurs'),
+			id <- i.getAttrVal('id'),
+			annotation <- i.getElementsByName('annotation').first(),
+			element <- i.getElementsByName('element'),
+			group <- i.getElementsByName('group'),
+			choice <- i.getElementsByName('choice'),
+			sequenceDef <- i.getElementsByName('sequence'),
+			any <- i.getElementsByName('any')
+		)
+}
+
+-- Rule 'Element2SimpleType'
+-- Create Element SimpleType(XML SCHEMA) from XML Element
+rule Element2SimpleType {	
+	from
+		i : XML!Element	(
+			i.name = 'simpleType' or i.name.endsWith(':simpleType')
+		)
+	to
+		o : WSDL!SimpleType (    
+			name <- i.getAttrVal('name'),
+			final<- i.getAttrVal('final'),
+			id <- i.getAttrVal('id'),
+			annotation <- i.getElementsByName('annotation').first(),
+			restriction <- i.getElementsByName('restriction').first(),
+			list <- i.getElementsByName('list').first(),
+			union <- i.getElementsByName('union').first()
+		)
+}
+
+-- Rule ' Element2List'
+-- Create Element List(XML SCHEMA) from XML Element
+rule Element2List {	
+	from
+		i : XML!Element	(
+			i.name = 'list' or i.name.endsWith(':list')
+		)
+	to
+		o : WSDL!List (    
+			itemType <-thisModule.getXMLReference('simpleType',
+						i.getAttrVal('itemType')),
+			primitiveType <- thisModule.getPrimitiveType(i.getAttrVal('itemType')),
+			id <- i.getAttrVal('id'),
+			annotation <- i.getElementsByName('annotation').first(),
+			simpleType <- i.getElementsByName('simpleType').first()
+		)
+}
+
+-- Rule 'Element2Union'
+-- Create Element Union(XML SCHEMA) from XML Element
+rule Element2Union {	
+	from
+		i : XML!Element	(
+			i.name = 'union' or i.name.endsWith(':union')
+		)
+	to
+		o : WSDL!Union (    
+			id <- i.getAttrVal('id'),
+			memberTypes <- i.getAttrVal('memberTypes'),
+			annotation <- i.getElementsByName('annotation').first(),
+			simpleType <- i.getElementsByName('simpleType')
+		)
+}
+
+-- Rule 'Element2Restriction'
+-- Create Element Restriction(XML SCHEMA) from XML Element
+rule Element2Restriction {	
+	from
+		i : XML!Element	(
+			i.name = 'restriction' or i.name.endsWith(':restriction')
+		)
+	to
+		o : WSDL!Restriction (    
+			base <- thisModule.getTypeRef(i.getAttrVal('base'),'c'),
+			id <- i.getAttrVal('id'),
+			primitiveType <- thisModule.getPrimitiveType(i.getAttrVal('base')),
+			annotation <- i.getElementsByName('annotation').first(),
+			all <- i.getElementsByName('all').first(),
+			choice <- i.getElementsByName('choice').first(),
+			sequenceDef <- i.getElementsByName('sequence').first(),
+			group <- i.getElementsByName('group').first(),
+			simpleType <- i.getElementsByName('simpleType').first(),
+			minExclusive <- i.getElementsByName('minExclusive').first(),
+			minInclusive <- i.getElementsByName('minInclusive').first(),
+			maxExclusive <- i.getElementsByName('maxExclusive').first(),
+			maxInclusive <- i.getElementsByName('maxInclusive').first(),
+			totalDigits <- i.getElementsByName('totalDigits').first(),
+			fractionDigits <- i.getElementsByName('fractionDigits').first(),
+			pattern <- i.getElementsByName('pattern').first(),
+			enumeration <- i.getElementsByName('enumeration').first(),
+			whiteSpace <- i.getElementsByName('whiteSpace').first(),
+			length <- i.getElementsByName('length').first(),
+			maxLength <- i.getElementsByName('maxLength').first(),
+			minLength <- i.getElementsByName('minLength').first(),
+			attribute <- i.getElementsByName('attribute'),
+			attributeGroup <- i.getElementsByName('attributeGroup'),
+			anyAttribute <- i.getElementsByName('anyAttribute').first()
+		)
+}
+
+-- Rule 'Element2MinExclusive'
+-- Create Element MinExclusive(XML SCHEMA) from XML Element
+rule Element2MinExclusive {	
+	from
+		i : XML!Element	(
+			i.name = 'minExclusive' or i.name.endsWith(':minExclusive')
+		)
+	to
+		o : WSDL!MinExclusive (    
+			value <- i.getAttrVal('value'),
+			id <- i.getAttrVal('id'),
+			fixed <- i.getBooleanAttrVal('fixed'),
+			annotation <- i.getElementsByName('annotation').first()
+		)
+}
+
+-- Rule 'Element2MinInclusive'
+-- Create Element MinInclusive(XML SCHEMA) from XML Element
+rule Element2MinInclusive {	
+	from
+		i : XML!Element	(
+			i.name = 'minInclusive' or i.name.endsWith(':minInclusive')
+		)
+	to
+		o : WSDL!MinInclusive (    
+			value <- i.getAttrVal('value'),
+			id <- i.getAttrVal('id'),
+			fixed <- i.getBooleanAttrVal('fixed'),
+			annotation <- i.getElementsByName('annotation').first()
+		)
+}
+
+-- Rule 'Element2MaxExclusive'
+-- Create Element MaxExclusive(XML SCHEMA) from XML Element
+rule Element2MaxExclusive {	
+	from
+		i : XML!Element	(
+			i.name = 'maxExclusive' or i.name.endsWith(':maxExclusive')
+		)
+	to
+		o : WSDL!MaxExclusive (    
+			value <- i.getAttrVal('value'),
+			id <- i.getAttrVal('id'),
+			fixed <- i.getBooleanAttrVal('fixed'),
+			annotation <- i.getElementsByName('annotation').first()
+		)
+}
+
+-- Rule 'Element2MaxInclusive'
+-- Create Element MaxInclusive(XML SCHEMA) from XML Element
+rule Element2MaxInclusive {	
+	from
+		i : XML!Element	(
+			i.name = 'maxInclusive' or i.name.endsWith(':maxInclusive')
+		)
+	to
+		o : WSDL!MaxInclusive (    
+			value <- i.getAttrVal('value'),
+			id <- i.getAttrVal('id'),
+			fixed <- i.getBooleanAttrVal('fixed'),
+			annotation <- i.getElementsByName('annotation').first()
+		)
+}
+
+-- Rule 'Element2TotalDigits'
+-- Create Element TotalDigits(XML SCHEMA) from XML Element
+rule Element2TotalDigits {	
+	from
+		i : XML!Element	(
+			i.name = 'totalDigits' or i.name.endsWith(':totalDigits')
+		)
+	to
+		o : WSDL!TotalDigits (    
+			value <- i.getAttrVal('value'),
+			id <- i.getAttrVal('id'),
+			fixed <- i.getBooleanAttrVal('fixed'),
+			annotation <- i.getElementsByName('annotation').first()
+		)
+}
+
+-- Rule 'Element2FractionDigits'
+-- Create Element FractionDigits(XML SCHEMA) from XML Element
+rule Element2FractionDigits {	
+	from
+		i : XML!Element	(
+			i.name = 'fractionDigits' or i.name.endsWith(':fractionDigits')
+		)
+	to
+		o : WSDL!FractionDigits (    
+			value <- i.getAttrVal('value'),
+			id <- i.getAttrVal('id'),
+			fixed <- i.getBooleanAttrVal('fixed'),
+			annotation <- i.getElementsByName('annotation').first()
+		)
+}
+
+-- Rule 'Element2Pattern'
+-- Create Element Pattern(XML SCHEMA) from XML Element
+rule Element2Pattern {	
+	from
+		i : XML!Element	(
+			i.name = 'pattern' or i.name.endsWith(':pattern')
+		)
+	to
+		o : WSDL!Pattern  (    
+			value <- i.getAttrVal('value'),
+			id <- i.getAttrVal('id'),
+			annotation <- i.getElementsByName('annotation').first()
+		)
+}
+
+-- Rule 'Element2Enumeration'
+-- Create Element Enumeration(XML SCHEMA) from XML Element
+rule Element2Enumeration {	
+	from
+		i : XML!Element	(
+			i.name = 'enumeration' or i.name.endsWith(':enumeration')
+		)
+	to
+		o : WSDL!Enumeration  (    
+			value <- i.getAttrVal('value'),
+			id <- i.getAttrVal('id'),
+			annotation <- i.getElementsByName('annotation').first()
+		)
+}
+
+-- Rule 'Element2WhiteSpace'
+-- Create Element WhiteSpace(XML SCHEMA) from XML Element
+rule Element2WhiteSpace {	
+	from
+		i : XML!Element	(
+			i.name = 'whiteSpace' or i.name.endsWith(':whiteSpace')
+		)
+	to
+		o : WSDL!WhiteSpace (    
+			value <- i.getAttrVal('value'),
+			id <- i.getAttrVal('id'),
+			fixed <- i.getBooleanAttrVal('fixed'),
+			annotation <- i.getElementsByName('annotation').first()
+		)
+}
+
+-- Rule 'Element2Length'
+-- Create Element Length(XML SCHEMA) from XML Element
+rule Element2Length {	
+	from
+		i : XML!Element	(
+			i.name = 'length' or i.name.endsWith(':length')
+		)
+	to
+		o : WSDL!Length (    
+			value <- i.getAttrVal('value'),
+			id <- i.getAttrVal('id'),
+			fixed <- i.getBooleanAttrVal('fixed'),
+			annotation <- i.getElementsByName('annotation').first()
+		)
+}
+
+-- Rule 'Element2MaxLength'
+-- Create Element MaxLength(XML SCHEMA) from XML Element
+rule Element2MaxLength {	
+	from
+		i : XML!Element	(
+			i.name = 'maxLength' or i.name.endsWith(':maxLength')
+		)
+	to
+		o : WSDL!MaxLength (    
+			value <- i.getAttrVal('value'),
+			id <- i.getAttrVal('id'),
+			fixed <- i.getBooleanAttrVal('fixed'),
+			annotation <- i.getElementsByName('annotation').first()
+		)
+}
+
+-- Rule 'Element2MinLength'
+-- Create Element MinLength(XML SCHEMA) from XML Element
+rule Element2MinLength {	
+	from
+		i : XML!Element	(
+			i.name = 'minLength' or i.name.endsWith(':minLength')
+		)
+	to
+	o : WSDL!MinLength (    
+		value <- i.getAttrVal('value'),
+		id <- i.getAttrVal('id'),
+		fixed <- i.getBooleanAttrVal('fixed'),
+		annotation <- i.getElementsByName('annotation').first()
+	)
+}
+
+---------------
+-- WSDL RULES--
+---------------
+
+-- Rule 'Root2Definitions'
+-- Create WSDL Definitions from XML Root
+rule Root2Definitions {
+	from
+		i : XML!Root(
+			i.name = 'definitions' or i.name.endsWith(':definitions')
+		)
+	to
+		o : WSDL!Definitions  (
+			binding <- i.getElementsByName('binding'),
+			service <- i.getElementsByName('service'),
+			portType <- i.getElementsByName('portType'),
+			message <- i.getElementsByName('message'),
+			types <- i.getElementsByName('types').first(),
+			documentation <-i.getElementsByName('documentation').first(),
+			import <- i.getElementsByName('import'),
+			name <- i.getAttrVal('name'),
+			targetNamespace <- i.getAttrVal('targetNamespace')
+		)do{
+			thisModule.createElements();
+		}
+}
+
+-- Rule 'Element2ElementType'
+-- Create WSDL Types from XML Element
+rule Element2ElementType {
+	from
+		i : XML!Element (
+			i.name = 'types' or i.name.endsWith(':types')
+		)		
+	to
+		o : WSDL!ElementType (                 
+				schema <- i.getElementsByName('schema'),
+				documentation <-i.getElementsByName('documentation').first()
+		)
+}
+
+-- Rule 'Element2Message'
+-- Create WSDL Message from XML Element
+rule Element2Message {	
+	from
+		i : XML!Element	(
+			i.name = 'message' or i.name.endsWith(':message')
+		)
+	to
+		o : WSDL!Message (    
+			name <- i.getAttrVal('name'),
+			part <- i.getElementsByName('part'),
+			documentation <-i.getElementsByName('documentation').first()
+		)
+}
+
+-- Rule 'Element2Part'
+-- Create WSDL Part from XML Element
+rule Element2Part {
+	from
+		i : XML!Element (
+			(i.name = 'part' or i.name.endsWith(':part')) and
+			if i.parent <> OclUndefined then
+				if i.parent.name='message' or 
+				i.parent.name.endsWith(':message') then
+					true
+				else
+					false
+				endif
+			else
+				false
+			endif
+		)
+	to
+		o : WSDL!Part (
+			name <- i.getAttrVal('name'),
+			element <- thisModule.getWSDLReference('element',i.getAttrVal('element')),
+			type <- thisModule.getTypeRef(i.getAttrVal('type'),'c')
+		)
+}
+
+-- Rule 'Element2PortType'
+-- Create WSDL PortType from XML Element
+rule Element2PortType {
+	from 
+		i : XML!Element (
+			i.name = 'portType' or i.name.endsWith(':portType')
+		)	
+	to
+		o : WSDL!PortType (
+			name <- i.getAttrVal('name'),
+			operation <- i.getElementsByName('operation'),
+			documentation <-i.getElementsByName('documentation').first()
+		) 
+}
+
+-- Rule 'Element2PortTypeOperation'
+-- Create WSDL PortTypeOperation from XML Element
+rule Element2PortTypeOperation{
+	from
+		i : XML!Element (
+			(i.name = 'operation' or i.name.endsWith(':operation')) and
+			if i.parent <> OclUndefined then
+				if i.parent.name='portType' or 
+				i.parent.name.endsWith(':portType') then
+					true
+				else
+					false
+				endif
+			else
+				false
+			endif
+		)
+	to
+		o : WSDL!PortTypeOperation (
+			name <- i.getAttrVal('name'),
+			input <- i.getElementsByName('input').first(),
+			output <- i.getElementsByName('output').first(),
+			fault <- i.getElementsByName('fault'),
+			documentation <-i.getElementsByName('documentation').first()
+		)
+}
+
+-- Rule 'Element2PortTypeInput'
+-- Create WSDL PortTypeInput from XML Element
+rule Element2PortTypeInput{
+	from
+		i : XML!Element (
+			(i.name = 'input' or i.name.endsWith(':input')) and
+			if i.parent <> OclUndefined then
+				if i.parent.parent <> OclUndefined then
+					if i.parent.parent.name='portType' or 
+					i.parent.parent.name.endsWith(':portType') then
+					true
+					else
+						false
+					endif
+				else
+					false
+				endif
+			else
+				false
+			endif
+		)
+	to
+		o : WSDL!PortTypeInput (
+			message <- thisModule.getWSDLReference('message',i.getAttrVal('message')),
+			name <- i.getAttrVal('name'),
+			documentation <-i.getElementsByName('documentation').first()
+		)
+}
+
+-- Rule 'Element2PortTypeOutput'
+-- Create WSDL PortTypeOutput from XML Element
+rule Element2PortTypeOutput{
+	from
+		i : XML!Element (
+			(i.name = 'output' or i.name.endsWith(':output')) and
+			if i.parent <> OclUndefined then
+				if i.parent.parent <> OclUndefined then
+					if i.parent.parent.name='portType' or 
+					i.parent.parent.name.endsWith(':portType') then
+					true
+					else
+						false
+					endif
+				else
+					false
+				endif
+			else
+				false
+			endif
+		)
+	to
+		o : WSDL!PortTypeOutput (
+			message <- thisModule.getWSDLReference('message',i.getAttrVal('message')),
+			name <- i.getAttrVal('name'),
+			documentation <-i.getElementsByName('documentation').first()
+		)
+}
+
+-- Rule 'Element2PortTypeFault'
+-- Create WSDL PortTypeFault from XML Element
+rule Element2PortTypeFault{
+	from
+		i : XML!Element (
+			(i.name = 'fault' or i.name.endsWith(':fault')) and
+			if i.parent <> OclUndefined then
+				if i.parent.parent <> OclUndefined then
+					if i.parent.parent.name='portType' or 
+					i.parent.parent.name.endsWith(':portType') then
+						true
+					else
+						false
+					endif
+				else
+					false
+				endif
+			else
+				false
+			endif
+		)
+	to
+		o : WSDL!PortTypeFault (
+			name <- i.getAttrVal('name'),
+			message <- thisModule.getWSDLReference('message',i.getAttrVal('message')),
+			documentation <-i.getElementsByName('documentation').first()
+		)
+}
+
+-- Rule 'Element2Binding'
+-- Create WSDL Binding from XML Element
+rule Element2Binding {
+	from
+		i : XML!Element(
+			(i.name = 'binding' or i.name.endsWith(':binding')) and
+			i.parent=thisModule.rootElt 
+		)
+	to
+		o : WSDL!Binding (
+			name <- i.getAttrVal('name'),
+			type <- thisModule.getWSDLReference('portType',i.getAttrVal('type')),
+			operation <- i.getElementsByName('operation'),
+			documentation <-i.getElementsByName('documentation').first(),
+			soapbinding <- i.getElementsByName(thisModule.getPrefix('soap','binding')).first(),
+			httpbinding <- i.getElementsByName(thisModule.getPrefix('http','binding')).first()
+		)
+}
+
+-- Rule 'Element2BindingOperation'
+-- Create WSDL BindingOperation from XML Element
+rule Element2BindingOperation{
+	from
+		i : XML!Element (
+			(i.name = 'operation' or i.name.endsWith(':operation')) and
+			if i.parent <> OclUndefined then
+				if i.parent.name='binding' or 
+				i.parent.name.endsWith(':binding') then
+					true
+				else
+					false
+				endif
+			else
+				false
+			endif
+		)
+	to
+		o : WSDL!BindingOperation (
+			name <- i.getAttrVal('name'),
+			input <- i.getElementsByName('input').first(),
+			output <- i.getElementsByName('output').first(),
+			fault <- i.getElementsByName('fault'),
+			documentation <-i.getElementsByName('documentation').first(),
+			soapoperation <-i.getElementsByName(thisModule.getPrefix('soap','operation')).first(),
+			httpoperation <-i.getElementsByName(thisModule.getPrefix('http','operation')).first()
+		)
+}
+
+-- Rule 'Element2BindingInput'
+-- Create WSDL BindingInput from XML Element
+rule Element2BindingInput{
+	from
+		i : XML!Element (
+			(i.name = 'input' or i.name.endsWith(':input')) and
+			if i.parent <> OclUndefined then
+				if i.parent.parent <> OclUndefined then
+					if i.parent.parent.name='binding' or 
+					i.parent.parent.name.endsWith(':binding') then
+					true
+					else
+						false
+					endif
+				else
+					false
+				endif
+			else
+				false
+			endif
+		)
+	to
+		o : WSDL!BindingInput (
+			documentation <-i.getElementsByName('documentation').first(),
+			body <- i.getElementsByName('body'),
+			header <- i.getElementsByName('header'),
+			urlReplacement <-i.getElementsByName('urlReplacement').first(),
+			urlEncoded <-i.getElementsByName('urlEncoded').first(),
+			multipartRelated <-i.getElementsByName('multipartRelated'),
+			content <-i.getElementsByName('content'),
+			mimeXml <-i.getElementsByName('mimeXml')
+		)
+}
+
+-- Rule 'Element2BindingOutput'
+-- Create WSDL BindingOutput from XML Element
+rule Element2BindingOutput{
+	from
+		i : XML!Element (
+			(i.name = 'output' or i.name.endsWith(':output')) and
+			if i.parent <> OclUndefined then
+				if i.parent.parent <> OclUndefined then
+					if i.parent.parent.name='binding' or 
+					i.parent.parent.name.endsWith(':binding') then
+					true
+					else
+						false
+					endif
+				else
+					false
+				endif
+			else
+				false
+			endif
+		)
+	to
+		o : WSDL!BindingOutput (
+			documentation <-i.getElementsByName('documentation').first(),
+			urlReplacement <-i.getElementsByName('urlReplacement').first(),
+			urlEncoded <-i.getElementsByName('urlEncoded').first(),
+			body <- i.getElementsByName('body'),
+			header <- i.getElementsByName('header'),
+			multipartRelated <-i.getElementsByName('multipartRelated'),
+			content <-i.getElementsByName('content'),
+			mimeXml <-i.getElementsByName('mimeXml')
+		)
+}
+
+-- Rule 'Element2BindingFault'
+-- Create WSDL BindingFault from XML Element
+rule Element2BindingFault{
+	from
+		i : XML!Element (
+			(i.name = 'fault' or i.name.endsWith(':fault')) and
+			if i.parent <> OclUndefined then
+				if i.parent.parent <> OclUndefined then
+					if i.parent.parent.name='binding' or 
+					i.parent.parent.name.endsWith(':binding') then
+					true
+					else
+						false
+					endif
+				else
+					false
+				endif
+			else
+				false
+			endif
+		)
+	to
+		o : WSDL!BindingFault (
+			name <- i.getAttrVal('name'),
+			fault <- i.getElementsByName('fault').first(),
+			urlReplacement <-i.getElementsByName('urlReplacement').first(),
+			urlEncoded <-i.getElementsByName('urlEncoded').first(),
+			documentation <-i.getElementsByName('documentation').first(),
+			body <- i.getElementsByName('body'),
+			header <- i.getElementsByName('header'),
+			multipartRelated <-i.getElementsByName('multipartRelated'),
+			content <-i.getElementsByName('content'),
+			mimeXml <-i.getElementsByName('mimeXml')
+		)
+}
+
+-- Rule 'Element2Service'
+-- Create WSDL Service from XML Element
+rule Element2Service {
+	from
+		i : XML!Element (
+			i.name = 'service' or i.name.endsWith(':service')
+		)
+	to
+		o : WSDL!Service (
+			name <- i.getAttrVal('name'),
+			port <- i.getElementsByName('port'),
+			documentation <-i.getElementsByName('documentation').first()
+		)
+}
+
+-- Rule 'Element2Port'
+-- Create WSDL Port from XML Element
+rule Element2Port {
+	from
+		i : XML!Element (
+			i.name = 'port' or i.name.endsWith(':port')
+		)
+	to
+		o : WSDL!Port (
+			name <- i.getAttrVal('name'),
+			binding <- thisModule.getWSDLReference('binding',i.getAttrVal('binding')),
+			documentation <-i.getElementsByName('documentation').first(),
+			soapAddress<- i.getElementsByName(thisModule.getPrefix('soap','address')).first(),
+			httpAddress<- i.getElementsByName(thisModule.getPrefix('http','address')).first()
+		)
+}
+
+-- Rule 'Element2Import'
+-- Create WSDL Import from XML Element
+rule Element2Import {
+	from
+		i : XML!Element (
+			(i.name = 'import' or i.name.endsWith(':import')) and
+			i.parent=thisModule.rootElt
+		)
+	to
+	o : WSDL!Import (
+		namespace <- i.getAttrVal('namespace'),
+		location <- i.getAttrVal('location')
+	)	
+}
+
+-- Rule 'Element2Documentation'
+-- Create WSDL Documentation from XML Element
+rule Element2Documentation {
+	from
+		i : XML!Element (
+			(i.name = 'documentation' or i.name.endsWith(':documentation')) and 
+			if i.parent <> OclUndefined then
+				if i.parent.name <> 'annotation' and
+				i.parent.name.endsWith(':annotation')=false then
+					true
+				else
+					false
+				endif
+			else
+				false
+			endif
+		)
+	to
+		o : WSDL!Documentation (
+			text <- i.getChildren('#text')
+		)	
+}
+
+-- Rule 'Text2Text'
+-- Create WSDL Text from XML Text
+rule Text2Text {
+	from
+		i : XML!Text (
+			i.name = '#text' and 
+			if i.parent <> OclUndefined then
+				if i.parent.name='documentation' or 
+				i.parent.name.endsWith(':documentation') then
+					true
+				else
+					false
+				endif
+			else
+				false
+			endif
+		)
+	to
+		o : WSDL!Text (
+			text <- i.value
+		)	
+}
+
+-- Rule 'Element2Namespace'
+-- Create WSDL Namespace from XML Attribute begining for xmlns
+rule Element2Namespace {
+	from
+		i : XML!Attribute (
+			i.name.startsWith('xmlns') and i.parent=thisModule.rootElt 
+		)
+	to
+		o : WSDL!Namespace (
+			name <- i.name,
+			value <- thisModule.rootElt.getAttrVal(i.name),
+			definition <-i.parent
+		)	
+}
+
+--------------------
+-- WSDL SOAP RULES--
+--------------------
+
+-- Rule 'Element2BindingSOAP'
+-- Create Element Binding(SOAP) from XML Element
+rule Element2BindingSOAP {
+	from
+		i : XML!Element (
+			i.name=thisModule.getPrefix('soap','binding') and 
+			i.parent<>thisModule.rootElt 
+		)
+	to
+		o : WSDL!BindingSOAP (
+			style <- i.getAttrVal('style'),
+			transport <- i.getAttrVal('transport')
+		)
+}
+
+-- Rule 'Element2OperationSOAP'
+-- Create Element Operation(SOAP) from XML Element
+rule Element2OperationSOAP {
+	from
+		i : XML!Element (
+			i.name=thisModule.getPrefix('soap','operation') and 
+			if i.parent <> OclUndefined then
+				if i.parent.name='operation' or 
+				i.parent.name.endsWith(':operation') then
+					true
+				else
+					false
+				endif
+			else
+				false
+			endif
+		)
+	to
+		o : WSDL!OperationSOAP (
+			soapAction <- i.getAttrVal('soapAction'),
+			style <- i.getAttrVal('style')	
+		)
+}
+
+-- Rule 'Element2BodySOAP'
+-- Create Element Body(SOAP) from XML Element
+rule Element2BodySOAP {
+	from
+		i : XML!Element (
+			i.name = 'body' or i.name.endsWith(':body')
+		)
+	to
+		o : WSDL!BodySOAP (
+			parts <- i.getAttrVal('parts'),
+			use <- i.getAttrVal('use'),
+			encodingStyle <- i.getAttrVal('encodingStyle'),
+			namespace <- i.getAttrVal('namespace')
+		)
+}
+
+-- Rule 'Element2HeaderSOAP'
+-- Create Element Header(SOAP) from XML Element
+rule Element2HeaderSOAP {
+	from
+		i : XML!Element (
+			i.name = 'header' or i.name.endsWith(':header')
+		)
+	to
+		o : WSDL!HeaderSOAP (
+			message <- thisModule.getXMLReference('message',i.getAttrVal('message')),
+			part <- i.getAttrVal('part'),
+			use <- i.getAttrVal('use'),
+			encodingStyle <- i.getAttrVal('encodingStyle'),
+			namespace <- i.getAttrVal('namespace'),
+			headerfault <- i.getElementsByName('headerfault')
+		)
+}
+
+-- Rule 'Element2HeaderFaultSOAP'
+-- Create Element HeaderFault(SOAP) from XML Element
+rule Element2HeaderFaultSOAP {
+	from
+		i : XML!Element (
+			i.name = 'headerfault' or i.name.endsWith(':headerfault')
+		)
+	to
+		o : WSDL!HeaderFaultSOAP (
+			message <- thisModule.getXMLReference('message',i.getAttrVal('message')),
+			part <- i.getAttrVal('part'),
+			use <- i.getAttrVal('use'),
+			encodingStyle <- i.getAttrVal('encodingStyle'),
+			namespace <- i.getAttrVal('namespace')
+		)
+}
+
+-- Rule 'Element2AddressSOAP'
+-- Create Element Address(SOAP) from XML Element
+rule Element2AddressSOAP {
+	from
+		i : XML!Element (
+			i.name=thisModule.getPrefix('soap','address') and 
+			if i.parent <> OclUndefined then
+				if i.parent.name='port' or 
+				i.parent.name.endsWith(':port') then
+					true
+				else
+					false
+				endif
+			else
+				false
+			endif
+		)
+	to
+		o : WSDL!AddressSOAP (
+			location <- i.getAttrVal('location')
+		)	
+}
+
+-- Rule 'Element2FaultSOAP'
+-- Create Element Fault(SOAP) from XML Element
+rule Element2FaultSOAP {
+	from
+		i : XML!Element (
+			(i.name = 'fault' or i.name.endsWith(':fault')) and 
+			if i.parent <> OclUndefined then
+				if i.parent.name = 'fault' or
+				i.parent.name.endsWith(':fault') then
+					true
+				else
+					false
+				endif
+			else
+				false
+			endif
+		)
+	to
+		o : WSDL!FaultSOAP (
+			name <- i.getAttrVal('name'),
+			use <- i.getAttrVal('use'),
+			encodingStyle <- i.getAttrVal('encodingStyle'),
+			namespace <- i.getAttrVal('namespace')
+		)
+}
+--------------------
+-- WSDL HTTP RULES--
+--------------------
+
+-- Rule 'Element2BindingHTTP'
+-- Create Element Binding(HTTP) from XML Element
+rule Element2BindingHTTP {
+	from
+		i : XML!Element (
+			i.name=thisModule.getPrefix('http','binding') and 
+			i.parent<>thisModule.rootElt 
+		)
+	to
+		o : WSDL!BindingHTTP (
+			verb <- i.getAttrVal('verb')
+		)	
+}
+
+-- Rule 'Element2OperationHTTP'
+-- Create Element Operation(HTTP) from XML Element
+rule Element2OperationHTTP {
+	from
+		i : XML!Element (
+			i.name = thisModule.getPrefix('http','operation')and 
+			if i.parent <> OclUndefined then
+				if i.parent.name='operation' or 
+				i.parent.name.endsWith(':operation') then
+					true
+				else
+					false
+				endif
+			else
+				false
+			endif
+		)
+	to
+		o : WSDL!OperationHTTP (
+			location <- i.getAttrVal('location')
+		)	
+}
+
+-- Rule 'Element2AddressHTTP'
+-- Create Element Address(HTTP) from XML Element
+rule Element2AddressHTTP {
+	from
+		i : XML!Element (
+			i.name=thisModule.getPrefix('http','address') and 
+			if i.parent <> OclUndefined then
+				if i.parent.name='port' or 
+				i.parent.name.endsWith(':port') then
+					true
+				else
+					false
+				endif
+			else
+				false
+			endif
+		)
+	to
+		o : WSDL!AddressHTTP (
+			location <- i.getAttrVal('location')
+		)	
+}
+
+-- Rule 'Element2URLEncoded'
+-- Create Element URLEncoded(HTTP) from XML Element
+rule Element2URLEncoded {
+	from
+		i : XML!Element (
+			i.name = 'urlEncoded' or i.name.endsWith(':urlEncoded')
+		)
+	to
+		o : WSDL!URLEncoded()	
+}
+
+-- Rule 'Element2URLReplacement'
+-- Create Element URLReplacement(HTTP) from XML Element
+rule Element2URLReplacement {
+	from
+		i : XML!Element (
+			i.name = 'urlReplacement' or i.name.endsWith(':urlReplacement')
+		)
+	to
+		o : WSDL!URLReplacement()	
+}
+
+--------------------
+-- WSDL MIME RULES--
+--------------------
+
+-- Rule 'Element2MIMEMultiPartRelated'
+-- Create Element MultiPartRelated(MIME) from XML Element
+rule Element2MIMEMultiPartRelated {
+	from
+		i : XML!Element (
+			i.name = 'multipartRelated' or i.name.endsWith(':multipartRelated')
+		)
+	to
+		o : WSDL!MIMEMultiPartRelated (
+			part<- i.getElementsByName('part')
+		)	
+}
+
+-- Rule 'Element2MIMEPart'
+-- Create Element Part(MIME) from XML Element
+rule Element2MIMEPart {
+	from
+		i : XML!Element (
+			(i.name= 'part' or i.name.endsWith(':part')) and
+			if i.parent <> OclUndefined then
+				if i.parent.name = 'multipartRelated' or
+				i.parent.name.endsWith(':multipartRelated') then
+					true
+				else
+					false
+				endif
+			else
+				false
+			endif
+		)
+	to
+		o : WSDL!MIMEPart (
+			content<- i.getElementsByName('content'),
+			mimeXml<- i.getElementsByName('mimeXml'),
+			body<- i.getElementsByName('body')
+		)
+}
+
+-- Rule 'Element2MIMEContent'
+-- Create Element Content(MIME) from XML Element
+rule Element2MIMEContent {
+	from
+		i : XML!Element (
+			i.name = 'content' or i.name.endsWith(':content')
+		)
+	to
+		o : WSDL!MIMEContent (
+			part <- i.getAttrVal('part'),
+			type <- i.getAttrVal('type')
+		)
+}
+
+-- Rule 'Element2MIMEXml'
+-- Create Element mimeXml(MIME) from XML Element
+rule Element2MIMEXml {
+	from
+		i : XML!Element (
+			i.name = 'mimeXml' or i.name.endsWith(':mimeXml')
+		)
+	to
+		o : WSDL!MIMEXml (
+			part <- i.getAttrVal('part')
+		)
+}
+
+---------------
+---LAZY RULE---
+---------------
+
+-- Rule 'createElementImported'
+-- Create element that is used for the element part of message when are imported
+lazy rule createElementImported{
+	from i : XML!Attribute
+	to o : WSDL!ElementImported(
+		name <-if i.value <> '#none' then 
+			thisModule.getNameElementImported(i.value) else '#none' endif,
+		url <- if  i.value <> '#none' then 
+			thisModule.getURLElementImported(i.value) else OclUndefined endif,
+		namespace <- if i.value <> '#none' then 
+			thisModule.getNamespace(i.value) else OclUndefined endif,
+		part <- thisModule.getParentElements(i),
+		orig <- i.name
+	)
+}
