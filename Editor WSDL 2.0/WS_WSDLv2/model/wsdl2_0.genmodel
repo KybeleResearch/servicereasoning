@@ -1,0 +1,561 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/WS_WSDLv2/src"
+    modelPluginID="WS_WSDLv2" modelName="Wsdl2_0" importerID="org.eclipse.emf.importer.ecore"
+    complianceLevel="6.0" copyrightFields="false">
+  <foreignModel>wsdl2_0.ecore</foreignModel>
+  <genPackages prefix="WSDL2_0" disposableProviderFactory="true" loadInitialization="true"
+      literalsInterface="false" fileExtensions="wsdlv2" ecorePackage="wsdl2_0.ecore#/">
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="wsdl2_0.ecore#//formValues">
+      <genEnumLiterals ecoreEnumLiteral="wsdl2_0.ecore#//formValues/unset"/>
+      <genEnumLiterals ecoreEnumLiteral="wsdl2_0.ecore#//formValues/qualified"/>
+      <genEnumLiterals ecoreEnumLiteral="wsdl2_0.ecore#//formValues/unqualified"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="wsdl2_0.ecore#//usesValues">
+      <genEnumLiterals ecoreEnumLiteral="wsdl2_0.ecore#//usesValues/unset"/>
+      <genEnumLiterals ecoreEnumLiteral="wsdl2_0.ecore#//usesValues/prohibited"/>
+      <genEnumLiterals ecoreEnumLiteral="wsdl2_0.ecore#//usesValues/optional"/>
+      <genEnumLiterals ecoreEnumLiteral="wsdl2_0.ecore#//usesValues/required"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="wsdl2_0.ecore#//processContentsValue">
+      <genEnumLiterals ecoreEnumLiteral="wsdl2_0.ecore#//processContentsValue/unset"/>
+      <genEnumLiterals ecoreEnumLiteral="wsdl2_0.ecore#//processContentsValue/skip"/>
+      <genEnumLiterals ecoreEnumLiteral="wsdl2_0.ecore#//processContentsValue/lax"/>
+      <genEnumLiterals ecoreEnumLiteral="wsdl2_0.ecore#//processContentsValue/strict"/>
+    </genEnums>
+    <genClasses ecoreClass="wsdl2_0.ecore#//Schema">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//Schema/targetNamespace"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//Schema/version"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//Schema/nds"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//Schema/nsSchema"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//Schema/finalDefault"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//Schema/blockDefault"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//Schema/id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//Schema/elementFormDefault"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//Schema/attributeFormDefault"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//Schema/xml_lang"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//Schema/include"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//Schema/import"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//Schema/redefine"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//Schema/annotation"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//Schema/simpleType"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//Schema/complexType"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//Schema/element"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//Schema/attribute"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//Schema/attributeGroup"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//Schema/group"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//Schema/notation"/>
+    </genClasses>
+    <genClasses ecoreClass="wsdl2_0.ecore#//AdicionalInformationType">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//AdicionalInformationType/primitiveType"/>
+    </genClasses>
+    <genClasses ecoreClass="wsdl2_0.ecore#//TypeRef"/>
+    <genClasses ecoreClass="wsdl2_0.ecore#//IncludeXMLSchema">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//IncludeXMLSchema/schemaLocation"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//IncludeXMLSchema/id"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//IncludeXMLSchema/annotation"/>
+    </genClasses>
+    <genClasses ecoreClass="wsdl2_0.ecore#//ImportXMLSchema">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//ImportXMLSchema/namespace"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//ImportXMLSchema/schemaLocation"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//ImportXMLSchema/id"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//ImportXMLSchema/annotation"/>
+    </genClasses>
+    <genClasses ecoreClass="wsdl2_0.ecore#//Redefine">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//Redefine/schemaLocation"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//Redefine/id"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//Redefine/annotation"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//Redefine/simpleType"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//Redefine/complexType"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//Redefine/attributeGroup"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//Redefine/group"/>
+    </genClasses>
+    <genClasses ecoreClass="wsdl2_0.ecore#//Annotation">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//Annotation/appinfo"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//Annotation/documentation"/>
+    </genClasses>
+    <genClasses ecoreClass="wsdl2_0.ecore#//ComplexType">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//ComplexType/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//ComplexType/id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//ComplexType/abstractDef"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//ComplexType/final"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//ComplexType/block"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//ComplexType/mixed"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//ComplexType/annotation"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//ComplexType/simpleContent"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//ComplexType/complexContent"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//ComplexType/all"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//ComplexType/choice"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//ComplexType/sequenceDef"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//ComplexType/group"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//ComplexType/attribute"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//ComplexType/attributeGroup"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//ComplexType/anyAttribute"/>
+    </genClasses>
+    <genClasses ecoreClass="wsdl2_0.ecore#//Element">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//Element/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//Element/id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//Element/minOccurs"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//Element/maxOccurs"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//Element/nillable"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//Element/abstractDef"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//Element/final"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//Element/block"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//Element/default"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//Element/fixed"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//Element/form"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//Element/annotation"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//Element/complexType"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//Element/simpleType"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//Element/uniqueDef"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//Element/key"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//Element/keyref"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//Element/ref"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//Element/substitutionGroup"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//Element/type"/>
+    </genClasses>
+    <genClasses ecoreClass="wsdl2_0.ecore#//ElementImported">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//ElementImported/url"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//ElementImported/namespace"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//ElementImported/message"/>
+    </genClasses>
+    <genClasses ecoreClass="wsdl2_0.ecore#//Attribute">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//Attribute/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//Attribute/id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//Attribute/use"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//Attribute/default"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//Attribute/fixed"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//Attribute/form"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//Attribute/annotation"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//Attribute/simpleType"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//Attribute/ref"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//Attribute/type"/>
+    </genClasses>
+    <genClasses ecoreClass="wsdl2_0.ecore#//AttributeGroup">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//AttributeGroup/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//AttributeGroup/id"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//AttributeGroup/annotation"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//AttributeGroup/attribute"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//AttributeGroup/attributeGroup"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//AttributeGroup/anyAttribute"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//AttributeGroup/ref"/>
+    </genClasses>
+    <genClasses ecoreClass="wsdl2_0.ecore#//Group">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//Group/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//Group/minOccurs"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//Group/maxOccurs"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//Group/id"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//Group/annotation"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//Group/all"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//Group/choice"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//Group/sequenceDef"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//Group/ref"/>
+    </genClasses>
+    <genClasses ecoreClass="wsdl2_0.ecore#//Notation">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//Notation/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//Notation/id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//Notation/public"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//Notation/system"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//Notation/annotation"/>
+    </genClasses>
+    <genClasses ecoreClass="wsdl2_0.ecore#//SimpleContent">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//SimpleContent/id"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//SimpleContent/annotation"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//SimpleContent/restriction"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//SimpleContent/extension"/>
+    </genClasses>
+    <genClasses ecoreClass="wsdl2_0.ecore#//ComplexContent">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//ComplexContent/mixed"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//ComplexContent/id"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//ComplexContent/annotation"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//ComplexContent/restriction"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//ComplexContent/extension"/>
+    </genClasses>
+    <genClasses ecoreClass="wsdl2_0.ecore#//Unique">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//Unique/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//Unique/id"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//Unique/annotation"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//Unique/selector"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//Unique/field"/>
+    </genClasses>
+    <genClasses ecoreClass="wsdl2_0.ecore#//Key">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//Key/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//Key/id"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//Key/annotation"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//Key/selector"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//Key/field"/>
+    </genClasses>
+    <genClasses ecoreClass="wsdl2_0.ecore#//KeyRef">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//KeyRef/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//KeyRef/id"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//KeyRef/annotation"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//KeyRef/selector"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//KeyRef/field"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//KeyRef/refer"/>
+    </genClasses>
+    <genClasses ecoreClass="wsdl2_0.ecore#//AnyAttribute">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//AnyAttribute/namespace"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//AnyAttribute/processContents"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//AnyAttribute/id"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//AnyAttribute/annotation"/>
+    </genClasses>
+    <genClasses ecoreClass="wsdl2_0.ecore#//Extension">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//Extension/id"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//Extension/annotation"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//Extension/all"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//Extension/choice"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//Extension/sequenceDef"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//Extension/group"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//Extension/attribute"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//Extension/attributeGroup"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//Extension/anyAttribute"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//Extension/base"/>
+    </genClasses>
+    <genClasses ecoreClass="wsdl2_0.ecore#//Selector">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//Selector/xpath"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//Selector/id"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//Selector/annotation"/>
+    </genClasses>
+    <genClasses ecoreClass="wsdl2_0.ecore#//Field">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//Field/xpath"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//Field/id"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//Field/annotation"/>
+    </genClasses>
+    <genClasses ecoreClass="wsdl2_0.ecore#//AppInfo">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//AppInfo/source"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//AppInfo/id"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//AppInfo/any"/>
+    </genClasses>
+    <genClasses ecoreClass="wsdl2_0.ecore#//DocumentationXMLSchema">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//DocumentationXMLSchema/source"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//DocumentationXMLSchema/id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//DocumentationXMLSchema/xml_lang"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//DocumentationXMLSchema/any"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//DocumentationXMLSchema/text"/>
+    </genClasses>
+    <genClasses ecoreClass="wsdl2_0.ecore#//Any">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//Any/namespace"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//Any/processContents"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//Any/minOccurs"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//Any/maxOccurs"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//Any/id"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//Any/annotation"/>
+    </genClasses>
+    <genClasses ecoreClass="wsdl2_0.ecore#//All">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//All/minOccurs"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//All/maxOccurs"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//All/id"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//All/annotation"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//All/element"/>
+    </genClasses>
+    <genClasses ecoreClass="wsdl2_0.ecore#//Choice">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//Choice/minOccurs"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//Choice/maxOccurs"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//Choice/id"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//Choice/annotation"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//Choice/element"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//Choice/group"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//Choice/choice"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//Choice/sequenceDef"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//Choice/any"/>
+    </genClasses>
+    <genClasses ecoreClass="wsdl2_0.ecore#//SequenceType">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//SequenceType/minOccurs"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//SequenceType/maxOccurs"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//SequenceType/id"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//SequenceType/annotation"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//SequenceType/element"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//SequenceType/group"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//SequenceType/choice"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//SequenceType/sequenceDef"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//SequenceType/any"/>
+    </genClasses>
+    <genClasses ecoreClass="wsdl2_0.ecore#//SimpleType">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//SimpleType/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//SimpleType/final"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//SimpleType/id"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//SimpleType/annotation"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//SimpleType/restriction"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//SimpleType/list"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//SimpleType/union"/>
+    </genClasses>
+    <genClasses ecoreClass="wsdl2_0.ecore#//List">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//List/id"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//List/annotation"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//List/simpleType"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//List/itemType"/>
+    </genClasses>
+    <genClasses ecoreClass="wsdl2_0.ecore#//Union">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//Union/id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//Union/memberTypes"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//Union/annotation"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//Union/simpleType"/>
+    </genClasses>
+    <genClasses ecoreClass="wsdl2_0.ecore#//Restriction">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//Restriction/id"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//Restriction/annotation"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//Restriction/all"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//Restriction/choice"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//Restriction/sequenceDef"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//Restriction/group"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//Restriction/simpleType"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//Restriction/minExclusive"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//Restriction/minInclusive"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//Restriction/maxExclusive"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//Restriction/maxInclusive"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//Restriction/totalDigits"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//Restriction/fractionDigits"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//Restriction/pattern"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//Restriction/enumeration"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//Restriction/whiteSpace"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//Restriction/length"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//Restriction/maxLength"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//Restriction/minLength"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//Restriction/attribute"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//Restriction/attributeGroup"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//Restriction/anyAttribute"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//Restriction/base"/>
+    </genClasses>
+    <genClasses ecoreClass="wsdl2_0.ecore#//MinInclusive">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//MinInclusive/value"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//MinInclusive/id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//MinInclusive/fixed"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//MinInclusive/annotation"/>
+    </genClasses>
+    <genClasses ecoreClass="wsdl2_0.ecore#//MinExclusive">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//MinExclusive/value"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//MinExclusive/id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//MinExclusive/fixed"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//MinExclusive/annotation"/>
+    </genClasses>
+    <genClasses ecoreClass="wsdl2_0.ecore#//MaxInclusive">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//MaxInclusive/value"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//MaxInclusive/id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//MaxInclusive/fixed"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//MaxInclusive/annotation"/>
+    </genClasses>
+    <genClasses ecoreClass="wsdl2_0.ecore#//MaxExclusive">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//MaxExclusive/value"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//MaxExclusive/id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//MaxExclusive/fixed"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//MaxExclusive/annotation"/>
+    </genClasses>
+    <genClasses ecoreClass="wsdl2_0.ecore#//TotalDigits">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//TotalDigits/value"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//TotalDigits/id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//TotalDigits/fixed"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//TotalDigits/annotation"/>
+    </genClasses>
+    <genClasses ecoreClass="wsdl2_0.ecore#//FractionDigits">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//FractionDigits/value"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//FractionDigits/id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//FractionDigits/fixed"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//FractionDigits/annotation"/>
+    </genClasses>
+    <genClasses ecoreClass="wsdl2_0.ecore#//Pattern">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//Pattern/value"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//Pattern/id"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//Pattern/annotation"/>
+    </genClasses>
+    <genClasses ecoreClass="wsdl2_0.ecore#//Enumeration">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//Enumeration/value"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//Enumeration/id"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//Enumeration/annotation"/>
+    </genClasses>
+    <genClasses ecoreClass="wsdl2_0.ecore#//WhiteSpace">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//WhiteSpace/value"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//WhiteSpace/id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//WhiteSpace/fixed"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//WhiteSpace/annotation"/>
+    </genClasses>
+    <genClasses ecoreClass="wsdl2_0.ecore#//Length">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//Length/value"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//Length/id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//Length/fixed"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//Length/annotation"/>
+    </genClasses>
+    <genClasses ecoreClass="wsdl2_0.ecore#//MaxLength">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//MaxLength/value"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//MaxLength/id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//MaxLength/fixed"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//MaxLength/annotation"/>
+    </genClasses>
+    <genClasses ecoreClass="wsdl2_0.ecore#//MinLength">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//MinLength/value"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//MinLength/id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//MinLength/fixed"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//MinLength/annotation"/>
+    </genClasses>
+    <genClasses ecoreClass="wsdl2_0.ecore#//Text">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//Text/text"/>
+    </genClasses>
+    <genClasses ecoreClass="wsdl2_0.ecore#//Object">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//Object/documentation"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//Object/elementImported"/>
+    </genClasses>
+    <genClasses ecoreClass="wsdl2_0.ecore#//Description">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//Description/targetNamespace"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//Description/import"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//Description/include"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//Description/types"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//Description/interface"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//Description/binding"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//Description/service"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//Description/namespace"/>
+    </genClasses>
+    <genClasses ecoreClass="wsdl2_0.ecore#//Interface">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//Interface/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//Interface/styleDefault"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//Interface/fault"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//Interface/operation"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//Interface/extendsDef"/>
+    </genClasses>
+    <genClasses ecoreClass="wsdl2_0.ecore#//InterfaceFault">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//InterfaceFault/name"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//InterfaceFault/element"/>
+    </genClasses>
+    <genClasses ecoreClass="wsdl2_0.ecore#//InterfaceOperation">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//InterfaceOperation/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//InterfaceOperation/pattern"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//InterfaceOperation/style"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//InterfaceOperation/wsdlx_safe"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//InterfaceOperation/wrpc_signature"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//InterfaceOperation/input"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//InterfaceOperation/output"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//InterfaceOperation/infault"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//InterfaceOperation/outfault"/>
+    </genClasses>
+    <genClasses ecoreClass="wsdl2_0.ecore#//InterfaceInput">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//InterfaceInput/messageLabel"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//InterfaceInput/element"/>
+    </genClasses>
+    <genClasses ecoreClass="wsdl2_0.ecore#//InterfaceOutput">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//InterfaceOutput/messageLabel"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//InterfaceOutput/element"/>
+    </genClasses>
+    <genClasses ecoreClass="wsdl2_0.ecore#//InterfaceInfault">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//InterfaceInfault/messageLabel"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//InterfaceInfault/ref"/>
+    </genClasses>
+    <genClasses ecoreClass="wsdl2_0.ecore#//InterfaceOutfault">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//InterfaceOutfault/messageLabel"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//InterfaceOutfault/ref"/>
+    </genClasses>
+    <genClasses ecoreClass="wsdl2_0.ecore#//Binding">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//Binding/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//Binding/type"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//Binding/wsoap_version"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//Binding/wsoap_protocol"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//Binding/whttp_methodDefault"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//Binding/wsoap_mepDefault"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//Binding/whttp_queryParameterSeparatorDefault"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//Binding/whttp_cookies"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//Binding/whttp_contentEncodingDefault"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//Binding/fault"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//Binding/operation"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//Binding/wsoap_module"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//Binding/interface"/>
+    </genClasses>
+    <genClasses ecoreClass="wsdl2_0.ecore#//BindingFault">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//BindingFault/wsoap_code"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//BindingFault/wsoap_subcodes"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//BindingFault/whttp_code"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//BindingFault/whttp_contentEncoding"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//BindingFault/wsoap_module"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//BindingFault/wsoap_header"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//BindingFault/whttp_header"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//BindingFault/ref"/>
+    </genClasses>
+    <genClasses ecoreClass="wsdl2_0.ecore#//BindingOperation">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//BindingOperation/wsoap_mep"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//BindingOperation/wsoap_action"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//BindingOperation/whttp_location"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//BindingOperation/whttp_method"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//BindingOperation/whttp_inputSerialization"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//BindingOperation/whttp_outputSerialization"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//BindingOperation/whttp_faultSerialization"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//BindingOperation/whttp_queryParameterSeparator"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//BindingOperation/whttp_contentEncodingDefault"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//BindingOperation/whttp_ignoreUncited"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//BindingOperation/input"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//BindingOperation/output"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//BindingOperation/infault"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//BindingOperation/outfault"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//BindingOperation/wsoap_module"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//BindingOperation/ref"/>
+    </genClasses>
+    <genClasses ecoreClass="wsdl2_0.ecore#//BindingInput">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//BindingInput/messageLabel"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//BindingInput/whttp_contentEncoding"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//BindingInput/wsoap_module"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//BindingInput/wsoap_header"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//BindingInput/whttp_header"/>
+    </genClasses>
+    <genClasses ecoreClass="wsdl2_0.ecore#//BindingOutput">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//BindingOutput/messageLabel"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//BindingOutput/whttp_contentEncoding"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//BindingOutput/wsoap_module"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//BindingOutput/wsoap_header"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//BindingOutput/whttp_header"/>
+    </genClasses>
+    <genClasses ecoreClass="wsdl2_0.ecore#//BindingInfault">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//BindingInfault/messageLabel"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//BindingInfault/ref"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//BindingInfault/wsoap_module"/>
+    </genClasses>
+    <genClasses ecoreClass="wsdl2_0.ecore#//BindingOutfault">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//BindingOutfault/messageLabel"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//BindingOutfault/ref"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//BindingOutfault/wsoap_module"/>
+    </genClasses>
+    <genClasses ecoreClass="wsdl2_0.ecore#//Service">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//Service/name"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//Service/endpointDef"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//Service/interface"/>
+    </genClasses>
+    <genClasses ecoreClass="wsdl2_0.ecore#//EndPoint">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//EndPoint/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//EndPoint/address"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//EndPoint/whttp_authenticationScheme"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//EndPoint/whttp_authenticationRealm"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//EndPoint/binding"/>
+    </genClasses>
+    <genClasses ecoreClass="wsdl2_0.ecore#//ElementType">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//ElementType/import"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//ElementType/schema"/>
+    </genClasses>
+    <genClasses ecoreClass="wsdl2_0.ecore#//Include">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//Include/location"/>
+    </genClasses>
+    <genClasses ecoreClass="wsdl2_0.ecore#//Import">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//Import/namespace"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//Import/location"/>
+    </genClasses>
+    <genClasses ecoreClass="wsdl2_0.ecore#//Documentation">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//Documentation/text"/>
+    </genClasses>
+    <genClasses ecoreClass="wsdl2_0.ecore#//Namespace">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//Namespace/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//Namespace/value"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference wsdl2_0.ecore#//Namespace/description"/>
+    </genClasses>
+    <genClasses ecoreClass="wsdl2_0.ecore#//Wsoap_Module">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//Wsoap_Module/ref"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//Wsoap_Module/required"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//Wsoap_Module/documentation"/>
+    </genClasses>
+    <genClasses ecoreClass="wsdl2_0.ecore#//Wsoap_Header">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//Wsoap_Header/mustUnderstand"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//Wsoap_Header/required"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//Wsoap_Header/documentation"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//Wsoap_Header/element"/>
+    </genClasses>
+    <genClasses ecoreClass="wsdl2_0.ecore#//Whttp_Header">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//Whttp_Header/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//Whttp_Header/type"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wsdl2_0.ecore#//Whttp_Header/required"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wsdl2_0.ecore#//Whttp_Header/documentation"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>

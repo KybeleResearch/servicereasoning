@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+
+<!--
+ <copyright>
+ </copyright>
+
+ $Id$
+-->
+
+<plugin>
+
+   <extension point="org.eclipse.ui.newWizards">
+      <category
+            id="org.eclipse.emf.ecore.Wizard.category.ID"
+            name="%_UI_Wizard_category"/>
+      <wizard
+            id="WSDL2_0.presentation.WSDL2_0ModelWizardID"
+            name="%_UI_WSDL2_0ModelWizard_label"
+            class="WSDL2_0.presentation.WSDL2_0ModelWizard"
+            category="org.eclipse.emf.ecore.Wizard.category.ID"
+            icon="icons/full/obj16/WSDL2_0ModelFile.gif">
+         <description>%_UI_WSDL2_0ModelWizard_description</description>
+         <selection class="org.eclipse.core.resources.IResource"/>
+      </wizard>
+   </extension>
+
+   <extension point="org.eclipse.ui.editors">
+      <editor
+            id="WSDL2_0.presentation.WSDL2_0EditorID"
+            name="%_UI_WSDL2_0Editor_label"
+            icon="icons/full/obj16/WSDL2_0ModelFile.gif"
+            extensions="wsdlv2"
+            class="WSDL2_0.presentation.WSDL2_0Editor"
+            contributorClass="WSDL2_0.presentation.WSDL2_0ActionBarContributor">
+      </editor>
+   </extension>
+
+</plugin>
