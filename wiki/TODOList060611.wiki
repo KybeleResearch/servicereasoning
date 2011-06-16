@@ -1,5 +1,5 @@
-#summary Updated TO-DO List - 10 June, 2011
 #labels Phase-Requirements
+* #summary Updated TO-DO List - 10 June, 2011
 
 = Introduction =
 
@@ -21,3 +21,4 @@ To write down a refining transformation.
   * It consumes two ASD models (S1 and S2) and generates an annotated copy of one of them (S1'). 
   * The annotations will state whether there is a matching element in S2 for each element in S1
   * If so, it will state also whether there is a subtype/supertype/none relationship between those matching elements.
+  * To that end, we add an annotation whose key is 'Typing' and whose value will be [SUB/SUPER/NONE]
