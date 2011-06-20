@@ -1,0 +1,279 @@
+module ServiceAnnotation;
+create Contract : ASD refining Prov : ASD, Cons : ASD;
+
+helper def: ProvElements : Sequence(ASD!NamedElement) = ASD!NamedElement.allInstancesFrom('Prov');
+
+helper def: ConsElements : Sequence(ASD!NamedElement) = ASD!NamedElement.allInstancesFrom('Cons');
+
+helper context ASD!NamedElement def: getMatchingElementByName(): ASD!NamedElement =
+	if (thisModule.ConsElements->includes(self)) then
+		thisModule.ProvElements->select(aux | aux.name = self.name)->first()
+	else
+		thisModule.ConsElements->select(aux | aux.name = self.name)->first()
+	endif;
+
+-------------- Operation Helpers-------------------------
+
+helper context ASD!Operation def: isSubTypeOf_Operation(aux: ASD!Operation): Boolean =
+	if ((self.name = aux.name and self.messagePattern.toString().isSubTypeOf_MessagePattern(aux.messagePattern.toString()) and
+	aux.contents.size() <= self.contents.size()))then
+		true
+	else
+		false
+	endif;
+
+helper context String def: isSubTypeOf_MessagePattern(aux: String): Boolean =
+	if self=aux then
+		true
+	else
+		if (self = 'oneway' and (aux='request-response' or aux='oneway')) or 
+		(self = 'notification' and (aux='solicit-response'or aux='notification')) then 
+			true
+		else
+			false
+		endif
+	endif;
+
+-------------- Message Helpers--------------------------
+
+helper context ASD!Message def: isSubTypeOf_Message(aux: ASD!Message): Boolean =
+	if ((self.name = aux.name) and (self.subset = aux.subset) and (self.role = aux.role) and (aux.infoType->size()<= self.infoType->size()))then
+		true
+	else
+		false
+	endif;
+
+-------------- InfoType Helpers--------------------------
+
+helper context ASD!InfoType def: isSubTypeOf_InfoType(aux: ASD!InfoType): Boolean=
+	if((self.valueType.toString().isSubtypeOf_ValueType(aux.valueType.toString())) and (self.subset= aux.subset) 
+	and (self.isSubTypeOf_SubInfoType(aux)) and (self.isSubTypeOf_RefInfoType(aux)) and (self.name = aux.name)) then 
+		true
+	else
+		false
+	endif;
+
+helper context ASD!InfoType def: isSubTypeOf_SubInfoType(aux: ASD!InfoType): Boolean=
+	if not(self.infoType.oclIsUndefined()) then
+		if not(aux.infoType.oclIsUndefined()) then
+			aux.infoType->size() <= self.infoType->size()
+		else
+			true
+		endif
+	else 
+		if not(aux.infoType.oclIsUndefined()) then
+			false
+		else
+			true
+		endif
+	endif;
+
+helper context ASD!InfoType def: isSubTypeOf_RefInfoType(aux: ASD!InfoType): Boolean=
+	if not(self.ref.oclIsUndefined()) then
+		if not(aux.ref.oclIsUndefined()) then
+			aux.ref->size() <= self.ref->size()
+		else
+			true
+		endif
+	else 
+		if not(aux.ref.oclIsUndefined()) then
+			false
+		else
+			true
+		endif
+	endif;
+
+helper context String def: isSubtypeOf_ValueType(aux: String): Boolean =
+	(aux = 'document') or (aux = 'string' and not (self = 'document')) 
+		or (aux = 'date' and not (self = 'date' or self = 'float')) or
+			(aux = 'double' and (self = 'int' or self = 'float' or self = 'double')) or 
+			(aux = 'float' and (self = 'int' or self = 'float')) or
+			(aux = 'int' and self = 'int')
+	;	
+
+-------------- Assertion Helpers--------------------------
+
+helper context  ASD!Assertion def: isSubtypeOf_Assertion(aux: ASD!Assertion): Boolean =
+	if((self.name= aux.name) and (self.dimension = aux.dimension) and
+	(self.dimensionType = aux.dimensionType) and (self.role = aux.role) and self.isSubtypeOf_Value(aux)) then 
+		true
+	else
+		false
+	endif;
+
+
+helper context  ASD!Assertion def: isSubtypeOf_Value(aux: ASD!Assertion): Boolean =
+	((self.dimensionType = #monotonic) and (self.minVal <= aux.minVal)
+	and (self.maxVal <= aux.maxVal)) or
+	((self.dimensionType = #antitonic) and (self.minVal >= aux.minVal)
+	and (self.maxVal >= aux.maxVal));
+-------------- AssertionSets Helpers--------------------------
+
+helper def: isSubtypeOf_AssertionSet(aux: ASD!AssertionSet): Sequence(Boolean) =
+	aux.assertions->iterate(p; y: Sequence(Boolean)= Sequence{}|
+		if not (p.getMatchingElementByName().oclIsUndefined()) then
+			y->union(Sequence{p.isSubtypeOf_Assertion(p.getMatchingElementByName())})
+		else
+			y
+		endif);
+
+-------------- Profile Helpers--------------------------
+
+helper def: isSubtypeOf_Profile(aux: ASD!Profile): Sequence(Boolean) =
+	aux.sets->iterate(p; y: Sequence(Boolean)= Sequence{}|
+		if not (p.getMatchingElementByName().oclIsUndefined()) then
+			y->union(Sequence{thisModule.isSubtypeOf_AssertionSet(p)})
+		else
+			y
+		endif);
+
+-------Rules-----------------------------------------------
+
+rule AnnotatedOperacion {
+	from
+		o1 : ASD!Operation ( not o1.getMatchingElementByName().oclIsUndefined() and thisModule.ProvElements->includes(o1))
+				
+	to
+		o : ASD!Operation (
+			annotations <- a
+		),
+		a : ASD!Annotation (
+			owner <- o1,
+			key <- 'Typing', 
+			value <- if (o1.isSubTypeOf_Operation(o1.getMatchingElementByName())) and  
+					(not (o1.getMatchingElementByName().isSubTypeOf_Operation(o1)))then 
+						'SUB'
+					 else
+					 	if not (o1.isSubTypeOf_Operation(o1.getMatchingElementByName())) and  
+						(o1.getMatchingElementByName().isSubTypeOf_Operation(o1)) then
+							'SUPER'
+						else
+							'NONE'
+						endif
+					endif
+		)
+}
+
+rule AnnotatedMessage {
+	from
+		m1 : ASD!Message ( not m1.getMatchingElementByName().oclIsUndefined() and thisModule.ProvElements->includes(m1))
+				
+	to
+		m : ASD!Operation (
+			annotations <- a
+		),
+		a : ASD!Annotation (
+			owner <- m1,
+			key <- 'Typing', 
+			value <- if (m1.isSubTypeOf_Message(m1.getMatchingElementByName())) and  
+					(not (m1.getMatchingElementByName().isSubTypeOf_Message(m1)))then 
+						'SUB'
+					 else
+					 	if not (m1.isSubTypeOf_Message(m1.getMatchingElementByName())) and  
+						(m1.getMatchingElementByName().isSubTypeOf_Message(m1)) then
+							'SUPER'
+						else
+							'NONE'
+						endif
+					endif
+		)
+}
+
+rule AnnotatedInfoType {
+	from
+		it1 : ASD!InfoType ( not it1.getMatchingElementByName().oclIsUndefined() and thisModule.ProvElements->includes(it1))
+				
+	to
+		it : ASD!InfoType (
+			annotations <- a
+		),
+		a : ASD!Annotation (
+			owner <- it1,
+			key <- 'Typing', 
+			value <- if (it1.isSubTypeOf_InfoType(it1.getMatchingElementByName())) and  
+					(not (it1.getMatchingElementByName().isSubTypeOf_InfoType(it1)))then 
+						'SUB'
+					 else
+					 	if not (it1.isSubTypeOf_InfoType(it1.getMatchingElementByName())) and  
+						(it1.getMatchingElementByName().isSubTypeOf_InfoType(it1)) then
+							'SUPER'
+						else
+							'NONE'
+						endif
+					endif
+		)
+}
+
+rule AnnotatedAssertion {
+	from
+		as1 : ASD!Assertion ( not as1.getMatchingElementByName().oclIsUndefined() and thisModule.ProvElements->includes(as1))
+				
+	to
+		as : ASD!Assertion(
+			annotations <- a
+		),
+		a : ASD!Annotation (
+			owner <- as1,
+			key <- 'Typing', 
+			value <- if (as1.isSubtypeOf_Assertion(as1.getMatchingElementByName())) and  
+					(not (as1.getMatchingElementByName().isSubtypeOf_Assertion(as1)))then 
+						'SUB'
+					 else
+					 	if not (as1.isSubtypeOf_Assertion(as1.getMatchingElementByName())) and  
+						(as1.getMatchingElementByName().isSubtypeOf_Assertion(as1)) then
+							'SUPER'
+						else
+							'NONE'
+						endif
+					endif
+		)
+}
+
+rule AnnotatedAssertionSet {
+	from
+		as1 : ASD!AssertionSet ( not as1.getMatchingElementByName().oclIsUndefined() and thisModule.ProvElements->includes(as1))
+				
+	to
+		as : ASD!AssertionSet(
+			annotations <- a
+		),
+		a : ASD!Annotation (
+			owner <- as1,
+			key <- 'Typing', 
+			value <- if thisModule.isSubtypeOf_AssertionSet(as1)->forAll(i| i=true) and 
+					 as1.getMatchingElementByName().assertions->size()<= as1.assertions->size()then
+						'SUB'
+					 else
+					 	if thisModule.isSubtypeOf_AssertionSet(as1)->forAll(i | i=false) and 
+						 as1.assertions->size()<= as1.getMatchingElementByName().assertions->size() then
+							'SUPER'
+						else
+							'NONE'
+						endif
+					endif
+		)
+}
+
+rule AnnotatedProfile {
+	from
+		ps1 : ASD!Profile ( not ps1.getMatchingElementByName().oclIsUndefined() and thisModule.ProvElements->includes(ps1))
+				
+	to
+		ps : ASD!Profile(
+			annotations <- a
+		),
+		a : ASD!Annotation (
+			owner <- ps1,
+			key <- 'Typing', 
+			value <- if thisModule.isSubtypeOf_Profile(ps1)->forAll(i | i=true) and 
+						ps1.getMatchingElementByName().sets->size()<= ps1.sets->size()then
+						'SUB'
+					 else
+					 	if thisModule.isSubtypeOf_Profile(ps1)->forAll(i | i=false) then
+							'SUPER'
+						else
+							'NONE'
+						endif
+					endif
+		)
+}
