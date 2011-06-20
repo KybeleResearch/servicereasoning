@@ -1,8 +1,8 @@
-#summary First draft of Annotator, see r91.
+#summary First draft of Annotator
 
 = Introduction =
 
-Created the *ServiceAnnotation* transformation that returns the first model passed as parameter with [sub/super]typing annotations. 
+Created the *ServiceAnnotation* transformation (see r91) that returns the first model passed as parameter with [sub/super]typing annotations. 
 To that end we use the refining mode of ATL that allows returning the very same source model with some changes. Those changes are specified in the transformation rules.
 
 Besides, it's worth noting that we have added some minor changes in the ASD metamodel:
