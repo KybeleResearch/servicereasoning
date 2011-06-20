@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<launchConfiguration type="org.eclipse.m2m.atl.adt.launching.atlTransformation">
+<stringAttribute key="ATL File Name" value="/Annotator/ServiceAnnotation.atl"/>
+<stringAttribute key="ATL VM" value="EMF-specific VM"/>
+<stringAttribute key="ATL_COMPILER" value="atl2006"/>
+<booleanAttribute key="IS_REFINING" value="true"/>
+<mapAttribute key="Input">
+<mapEntry key="Cons" value="ASD"/>
+<mapEntry key="Prov" value="ASD"/>
+</mapAttribute>
+<mapAttribute key="Libs"/>
+<mapAttribute key="Model Handler">
+<mapEntry key="ASD" value="EMF"/>
+</mapAttribute>
+<mapAttribute key="ModelType">
+<mapEntry key="ASD" value="METAMODELOUTPUT"/>
+<mapEntry key="Cons" value="MODELINPUT"/>
+<mapEntry key="Contract" value="MODELOUTPUT"/>
+<mapEntry key="Prov" value="MODELINPUT"/>
+</mapAttribute>
+<mapAttribute key="Options">
+<mapEntry key="OPTION_CLEAR" value="false"/>
+<mapEntry key="OPTION_CONTENT_TYPE" value="false"/>
+<mapEntry key="OPTION_DERIVED" value="true"/>
+<mapEntry key="allowInterModelReferences" value="true"/>
+<mapEntry key="printExecutionTime" value="false"/>
+<mapEntry key="step" value="false"/>
+<mapEntry key="supportUML2Stereotypes" value="false"/>
+</mapAttribute>
+<listAttribute key="OrderedInput">
+<listEntry value="Prov"/>
+<listEntry value="Cons"/>
+</listAttribute>
+<listAttribute key="OrderedOutput">
+<listEntry value="Contract"/>
+</listAttribute>
+<mapAttribute key="Output">
+<mapEntry key="Contract" value="ASD"/>
+</mapAttribute>
+<mapAttribute key="Path">
+<mapEntry key="ASD" value="/Annotator/ASD.ecore"/>
+<mapEntry key="Cons" value="/Annotator/vOriginal-wsdlv1-asd.xmi"/>
+<mapEntry key="Contract" value="/Annotator/vEjem3Annotated.xmi"/>
+<mapEntry key="Prov" value="/Annotator/vEjem3-wsdlv1-asd.xmi"/>
+</mapAttribute>
+<listAttribute key="Superimpose"/>
+</launchConfiguration>
