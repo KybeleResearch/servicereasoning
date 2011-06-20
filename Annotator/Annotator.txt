@@ -1,0 +1,56 @@
+Create a tranformation that return the first model that pass as parameter with typing annotation. 
+For this we use a refining mode of ATL that allows return a input model with the changes that are specified in the rules.
+
+In the metamodel have made some changes, has been included in the element InfoType a references to others InfoTypes (relationship ref), because sometimes defined types that have global validity and can be used by other InfoType. The relationship InfoType now is used for when a type is complex and may contain subtypes within it, in this case these types have local validity, can only be used within the containing InfoType
+
+-----------
+
+--Helpers--
+
+-----------
+
+	- ProvElements : return a sequence with all the elements that belong to Prov.
+
+	- ConsElements : return a sequence with all the elements that belong to Cons.
+
+	-  getMatchingElementByName : return the element with the same name in the other model.
+
+	- isSubTypeOf_Operation: Informs if a operation is subtype of other operation, for this taking into account that the name is the same, the number of message that include is < = of the number of message of the other operation and if the messagePattern is subtype of the messagePattern of the other operation.
+
+	- isSubTypeOf_MessagePattern: Informs if a MessagePattern is subtype of other MessagePattern.
+
+	- isSubTypeOf_Message: Informs if a message is subtype of other message, for this taking into account that the name, the subset and role are the same and the number of InfoTypes that include is < = of the number of InfoType that includes the other message.
+	
+	-isSubTypeOf_InfoType: Informs if a InfoType is subtype of other InfoType, for this taking into account that the name, the subset are the same and the number of InfoTypes that include is < = of the number of InfoType and the refeferences to InfoType are <= that includes in the other InfoType, and the valueType of InfoType is subtype of valueType of the other InfoType.
+
+	-isSubtypeOf_ValueType: Inform if a valueType is subtype of other valueType.
+
+	-isSubTypeOf_Assertion: Informs if a Assertion is subtype of other Assertion, for this taking into account that the name, the role, the dimension an dimensionType are the same and the value is subtype the other value.
+
+	-isSubtypeOf_Value: Inform if a value is subtype of other value.
+
+
+	-isSubtypeOf_AssertionSet: Inform if the assertion than contains are subtype the others assertions. If all the assertions are subtype the other assertion from the other model(Cons) and the number of the assertions from the other model (Cons) is <= of the number of Assertions of the first model(Pro) the element AssertionSet is a subtype.	
+
+	
+	-isSubtypeOf_Profile: Inform if the assertionSet than contains are subtype the others assertionsSet. If all the assertionsSet are subtype the other assertionSet from the other model(Cons) and the number of the assertionsSet from the other model (Cons) is <= of the number of AssertionsSet of the first model(Pro) the element Profile is a subtype.	
+-----------
+
+---rules---
+
+-----------
+
+	- AnnotatedOperation: Adding a annotation to element operation for indicate if one operation from model Prov is subtype or supertype of other operation with the same name from model Cons.
+
+	- AnnotatedMessage: Adding a annotation to element message for indicate if one message from model Prov is subtype or supertype of other message with the same name from model Cons.
+
+	 - AnnotatedInfoType: Adding a annotation to element InfoType for indicate if one InfoType from model Prov is subtype or supertype of other InfoType with the same name from model Cons.
+
+	- AnnotatedAssertion: Adding a annotation to element Assertion for indicate if one Assertion from model Prov is subtype or supertype of other Assertion with the same name from model Cons.
+
+
+	- AnnotatedAssertionSet: Adding a annotation to element AssertionSet for indicate if one AssertionSet from model Prov is subtype or supertype of other AssertionSet with the same name from model Cons.
+
+
+	- AnnotatedProfile: Adding a annotation to element Profile for indicate if one Profile from model Prov is subtype or supertype of other Profile with the same name from model Cons.
+
