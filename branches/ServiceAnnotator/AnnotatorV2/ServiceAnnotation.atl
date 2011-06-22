@@ -248,7 +248,7 @@ rule AnnotatedOperation {
 		)
 }
 
-rule NotMachingAnnotatedOperacion {
+rule NotMachingAnnotatedOperation {
 	from
 		o1 : ASD!Operation (o1.getMatchingElementByName().oclIsUndefined() and thisModule.SourceElements->includes(o1))
 				
