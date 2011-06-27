@@ -1,0 +1,29 @@
+Helpers
+
+- containsAnnotation(value:String) : Boolean : return a boolean value if contains a annotations with the value
+						is equals to the string passed as parameter.
+
+- isFullfilledConditions() : Boolean : return a boolean value for indicate if all the conditions are fullfilled:
+					  
+    - element.Typing=SUB AND element.subset IS NOT 'off' equivalent in not pro.
+    - element.Typing='N/A' AND element.subset='unset'.
+
+Rules
+
+ -Service2Service -> In the output model remains the element ServiceDescription of the Provider.
+
+ - Operation2Operation -> mantains the elements operation that fullfilled the conditions independently of the source model.
+
+ - Message2Message -> maintains the elements message that fullfilled the conditions independently of the source model.
+ 
+ - InfoType2InfoType -> maintains the elements infotypes that fullfilled the conditions independently of the source model.
+
+ - InfoTypeImported2InfoTypeImported -> maintains the elements infotypesImported that fullfilled the conditions independently of the source model.
+
+ - Assertion2Assertion -> maintains the elements assertions that fullfilled the conditions independently of the source model.
+
+ - AssertionsSet2AssertionSet -> maintains the elements assertionsSet that fullfilled the conditions independently of the source model.
+
+ - Profile2Profile -> maintains the elements profile that fullfilled the conditions independently of the source model.
+
+This transformation generate a output model with a list of elements that fulfilled the conditions. In the output model doesn't represent the relationships between the elements because they belong to both input models.

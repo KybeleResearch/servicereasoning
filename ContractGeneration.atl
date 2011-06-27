@@ -1,0 +1,131 @@
+module ContractGeneration;
+create Contract : ASD from Provider : ASD, Client : ASD;
+
+helper context ASD!NamedElement def: containsAnnotation(value:String) : Boolean=
+	if self.annotations->collect(e| e.value)->first()= value then
+		true
+	else 
+		false
+	endif;
+
+helper context ASD!NamedElement def: isFulfilledConditions() : Boolean=
+	if self.containsAnnotation('SUB') then
+		if not (self.subset.oclIsUndefined()) then
+			if (self.subset<>#pro) then 
+				true
+			else
+				false
+			endif
+		else
+			true
+		endif
+	else
+		if(self.containsAnnotation('N/A'))then
+			if not (self.subset.oclIsUndefined()) then
+				if (self.subset=#unset) then 
+					true
+				else
+					false
+				endif
+			else
+				true
+			endif
+		else
+			false
+		endif
+	endif;
+
+--------------------
+------Rules---------
+--------------------
+
+rule Service2Service {
+	from
+		s1 : ASD!ServiceDescription	in Provider
+	to
+		s : ASD!ServiceDescription (
+			name <- s1.name
+		)
+}
+
+rule Operation2Operation {
+	from
+		o1 : ASD!Operation (o1.isFulfilledConditions())
+	to
+		o : ASD!Operation (
+			name <- o1.name,
+			messagePattern <- o1.messagePattern
+		)
+}
+
+
+rule Message2Message {
+	from
+		m1 : ASD!Message (m1.isFulfilledConditions())
+	to
+		m : ASD!Message (
+			name <- m1.name,
+			role <- m1.role,
+			subset <- m1.subset
+		)
+}
+
+rule InfoType2InfoType {
+	from
+		it1 : ASD!InfoType (it1.isFulfilledConditions()and(not it1.oclIsTypeOf(ASD!InfoTypeImported))) 
+	to
+		it : ASD!InfoType (
+			name <- it1.name,
+			subset <- it1.subset,
+			valueType <- it1.valueType,
+			valueRange <- it1.valueRange
+	)
+}
+
+rule InfoTypeImported2InfoTypeImported {
+	from
+		it1 : ASD!InfoTypeImported (it1.isFulfilledConditions()and(it1.oclIsTypeOf(ASD!InfoTypeImported))) 
+	to
+		it : ASD!InfoTypeImported (
+			name <- it1.name,
+			subset <- it1.subset,
+			valueType <- it1.valueType,
+			valueRange <- it1.valueRange,
+			url <- it1.url
+		)
+}
+
+rule Assertion2Assertion {
+	from
+		as1 : ASD!Assertion (as1.isFulfilledConditions()) 
+	to
+		as : ASD!Assertion (
+			name <- as1.name,
+			dimension <- as1.dimension,
+			dimensionType <- as1.dimensionType,
+			minVal <- as1.minVal,
+			maxVal <- as1.maxVal,
+			role <- as1.role,
+			lType <- as1.lType
+		)
+}
+
+rule AssertionSet2AssertionSet {
+	from
+		as1 : ASD!AssertionSet (as1.isFulfilledConditions()) 
+	to
+		as : ASD!AssertionSet (
+			name <- as1.name,
+			lType <- as1.lType
+		)
+}
+
+rule Profile2Profile {
+	from
+		ps1 : ASD!Profile (ps1.isFulfilledConditions())
+	to
+		ps : ASD!Profile (
+			name <- ps1.name,
+			service <- ps1.service
+		)
+}
