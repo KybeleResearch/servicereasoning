@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<ASD:ServiceDescription xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ASD="http://ASD" name="POPService">
+  <operations name="receivePO">
+    <annotations key="Typing" value="NONE"/>
+    <contents name="POMessage" infoType="//@infotypes.1">
+      <annotations key="Typing" value="NONE"/>
+    </contents>
+  </operations>
+  <operations name="receivePOCallBack" messagePattern="notification">
+    <annotations key="Typing" value="NONE"/>
+    <contents name="POMessageAck" role="output" subset="pro" infoType="//@infotypes.0">
+      <annotations key="Typing" value="SUPER"/>
+    </contents>
+  </operations>
+  <infotypes xsi:type="ASD:InfoTypeImported" name="string" valueType="string" subset="pro" message="//@operations.1/@contents.0" url="http://www.w3.org/2001/ XMLSchema">
+    <annotations key="Typing" value="NONE"/>
+  </infotypes>
+  <infotypes name="PODocument" message="//@operations.0/@contents.0">
+    <annotations key="Typing" value="SUPER"/>
+    <infoType name="OrderInfo" valueType="string" valueRange="" subset="unset">
+      <annotations key="Typing" value="NONE"/>
+    </infoType>
+    <infoType name="DeliveryInfo" valueType="string" valueRange="0-?" subset="unset">
+      <annotations key="Typing" value="NONE"/>
+    </infoType>
+  </infotypes>
+  <profiles name="ppro" refers="//@operations.0">
+    <annotations key="Typing" value="NONE"/>
+    <sets name="ass">
+      <annotations key="Typing" value="NONE"/>
+      <assertions name="a1" dimension="pppp" minVal="1.3" maxVal="2.3">
+        <annotations key="Typing" value="SUPER"/>
+      </assertions>
+      <assertions name="a2" dimension="ooo" minVal="1.3" maxVal="0.2">
+        <annotations key="Typing" value="SUB"/>
+      </assertions>
+    </sets>
+  </profiles>
+</ASD:ServiceDescription>
