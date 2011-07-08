@@ -1,0 +1,59 @@
+The project VLDB is divided into the following folders:
+
+- *Metamodel*: contains the metamodel ASD.
+
+- *Transformations*: contains the ATL transformations to generate a annotated model (ServiceAnnotation.atl) and the generator contracts (ContractGeneration.atl).
+
+- *Launchers*: contains two folders:
+
+  * _ContractGeneration_: contains the launcher to generate test examples of ContractGeneration.
+
+  * _ServiceAnnotation_: contains the launcher to generate test examples of ServiceAnnotation.
+
+- *Models*: This folder is divided into three other folders:
+      
+  * _Original_: contains the examples in the paper being prepared (POCliente, POClientEvolution, POService and POServiceEvolution) expressed in ASD models.
+
+  * _Annotated_ : contains the result of the generation of the services annotated.
+
+    o POClientAnnotated: is generated from the model POClient (Source) and POClientEvolution (Target).
+
+    o POClienteEvolutionAnnotated: is generated from the model POClientEvolucion (Source) and POClient (Target).
+
+    o POServiceAnnotated:is generated from the model POService (Source) and POServiceEvolution (Target).
+
+    o POServiceEvolutionAnnotated: is generated from the model POServiceEvolution (Source) and POService (Target).
+
+  * _Contract_: contains the result of the generation contracts.
+
+    o ContractPOClient_POClientEvolution: ContractPOClient_POClientEvolution is generated from models POClientEvolutionAnnotated (Provider) POClientAnnotated (Client).
+
+*Example*: change the configuration of the launcher that generates generating contracts for use the launcher to try others models input.
+
+Select the file GenerateContractModel.launch that is inside /VLDB/Launchers/ContractGeneration and clicking the right mouse button get the following menu:
+
+http://dl.dropbox.com/u/21383948/Launcher1.png
+
+ Select "Run As" and then "Run Configurations ...".
+
+Once this is done open other the window:
+
+http://dl.dropbox.com/u/21383948/Launcher2.png
+
+To change the Provider model should be press the button "Workspace" and select one of the listed models that are generated in /VLDB/Models/Annotated.
+
+The same is done to choose the model client.
+
+Finally change the name of the output model: from /VLDB/Models/Contract/*ContractPOClient_POClientEvolution.xmi* to /VLDB/Models/Contract/*newoutmodel.xmi*
+
+Click on "Apply" then "Run" and the model output will be generated with the new name in the folder /VLDB/Models/Contract.
+
+The same should be done to change the configuration of the launcher that generates annotated models except the input models are in /VLDB/Models/Original and models are saved in the folder /VLDB/Models/Annotated.
+The name of launcher that generates annotated models is “GenerateAnnotatedModel.launch” and is in this folder: VLDB/Launchers/ServiceAnnotation.
+
+
+
+
+
+
+
