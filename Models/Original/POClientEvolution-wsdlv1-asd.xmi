@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<ASD:ServiceDescription xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ASD="http://ASD" name="POPClient">
+  <operations name="receivePO">
+    <contents name="POMessage" infoType="//@infotypes.1"/>
+  </operations>
+  <operations name="receivePOCallBack" messagePattern="notification">
+    <contents name="POMessageAck" role="output" subset="pro" infoType="//@infotypes.0"/>
+  </operations>
+  <infotypes xsi:type="ASD:InfoTypeImported" name="string" valueType="string" subset="pro" message="//@operations.1/@contents.0" url="http://www.w3.org/2001/XMLSchema"/>
+  <infotypes name="PODocument" message="//@operations.0/@contents.0">
+    <infoType name="OrderInfo" valueType="string" valueRange=""/>
+    <infoType name="DeliveryInfo" valueType="string" valueRange=""/>
+    <infoType name="OrderDate" valueType="date" valueRange=""/>
+  </infotypes>
+  <profiles name="pfl1">
+    <sets name="aset1">
+      <assertions name="availability" dimension="assert1" role="expectation" minVal="80.0" maxVal="95.0" subset="exp"/>
+      <assertions name="latency" dimension="assert2" dimensionType="antitonic" role="expectation" minVal="0.2" maxVal="0.3" subset="exp"/>
+      <assertions name="reliability" dimension="assert3" role="expectation" minVal="85.0" maxVal="85.0" subset="exp"/>
+      <assertions name="capacity" dimension="assert4" role="expectation" maxVal="6.0" subset="exp"/>
+    </sets>
+  </profiles>
+</ASD:ServiceDescription>
