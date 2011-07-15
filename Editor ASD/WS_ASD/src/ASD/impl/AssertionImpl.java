@@ -93,7 +93,7 @@ public class AssertionImpl extends NamedElementImpl implements Assertion {
 	 * @generated
 	 * @ordered
 	 */
-	protected static final EEnumIntention ROLE_EDEFAULT = EEnumIntention.PROMISE;
+	protected static final EEnumIntention ROLE_EDEFAULT = EEnumIntention.OFFERING;
 
 	/**
 	 * The cached value of the '{@link #getRole() <em>Role</em>}' attribute.

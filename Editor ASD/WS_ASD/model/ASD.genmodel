@@ -20,7 +20,8 @@
     <genEnums typeSafeEnumCompatible="false" ecoreEnum="ASD.ecore#//EEnumSubset">
       <genEnumLiterals ecoreEnumLiteral="ASD.ecore#//EEnumSubset/req"/>
       <genEnumLiterals ecoreEnumLiteral="ASD.ecore#//EEnumSubset/pro"/>
-      <genEnumLiterals ecoreEnumLiteral="ASD.ecore#//EEnumSubset/unset"/>
+      <genEnumLiterals ecoreEnumLiteral="ASD.ecore#//EEnumSubset/off"/>
+      <genEnumLiterals ecoreEnumLiteral="ASD.ecore#//EEnumSubset/exp"/>
     </genEnums>
     <genEnums typeSafeEnumCompatible="false" ecoreEnum="ASD.ecore#//EEnumValueType">
       <genEnumLiterals ecoreEnumLiteral="ASD.ecore#//EEnumValueType/document"/>
@@ -39,8 +40,8 @@
       <genEnumLiterals ecoreEnumLiteral="ASD.ecore#//EEnumDimensionType/antitonic"/>
     </genEnums>
     <genEnums typeSafeEnumCompatible="false" ecoreEnum="ASD.ecore#//EEnumIntention">
-      <genEnumLiterals ecoreEnumLiteral="ASD.ecore#//EEnumIntention/promise"/>
-      <genEnumLiterals ecoreEnumLiteral="ASD.ecore#//EEnumIntention/obligation"/>
+      <genEnumLiterals ecoreEnumLiteral="ASD.ecore#//EEnumIntention/offering"/>
+      <genEnumLiterals ecoreEnumLiteral="ASD.ecore#//EEnumIntention/expectation"/>
     </genEnums>
     <genClasses ecoreClass="ASD.ecore#//ServiceDescription">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ASD.ecore#//ServiceDescription/operations"/>

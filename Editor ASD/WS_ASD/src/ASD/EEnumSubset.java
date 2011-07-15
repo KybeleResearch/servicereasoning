@@ -43,14 +43,24 @@ public enum EEnumSubset implements Enumerator {
 	PRO(0, "pro", "pro"),
 
 	/**
-	 * The '<em><b>Unset</b></em>' literal object.
+	 * The '<em><b>Off</b></em>' literal object.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #UNSET_VALUE
+	 * @see #OFF_VALUE
 	 * @generated
 	 * @ordered
 	 */
-	UNSET(0, "unset", "unset");
+	OFF(0, "off", "off"),
+
+	/**
+	 * The '<em><b>Exp</b></em>' literal object.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #EXP_VALUE
+	 * @generated
+	 * @ordered
+	 */
+	EXP(0, "exp", "exp");
 
 	/**
 	 * The '<em><b>Req</b></em>' literal value.
@@ -83,19 +93,34 @@ public enum EEnumSubset implements Enumerator {
 	public static final int PRO_VALUE = 0;
 
 	/**
-	 * The '<em><b>Unset</b></em>' literal value.
+	 * The '<em><b>Off</b></em>' literal value.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of '<em><b>Unset</b></em>' literal object isn't clear,
+	 * If the meaning of '<em><b>Off</b></em>' literal object isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @see #UNSET
-	 * @model name="unset"
+	 * @see #OFF
+	 * @model name="off"
 	 * @generated
 	 * @ordered
 	 */
-	public static final int UNSET_VALUE = 0;
+	public static final int OFF_VALUE = 0;
+
+	/**
+	 * The '<em><b>Exp</b></em>' literal value.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of '<em><b>Exp</b></em>' literal object isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @see #EXP
+	 * @model name="exp"
+	 * @generated
+	 * @ordered
+	 */
+	public static final int EXP_VALUE = 0;
 
 	/**
 	 * An array of all the '<em><b>EEnum Subset</b></em>' enumerators.
@@ -107,7 +132,8 @@ public enum EEnumSubset implements Enumerator {
 		new EEnumSubset[] {
 			REQ,
 			PRO,
-			UNSET,
+			OFF,
+			EXP,
 		};
 
 	/**
