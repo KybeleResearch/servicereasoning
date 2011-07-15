@@ -18,7 +18,7 @@ helper context ASD!NamedElement def: isFulfilledConditions() : Boolean=
 			endif
 		else
 			true
-		endif
+		endif	
 	else
 		if(self.containsAnnotation('N/A'))then
 			if not (self.subset.oclIsUndefined()) then
