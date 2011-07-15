@@ -27,7 +27,7 @@ import org.eclipse.emf.common.util.EList;
  * </p>
  *
  * @see ASD.ASDPackage#getInfoType()
- * @model annotation="gmf.node label='name' figure='ellipse' color='255,255,153' border.color='0,0,0' border.style='dot'"
+ * @model
  * @generated
  */
 public interface InfoType extends NamedElement {
@@ -127,7 +127,6 @@ public interface InfoType extends NamedElement {
 	 * @return the value of the '<em>Info Type</em>' containment reference list.
 	 * @see ASD.ASDPackage#getInfoType_InfoType()
 	 * @model containment="true"
-	 *        annotation="gmf.link source.decoration='square' target.decoration='square' style='dash' tool.description='Relationship between InfoTypes'"
 	 * @generated
 	 */
 	EList<InfoType> getInfoType();

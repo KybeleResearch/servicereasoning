@@ -23,54 +23,54 @@ import org.eclipse.emf.common.util.Enumerator;
  */
 public enum EEnumIntention implements Enumerator {
 	/**
-	 * The '<em><b>Promise</b></em>' literal object.
+	 * The '<em><b>Offering</b></em>' literal object.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #PROMISE_VALUE
+	 * @see #OFFERING_VALUE
 	 * @generated
 	 * @ordered
 	 */
-	PROMISE(0, "promise", "promise"),
+	OFFERING(0, "offering", "offering"),
 
 	/**
-	 * The '<em><b>Obligation</b></em>' literal object.
+	 * The '<em><b>Expectation</b></em>' literal object.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #OBLIGATION_VALUE
+	 * @see #EXPECTATION_VALUE
 	 * @generated
 	 * @ordered
 	 */
-	OBLIGATION(1, "obligation", "obligation");
+	EXPECTATION(1, "expectation", "expectation");
 
 	/**
-	 * The '<em><b>Promise</b></em>' literal value.
+	 * The '<em><b>Offering</b></em>' literal value.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of '<em><b>Promise</b></em>' literal object isn't clear,
+	 * If the meaning of '<em><b>Offering</b></em>' literal object isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @see #PROMISE
-	 * @model name="promise"
+	 * @see #OFFERING
+	 * @model name="offering"
 	 * @generated
 	 * @ordered
 	 */
-	public static final int PROMISE_VALUE = 0;
+	public static final int OFFERING_VALUE = 0;
 
 	/**
-	 * The '<em><b>Obligation</b></em>' literal value.
+	 * The '<em><b>Expectation</b></em>' literal value.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of '<em><b>Obligation</b></em>' literal object isn't clear,
+	 * If the meaning of '<em><b>Expectation</b></em>' literal object isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @see #OBLIGATION
-	 * @model name="obligation"
+	 * @see #EXPECTATION
+	 * @model name="expectation"
 	 * @generated
 	 * @ordered
 	 */
-	public static final int OBLIGATION_VALUE = 1;
+	public static final int EXPECTATION_VALUE = 1;
 
 	/**
 	 * An array of all the '<em><b>EEnum Intention</b></em>' enumerators.
@@ -80,8 +80,8 @@ public enum EEnumIntention implements Enumerator {
 	 */
 	private static final EEnumIntention[] VALUES_ARRAY =
 		new EEnumIntention[] {
-			PROMISE,
-			OBLIGATION,
+			OFFERING,
+			EXPECTATION,
 		};
 
 	/**
@@ -132,8 +132,8 @@ public enum EEnumIntention implements Enumerator {
 	 */
 	public static EEnumIntention get(int value) {
 		switch (value) {
-			case PROMISE_VALUE: return PROMISE;
-			case OBLIGATION_VALUE: return OBLIGATION;
+			case OFFERING_VALUE: return OFFERING;
+			case EXPECTATION_VALUE: return EXPECTATION;
 		}
 		return null;
 	}

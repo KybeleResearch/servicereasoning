@@ -25,7 +25,6 @@ import org.eclipse.emf.ecore.EReference;
  * <!-- end-user-doc -->
  * @see ASD.ASDFactory
  * @model kind="package"
- *        annotation="gmf foo='bar'"
  * @generated
  */
 public interface ASDPackage extends EPackage {

@@ -23,7 +23,7 @@ import org.eclipse.emf.common.util.EList;
  * </p>
  *
  * @see ASD.ASDPackage#getOperation()
- * @model annotation="gmf.node label='name' figure='rounded' label.placement='external' color='135,206,250' border.width='4' size='200,220'"
+ * @model
  * @generated
  */
 public interface Operation extends NamedElement {
@@ -70,7 +70,6 @@ public interface Operation extends NamedElement {
 	 * @see ASD.ASDPackage#getOperation_Contents()
 	 * @see ASD.Message#getOperation
 	 * @model opposite="operation" containment="true" required="true"
-	 *        annotation="gmf.compartment foo='bar' layout='list'"
 	 * @generated
 	 */
 	EList<Message> getContents();

@@ -23,7 +23,7 @@ import org.eclipse.emf.common.util.EList;
  * </p>
  *
  * @see ASD.ASDPackage#getServiceDescription()
- * @model annotation="gmf.diagram foo='bar' model.extension='model' diagram.extension='model_diagram'"
+ * @model
  * @generated
  */
 public interface ServiceDescription extends NamedElement {

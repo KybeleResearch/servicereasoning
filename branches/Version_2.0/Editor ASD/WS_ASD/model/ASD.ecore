@@ -3,15 +3,7 @@
     xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="ASD"
     nsURI="http://ASD" nsPrefix="ASD">
-  <eAnnotations source="gmf">
-    <details key="foo" value="bar"/>
-  </eAnnotations>
   <eClassifiers xsi:type="ecore:EClass" name="ServiceDescription" eSuperTypes="#//NamedElement">
-    <eAnnotations source="gmf.diagram">
-      <details key="foo" value="bar"/>
-      <details key="model.extension" value="model"/>
-      <details key="diagram.extension" value="model_diagram"/>
-    </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="operations" upperBound="-1"
         eType="#//Operation" containment="true" eOpposite="#//Operation/service"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="infotypes" upperBound="-1"
@@ -20,65 +12,27 @@
         eType="#//Profile" containment="true" eOpposite="#//Profile/service"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Operation" eSuperTypes="#//NamedElement">
-    <eAnnotations source="gmf.node">
-      <details key="label" value="name"/>
-      <details key="figure" value="rounded"/>
-      <details key="label.placement" value="external"/>
-      <details key="color" value="135,206,250"/>
-      <details key="border.width" value="4"/>
-      <details key="size" value="200,220"/>
-    </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="messagePattern" eType="#//EEnumOp"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="contents" lowerBound="1"
-        upperBound="-1" eType="#//Message" containment="true" eOpposite="#//Message/operation">
-      <eAnnotations source="gmf.compartment">
-        <details key="foo" value="bar"/>
-        <details key="layout" value="list"/>
-      </eAnnotations>
-    </eStructuralFeatures>
+        upperBound="-1" eType="#//Message" containment="true" eOpposite="#//Message/operation"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="service" eType="#//ServiceDescription"
         eOpposite="#//ServiceDescription/operations"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Message" eSuperTypes="#//NamedElement">
-    <eAnnotations source="gmf.node">
-      <details key="label" value="name"/>
-      <details key="figure" value="rectangle"/>
-      <details key="color" value="193,255,193"/>
-    </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="role" eType="#//EEnumMes"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="subset" eType="#//EEnumSubset"
         derived="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="infoType" lowerBound="1"
-        upperBound="-1" eType="#//InfoType" eOpposite="#//InfoType/message">
-      <eAnnotations source="gmf.link">
-        <details key="target.decoration" value="arrow"/>
-        <details key="style" value="dot"/>
-        <details key="tool.description" value="Relationship between Message and InfoType"/>
-      </eAnnotations>
-    </eStructuralFeatures>
+        upperBound="-1" eType="#//InfoType" eOpposite="#//InfoType/message"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="operation" eType="#//Operation"
         eOpposite="#//Operation/contents"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="InfoType" eSuperTypes="#//NamedElement">
-    <eAnnotations source="gmf.node">
-      <details key="label" value="name"/>
-      <details key="figure" value="ellipse"/>
-      <details key="color" value="255,255,153"/>
-      <details key="border.color" value="0,0,0"/>
-      <details key="border.style" value="dot"/>
-    </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="valueType" eType="#//EEnumValueType"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="valueRange" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="subset" eType="#//EEnumSubset"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="infoType" upperBound="-1"
-        eType="#//InfoType" containment="true">
-      <eAnnotations source="gmf.link">
-        <details key="source.decoration" value="square"/>
-        <details key="target.decoration" value="square"/>
-        <details key="style" value="dash"/>
-        <details key="tool.description" value="Relationship between InfoTypes"/>
-      </eAnnotations>
-    </eStructuralFeatures>
+        eType="#//InfoType" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="ref" eType="#//InfoType"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="message" upperBound="-1"
         eType="#//Message" eOpposite="#//Message/infoType"/>
@@ -99,7 +53,8 @@
   <eClassifiers xsi:type="ecore:EEnum" name="EEnumSubset">
     <eLiterals name="req" literal="req"/>
     <eLiterals name="pro"/>
-    <eLiterals name="unset"/>
+    <eLiterals name="off" literal="off"/>
+    <eLiterals name="exp" literal="exp"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EEnum" name="EEnumValueType">
     <eLiterals name="document" value="4"/>
@@ -133,8 +88,8 @@
     <eLiterals name="antitonic" value="1"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EEnum" name="EEnumIntention">
-    <eLiterals name="promise"/>
-    <eLiterals name="obligation" value="1"/>
+    <eLiterals name="offering" literal="offering"/>
+    <eLiterals name="expectation" value="1" literal="expectation"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Assertion" eSuperTypes="#//NamedElement">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="dimension" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>

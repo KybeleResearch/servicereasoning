@@ -24,7 +24,7 @@ import org.eclipse.emf.common.util.EList;
  * </p>
  *
  * @see ASD.ASDPackage#getMessage()
- * @model annotation="gmf.node label='name' figure='rectangle' color='193,255,193'"
+ * @model
  * @generated
  */
 public interface Message extends NamedElement {
@@ -100,7 +100,6 @@ public interface Message extends NamedElement {
 	 * @see ASD.ASDPackage#getMessage_InfoType()
 	 * @see ASD.InfoType#getMessage
 	 * @model opposite="message" required="true"
-	 *        annotation="gmf.link target.decoration='arrow' style='dot' tool.description='Relationship between Message and InfoType'"
 	 * @generated
 	 */
 	EList<InfoType> getInfoType();

@@ -912,7 +912,8 @@ public class ASDPackageImpl extends EPackageImpl implements ASDPackage {
 		initEEnum(eEnumSubsetEEnum, EEnumSubset.class, "EEnumSubset");
 		addEEnumLiteral(eEnumSubsetEEnum, EEnumSubset.REQ);
 		addEEnumLiteral(eEnumSubsetEEnum, EEnumSubset.PRO);
-		addEEnumLiteral(eEnumSubsetEEnum, EEnumSubset.UNSET);
+		addEEnumLiteral(eEnumSubsetEEnum, EEnumSubset.OFF);
+		addEEnumLiteral(eEnumSubsetEEnum, EEnumSubset.EXP);
 
 		initEEnum(eEnumValueTypeEEnum, EEnumValueType.class, "EEnumValueType");
 		addEEnumLiteral(eEnumValueTypeEEnum, EEnumValueType.DOCUMENT);
@@ -931,140 +932,11 @@ public class ASDPackageImpl extends EPackageImpl implements ASDPackage {
 		addEEnumLiteral(eEnumDimensionTypeEEnum, EEnumDimensionType.ANTITONIC);
 
 		initEEnum(eEnumIntentionEEnum, EEnumIntention.class, "EEnumIntention");
-		addEEnumLiteral(eEnumIntentionEEnum, EEnumIntention.PROMISE);
-		addEEnumLiteral(eEnumIntentionEEnum, EEnumIntention.OBLIGATION);
+		addEEnumLiteral(eEnumIntentionEEnum, EEnumIntention.OFFERING);
+		addEEnumLiteral(eEnumIntentionEEnum, EEnumIntention.EXPECTATION);
 
 		// Create resource
 		createResource(eNS_URI);
-
-		// Create annotations
-		// gmf
-		createGmfAnnotations();
-		// gmf.diagram
-		createGmf_1Annotations();
-		// gmf.node
-		createGmf_2Annotations();
-		// gmf.compartment
-		createGmf_3Annotations();
-		// gmf.link
-		createGmf_4Annotations();
-	}
-
-	/**
-	 * Initializes the annotations for <b>gmf</b>.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void createGmfAnnotations() {
-		String source = "gmf";		
-		addAnnotation
-		  (this, 
-		   source, 
-		   new String[] {
-			 "foo", "bar"
-		   });							
-	}
-
-	/**
-	 * Initializes the annotations for <b>gmf.diagram</b>.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void createGmf_1Annotations() {
-		String source = "gmf.diagram";			
-		addAnnotation
-		  (serviceDescriptionEClass, 
-		   source, 
-		   new String[] {
-			 "foo", "bar",
-			 "model.extension", "model",
-			 "diagram.extension", "model_diagram"
-		   });						
-	}
-
-	/**
-	 * Initializes the annotations for <b>gmf.node</b>.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void createGmf_2Annotations() {
-		String source = "gmf.node";				
-		addAnnotation
-		  (operationEClass, 
-		   source, 
-		   new String[] {
-			 "label", "name",
-			 "figure", "rounded",
-			 "label.placement", "external",
-			 "color", "135,206,250",
-			 "border.width", "4",
-			 "size", "200,220"
-		   });			
-		addAnnotation
-		  (messageEClass, 
-		   source, 
-		   new String[] {
-			 "label", "name",
-			 "figure", "rectangle",
-			 "color", "193,255,193"
-		   });			
-		addAnnotation
-		  (infoTypeEClass, 
-		   source, 
-		   new String[] {
-			 "label", "name",
-			 "figure", "ellipse",
-			 "color", "255,255,153",
-			 "border.color", "0,0,0",
-			 "border.style", "dot"
-		   });	
-	}
-
-	/**
-	 * Initializes the annotations for <b>gmf.compartment</b>.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void createGmf_3Annotations() {
-		String source = "gmf.compartment";					
-		addAnnotation
-		  (getOperation_Contents(), 
-		   source, 
-		   new String[] {
-			 "foo", "bar",
-			 "layout", "list"
-		   });				
-	}
-
-	/**
-	 * Initializes the annotations for <b>gmf.link</b>.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void createGmf_4Annotations() {
-		String source = "gmf.link";							
-		addAnnotation
-		  (getMessage_InfoType(), 
-		   source, 
-		   new String[] {
-			 "target.decoration", "arrow",
-			 "style", "dot",
-			 "tool.description", "Relationship between Message and InfoType"
-		   });			
-		addAnnotation
-		  (getInfoType_InfoType(), 
-		   source, 
-		   new String[] {
-			 "source.decoration", "square",
-			 "target.decoration", "square",
-			 "style", "dash",
-			 "tool.description", "Relationship between InfoTypes"
-		   });
 	}
 
 } //ASDPackageImpl
