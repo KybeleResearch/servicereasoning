@@ -1,0 +1,439 @@
+module ServiceAnnotation;
+create AnnotatedASD : ASD refining Source : ASD, Target : ASD;
+
+helper def: SourceElements : Sequence(ASD!NamedElement) = ASD!NamedElement.allInstancesFrom('Source');
+
+helper def: TargetElements : Sequence(ASD!NamedElement) = ASD!NamedElement.allInstancesFrom('Target');
+
+helper context ASD!NamedElement def: getMatchingElementByName(): ASD!NamedElement =
+	if (thisModule.TargetElements->includes(self)) then
+		thisModule.SourceElements->select(aux | aux.name = self.name)->first()
+	else
+		thisModule.TargetElements->select(aux | aux.name = self.name)->first()
+	endif;
+
+-------------- Operation Helpers-------------------------
+
+helper context ASD!Operation def: isSubTypeOf_Operation(aux: ASD!Operation): Boolean =
+	if ((self.name = aux.name and self.messagePattern.toString().isSubTypeOf_MessagePattern(aux.messagePattern.toString()) and
+	aux.contents.size() <= self.contents.size()))then
+		true
+	else
+		false
+	endif;
+
+helper context String def: isSubTypeOf_MessagePattern(aux: String): Boolean =
+	if self=aux then
+		true
+	else
+		if (self = 'oneway' and (aux='request-response' or aux='oneway')) or 
+		(self = 'notification' and (aux='solicit-response'or aux='notification')) then 
+			true
+		else
+			false
+		endif
+	endif;
+
+-------------- Message Helpers--------------------------
+
+helper context ASD!Message def: isSubTypeOf_Message(aux: ASD!Message): Boolean =
+	if ((self.name = aux.name) and (self.subset = aux.subset) and (self.role = aux.role) and (aux.infoType->size()<= self.infoType->size()))then
+		true
+	else
+		false
+	endif;
+
+-------------- InfoType Helpers--------------------------
+
+helper context ASD!InfoType def: isSubTypeOf_InfoType(aux: ASD!InfoType): Boolean=
+	if((self.valueType.toString().isSubtypeOf_ValueType(aux.valueType.toString())) and (self.subset= aux.subset) 
+	and (self.isSubTypeOf_SubInfoType(aux)) and (self.isSubTypeOf_RefInfoType(aux)) and (self.name = aux.name)) then 
+		true
+	else
+		false
+	endif;
+
+helper context ASD!InfoType def: isSubTypeOf_SubInfoType(aux: ASD!InfoType): Boolean=
+	if not(self.infoType.oclIsUndefined()) then
+		if not(aux.infoType.oclIsUndefined()) then
+			aux.infoType->size() <= self.infoType->size()
+		else
+			true
+		endif
+	else 
+		if not(aux.infoType.oclIsUndefined()) then
+			false
+		else
+			true
+		endif
+	endif;
+
+helper context ASD!InfoType def: isSubTypeOf_RefInfoType(aux: ASD!InfoType): Boolean=
+	if not(self.ref.oclIsUndefined()) then
+		if not(aux.ref.oclIsUndefined()) then
+			aux.ref->size() <= self.ref->size()
+		else
+			true
+		endif
+	else 
+		if not(aux.ref.oclIsUndefined()) then
+			false
+		else
+			true
+		endif
+	endif;
+
+helper context String def: isSubtypeOf_ValueType(aux: String): Boolean =
+	(aux = 'document') or (aux = 'string' and not (self = 'document')) 
+		or (aux = 'date' and not (self = 'date' or self = 'float')) or
+			(aux = 'double' and (self = 'int' or self = 'float' or self = 'double')) or 
+			(aux = 'float' and (self = 'int' or self = 'float')) or
+			(aux = 'int' and self = 'int')
+	;	
+
+-------------- Assertion Helpers--------------------------
+
+helper context  ASD!Assertion def: isSubtypeOf_Assertion(aux: ASD!Assertion): Boolean =
+	if((self.name= aux.name) and (self.dimension = aux.dimension) and
+	(self.dimensionType = aux.dimensionType) and (self.role = aux.role) and self.isSubtypeOf_Value(aux)) then 
+		true
+	else
+		false
+	endif;
+
+
+helper context  ASD!Assertion def: isSubtypeOf_Value(aux: ASD!Assertion): Boolean =
+	((self.dimensionType = #monotonic) and (self.minVal <= aux.minVal)
+	and (self.maxVal <= aux.maxVal)) or
+	((self.dimensionType = #antitonic) and (self.minVal >= aux.minVal)
+	and (self.maxVal >= aux.maxVal));
+
+-------------- AssertionSets Helpers--------------------------
+
+helper def: isSubtypeOf_AssertionSet(aux: ASD!AssertionSet): Sequence(Integer) =
+	aux.assertions->iterate(p; y: Sequence(Integer)= Sequence{}|
+		if not (p.getMatchingElementByName().oclIsUndefined()) then
+			if(p.isSubtypeOf_Assertion(p.getMatchingElementByName())) then
+				if(p.getMatchingElementByName().isSubtypeOf_Assertion(p)) then
+					y->union(Sequence{2})
+				else
+					y->union(Sequence{1})
+				endif
+			else
+				y->union(Sequence{0})
+			endif
+		else
+			y->union(Sequence{3})
+		endif);
+
+-------------- Profile Helpers--------------------------
+
+helper def: isSubtypeOf_Profile(aux: ASD!Profile): Sequence(Integer) =
+	aux.sets->iterate(p; y: Sequence(Integer)= Sequence{}|
+		if (p.getValueAssertionSet()='SUB')then
+			y->union(Sequence{1})
+		else
+			if(p.getValueAssertionSet()='SUPER')then
+				y->union(Sequence{0})
+			else
+				if(p.getValueAssertionSet()='EQUIV')then
+					y->union(Sequence{2})
+				else
+					y->union(Sequence{3})
+				endif
+			endif
+		endif);
+-------------- Annotation Helpers--------------------------
+helper context ASD!Operation def: getValueOperation(): String=
+	if (self.isSubTypeOf_Operation(self.getMatchingElementByName())) and  
+		(not (self.getMatchingElementByName().isSubTypeOf_Operation(self)))then 
+		'SUB'
+ 	else
+		if not (self.isSubTypeOf_Operation(self.getMatchingElementByName())) and  
+			(self.getMatchingElementByName().isSubTypeOf_Operation(self)) then
+			'SUPER'
+		else
+			'EQUIV'
+		endif
+	endif;
+
+helper context ASD!Message def: getValueMessage(): String=
+	if (self.isSubTypeOf_Message(self.getMatchingElementByName())) and  
+		(not (self.getMatchingElementByName().isSubTypeOf_Message(self)))then 
+		'SUB'
+	else
+		if not (self.isSubTypeOf_Message(self.getMatchingElementByName())) and  
+			(self.getMatchingElementByName().isSubTypeOf_Message(self)) then
+			'SUPER'
+		else
+			'EQUIV'
+		endif
+	endif;
+
+helper context ASD!InfoType def: getValueInfoType(): String=
+	 if (self.isSubTypeOf_InfoType(self.getMatchingElementByName())) and  
+		(not (self.getMatchingElementByName().isSubTypeOf_InfoType(self)))then 
+		'SUB'
+	 else
+		if not (self.isSubTypeOf_InfoType(self.getMatchingElementByName())) and  
+		(self.getMatchingElementByName().isSubTypeOf_InfoType(self)) then
+			'SUPER'
+		else
+			'EQUIV'
+		endif
+	endif;
+	
+helper context ASD!Assertion def: getValueAssertion(): String=
+	if (self.isSubtypeOf_Assertion(self.getMatchingElementByName())) and  
+		(not (self.getMatchingElementByName().isSubtypeOf_Assertion(self)))then 
+		'SUB'
+	 else
+		if not (self.isSubtypeOf_Assertion(self.getMatchingElementByName())) and  
+		(self.getMatchingElementByName().isSubtypeOf_Assertion(self)) then
+			'SUPER'
+		else
+			'EQUIV'
+		endif
+	endif;
+
+helper context ASD!AssertionSet def: getValueAssertionSet(): String=
+	if thisModule.isSubtypeOf_AssertionSet(self)->forAll(i| i= 1) and 
+	self.getMatchingElementByName().assertions->size()<= self.assertions->size()then
+		'SUB'
+	else
+		if thisModule.isSubtypeOf_AssertionSet(self)->forAll(i| i=0) and 
+		self.assertions->size()<= self.getMatchingElementByName().assertions->size() then
+			'SUPER'
+		else
+			if thisModule.isSubtypeOf_AssertionSet(self)->includes(3) then
+				'NONE'
+			else
+				'EQUIV'
+			endif
+		endif
+	endif;
+
+helper context ASD!Profile def: getValueProfile(): String=
+	if thisModule.isSubtypeOf_Profile(self)->forAll(i | i=1) and 
+	self.getMatchingElementByName().sets->size()<= self.sets->size()then
+		'SUB'
+	else
+		if thisModule.isSubtypeOf_Profile(self)->forAll(i | i=0) then
+			'SUPER'
+		else
+			if thisModule.isSubtypeOf_Profile(self)->includes(3) then
+				'NONE'
+			else
+				'EQUIV'
+			endif
+		endif
+	endif;
+
+helper context ASD!NamedElement def: getValueAnnotation(): String=
+	if self.oclIsTypeOf(ASD!Operation) then
+		self.getValueOperation()
+	else 
+		if self.oclIsTypeOf(ASD!Message) then
+			self.getValueMessage()
+		else
+			if self.oclIsTypeOf(ASD!InfoType) then
+				self.getValueInfoType()
+			else
+				if self.oclIsTypeOf(ASD!Assertion) then
+					self.getValueAssertion()
+				else
+					if self.oclIsTypeOf(ASD!AssertionSet) then
+						self.getValueAssertionSet()
+					else
+						if self.oclIsTypeOf(ASD!Profile) then
+							self.getValueProfile()
+						else
+							self.getValueInfoType()
+						endif
+					endif
+				endif
+			endif
+		endif
+	endif;
+		
+-------Rules-----------------------------------------------
+
+rule AnnotatedOperation {
+	from
+		o1 : ASD!Operation ( not o1.getMatchingElementByName().oclIsUndefined() and thisModule.SourceElements->includes(o1))
+				
+	to
+		o : ASD!Operation (
+			annotations <- a
+		),
+		a : ASD!Annotation (
+			owner <- o1,
+			key <- 'Typing', 
+			value <- o1.getValueAnnotation()
+		)
+}
+
+rule NotMachingAnnotatedOperation {
+	from
+		o1 : ASD!Operation (o1.getMatchingElementByName().oclIsUndefined() and thisModule.SourceElements->includes(o1))
+				
+	to
+		o : ASD!Operation(
+			annotations <- a
+		),
+		a : ASD!Annotation (
+			owner <- o1,
+			key <- 'Typing', 
+			value <- 'NONE'
+		)
+}
+
+rule AnnotatedMessage {
+	from
+		m1 : ASD!Message ( not m1.getMatchingElementByName().oclIsUndefined() and thisModule.SourceElements->includes(m1))
+				
+	to
+		m : ASD!Message (
+			annotations <- a
+		),
+		a : ASD!Annotation (
+			owner <- m1,
+			key <- 'Typing', 
+			value <- m1.getValueAnnotation()
+		)
+}
+
+rule NotMachingAnnotatedMessage {
+	from
+		m1 : ASD!Message ( m1.getMatchingElementByName().oclIsUndefined() and thisModule.SourceElements->includes(m1))
+				
+	to
+		m : ASD!Message(
+			annotations <- a
+		),
+		a : ASD!Annotation (
+			owner <- m1,
+			key <- 'Typing', 
+			value <- 'NONE'
+		)
+}
+
+rule AnnotatedInfoType {
+	from
+		it1 : ASD!InfoType ( not it1.getMatchingElementByName().oclIsUndefined() and thisModule.SourceElements->includes(it1))
+				
+	to
+		it : ASD!InfoType (
+			annotations <- a
+		),
+		a : ASD!Annotation (
+			owner <- it1,
+			key <- 'Typing', 
+			value <- it1.getValueAnnotation()
+		)
+}
+
+rule NotMachingAnnotatedInfoType {
+	from
+		it1 : ASD!InfoType ( it1.getMatchingElementByName().oclIsUndefined() and thisModule.SourceElements->includes(it1))
+				
+	to
+		it : ASD!InfoType(
+			annotations <- a
+		),
+		a : ASD!Annotation (
+			owner <- it1,
+			key <- 'Typing', 
+			value <- 'NONE'
+		)
+}
+
+rule AnnotatedAssertion {
+	from
+		as1 : ASD!Assertion ( not as1.getMatchingElementByName().oclIsUndefined() and thisModule.SourceElements->includes(as1))
+				
+	to
+		as : ASD!Assertion(
+			annotations <- a
+		),
+		a : ASD!Annotation (
+			owner <- as1,
+			key <- 'Typing', 
+			value <- as1.getValueAnnotation()
+		)
+}
+
+rule NotMachingAnnotatedAssertion {
+	from
+		as1 : ASD!Assertion ( as1.getMatchingElementByName().oclIsUndefined() and thisModule.SourceElements->includes(as1))
+				
+	to
+		as : ASD!Assertion(
+			annotations <- a
+		),
+		a : ASD!Annotation (
+			owner <- as1,
+			key <- 'Typing', 
+			value <- 'NONE'
+		)
+}
+
+rule AnnotatedAssertionSet {
+	from
+		as1 : ASD!AssertionSet ( not as1.getMatchingElementByName().oclIsUndefined() and thisModule.SourceElements->includes(as1))
+				
+	to
+		as : ASD!AssertionSet(
+			annotations <- a
+		),
+		a : ASD!Annotation (
+			owner <- as1,
+			key <- 'Typing', 
+			value <- as1.getValueAnnotation()
+		)
+}
+
+rule NotMachingAnnotatedAssertionSet {
+	from
+		as1 : ASD!AssertionSet ( as1.getMatchingElementByName().oclIsUndefined() and thisModule.SourceElements->includes(as1))
+				
+	to
+		as : ASD!AssertionSet(
+			annotations <- a
+		),
+		a : ASD!Annotation (
+			owner <- as1,
+			key <- 'Typing', 
+			value <- 'NONE'
+		)
+}
+
+rule AnnotatedProfile {
+	from
+		ps1 : ASD!Profile ( not ps1.getMatchingElementByName().oclIsUndefined() and thisModule.SourceElements->includes(ps1))
+				
+	to
+		ps : ASD!Profile(
+			annotations <- a
+		),
+		a : ASD!Annotation (
+			owner <- ps1,
+			key <- 'Typing', 
+			value <- ps1.getValueAnnotation()
+		)
+}
+
+rule NotMachingAnnotatedProfile {
+	from
+		ps1 : ASD!Profile ( ps1.getMatchingElementByName().oclIsUndefined() and thisModule.SourceElements->includes(ps1))
+				
+	to
+		ps : ASD!Profile(
+			annotations <- a
+		),
+		a : ASD!Annotation (
+			owner <- ps1,
+			key <- 'Typing', 
+			value <- 'NONE'
+		)
+}
