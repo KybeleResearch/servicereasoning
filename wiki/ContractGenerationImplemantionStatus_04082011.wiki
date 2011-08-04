@@ -1,0 +1,16 @@
+#summary Status of the implementation of the ContractGeneration on 08/04/11. The aim is at clarifying fuzzy points.
+
+= Introduction =
+  * The ContractGeneration consumes two annotated ASDs 
+  * The first one (P,,1,,') is the Provider whereas the second one (C,,1',,) acts as the Client, i.e. it represents the service that the client would like to find: its expectations.
+  * It generates a contract (C) between them that will contain elemnts from both service descriptions.
+  * In particular, for a given element of S,,1',, OR  S,,2',, to be inclluded in the contract generated the next consitions should be fullfilled:
+    * ∀ e ∈(C,,1',,), e ∈(C) if
+      * e,,subset,, ≠ [∅, `exp`]
+      * e,,Typing,, = [SUB, EQUIV]
+    * ∀ e ∈(P,,1',,), e ∈(C) if
+      * e,,subset,, ≠ [∅, `off`]
+      * e,,Typing,, = [SUPER, EQUIV]
+
+      
+
