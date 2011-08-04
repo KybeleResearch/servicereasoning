@@ -21,10 +21,52 @@ The typing relationships stated by the Typing objects corresponds to the followi
 == Definition of sub/supertyping relationships ==
 In the following we summarize how to check whether there is a sub/supertype relationship between two given objects depending in the nature of the objects 
 
-=== OPERATION ===
+=== Operations ===
 For a given operation X being subtype of another operation Y the following conditions must be fullfilled:
   * X,,name,, = Y,,name,,
   * X,,messagePattern,, ≤ Y,,messagePattern,,
     * Notice that (`one-way` ≤ `request-response`) ∧ (`notification` ≤ `solicit-response`)
   * Y,,|messages|,, ≤ X,,|messages|,,
 
+=== Messages ===
+For a given message X being *subtype* of another message Y the following conditions must be fullfilled:
+  * X,,name,, ≡ Y,,name,,
+  * X,,role,, ≡ Y,,role,,
+  * X,,subset,, ≡ Y,,subset,,
+  * Y,,|infoTypes|,, ≤ X,,|infoTypes|,,
+
+For a given message X being *supertype* of another message Y, the following conditions must be fullfilled:
+  * X,,name,, ≡ Y,,name,,
+  * X,,role,, ≡ Y,,role,,
+  * X,,subset,, ≡ Y,,subset,,
+  * Y,,|infoTypes|,, ≤ X,,|infoTypes|,,
+
+=== InfoType and InfoTypeImported ===
+For a given InfoType X being *subtype* of another infoType Y the following conditions must be fullfilled:
+  * X,,name,, ≡ Y,,name,,
+  * X,,valueType,, ≤ Y,,valueType,,
+    * Note that `date ≤ int ≤ float ≤ double ≤ string ≤ document`
+  * X,,subset,, ≡ Y,,subset,,
+  * Y,,|infoType|,, ≤ X,,|infoType|,,
+  * Y,,|ref_infoType|,, ≤ X,,|ref_infoType|,,
+<font color=red>
+*TO DISCUSS*
+Do we need to consider the `valueRange` attribute in some way???
+</font>
+
+=== Assertion ===
+For a given Assertion X being *subtype* of another Assertion Y the following conditions must be fullfilled:
+  * X,,name,, ≡ Y,,name,,
+  * X,,dimension,, ≡ Y,,dimension,,
+  * X,,dimensionType,, ≡ Y,,dimensionType,,
+  * X,,intention,, ≡ Y,,intention,,
+  * If `dimension = monotonic`
+    * X,,minVal,, ≤ Y,,minVal,,
+    * X,,maxVal,, ≤ Y,,maxVal,,
+  * If `dimension = antitonic`
+    * X,,minVal,, ≥ Y,,minVal,,
+    * X,,maxVal,, ≥ Y,,maxVal,,
+<font color=red>
+*TO DISCUSS*
+Do we need to consider the `lType` and `subset` attributes in some way???
+</font>
