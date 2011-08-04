@@ -111,7 +111,7 @@ When comparing the Profile X with the Profile Y the following values will be obt
     * as,,Typing,, = SUPER ∀ as ∈ X,,{assertionSet},, 
   * X,,Typing = *NONE* ⇔
     * ∃ as ∈ X,,{assertionSet},, / a,,Typing,, = NONE 
-
+<font color=red>
 *TO DISCUSS*
-  * (With Jenifer) The ema here: the EQUIV computation seems to be a little bit strange ...
+  * (With Jenifer) The same here: the EQUIV computation seems to be a little bit strange ...
 </font>
