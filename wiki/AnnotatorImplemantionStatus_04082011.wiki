@@ -1,4 +1,4 @@
-#summary Status of the annotator at 08/04/11 in order to clarify dubious points
+#summary Status of the implementation of the annotator on 08/04/11. The aim is at clarifying fuzzy points.
 
 = Functionality =
   * Takes as input the ASD of two given services (S,,1,, and S,,2,,). 
@@ -111,3 +111,7 @@ When comparing the Profile X with the Profile Y the following values will be obt
     * as,,Typing,, = SUPER ∀ as ∈ X,,{assertionSet},, 
   * X,,Typing = *NONE* ⇔
     * ∃ as ∈ X,,{assertionSet},, / a,,Typing,, = NONE 
+
+*TO DISCUSS*
+  * (With Jenifer) The ema here: the EQUIV computation seems to be a little bit strange ...
+</font>
