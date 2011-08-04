@@ -1,0 +1,29 @@
+#summary Status of the annotator at 08/04/11 in order to clarify dubious points
+
+= Functionality =
+  * Takes as input the ASD of two given services (S,,1,, and S,,2,,). 
+  * Produces an annotated version of the first one. 
+  * Annotation objects are called `Typing`
+  * Its values range between {SUB, SUPER, NONE, EQUIV}  
+  * Each annotation states whether the annotated element from S,,1,, is a subtype/supertype for any other element in in S,,2,,
+
+== Assesing the value of *Typing* annotations == 
+The typing relationships stated by the Typing objects corresponds to the following pseudo-algorithm:
+  * If ∃ (X ϵ S,,1,,, Y ϵ S,,2,,) / (X.name = Y.name) AND (X.isTypeOf = Y.isTypeOf) then
+    * If X < Y then (if _X is subtype of Y_)
+      * If Y < X ⇒ *EQUIV* (_X and Y are Equivalent_)
+      * If Y ≮ X ⇒ *SUB* (_X is subtype of Y_)
+    * If X > Y then (if _X is supertype of Y_)
+      * If Y < X ⇒ *EQUIV* (_X and Y are Equivalent_)
+      * If Y ≯ X ⇒ *SUPER* (_X is supertype of Y_)
+  * If ∄​ (X ϵ S,,1,,, Y ϵ S,,2,,) / (X.name = Y.name) AND (X.isTypeOf = Y.isTypeOf) ⇒ *NONE*(_there is no matching element for X)
+
+== 
+
+
+= Details =
+
+Add your content here.  Format your content with:
+  * Text in *bold* or _italic_
+  * Headings, paragraphs, and lists
+  * Automatic links to other wiki pages
