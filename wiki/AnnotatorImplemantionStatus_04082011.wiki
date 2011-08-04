@@ -51,7 +51,7 @@ For a given InfoType X being *subtype* of another infoType Y the following condi
   * Y,,|ref_infoType|,, ≤ X,,|ref_infoType|,,
 <font color=red>
 *TO DISCUSS*
-Do we need to consider the `valueRange` attribute in some way???
+  * Do we need to consider the `valueRange` attribute in some way???
 </font>
 
 === Assertion ===
@@ -68,5 +68,46 @@ For a given Assertion X being *subtype* of another Assertion Y the following con
     * X,,maxVal,, ≥ Y,,maxVal,,
 <font color=red>
 *TO DISCUSS*
-Do we need to consider the `lType` and `subset` attributes in some way???
+  * Do we need to consider the `lType` and `subset` attributes in some way???
 </font>
+
+=== AssertionSet ===
+When comparing the AssertionSet X with the AssertionSet Y the following values will be obtaied in presence of the following conditions:
+
+  * X,,Typing = *SUB* ⇔
+    * X,,name,, ≡ Y,,name,,
+    * Y,,|assertion|,, ≤ X,,|assertion|,,
+    * a,,Typing,, = SUB ∀ a ∈ X,,{assertion},, 
+
+  * X,,Typing = *SUPER* ⇔
+    * X,,name,, ≡ Y,,name,,
+    * X,,|assertion|,, ≤ Y,,|assertion|,,
+    * a,,Typing,, = SUPER ∀ a ∈ X,,{assertion},, 
+
+  * X,,Typing = *NONE* ⇔
+    * X,,name,, ≡ Y,,name,,
+    * X,,|assertion|,, ≤ Y,,|assertion|,,
+    * ∃ a ∈ X,,{assertion},, / a,,Typing,, = NONE 
+
+  * X,,Typing = *EQUIV* ⇔
+    * X,,name,, ≡ Y,,name,,
+    * Rest of scenarios
+
+<font color=red>
+*TO DISCUSS*
+  * Do we need to consider the `lType` attribute in some way???
+  * (With Jenifer) The EQUIV computation seems to be a little bit strange ...
+</font>
+
+=== Profiles ===
+When comparing the Profile X with the Profile Y the following values will be obtained in presence of the following conditions:
+  * X,,Typing = *SUB* ⇔
+    * X,,name,, ≡ Y,,name,,
+    * Y,,|assertionSet|,, ≤ X,,|assertionSet|,,
+    * as,,Typing,, = SUB ∀ as ∈ X,,{assertionSet},, 
+  * X,,Typing = *SUPER* ⇔
+    * X,,name,, ≡ Y,,name,,
+    * Y,,|assertionSet|,, ≥ X,,|assertionSet|,,
+    * as,,Typing,, = SUPER ∀ as ∈ X,,{assertionSet},, 
+  * X,,Typing = *NONE* ⇔
+    * ∃ as ∈ X,,{assertionSet},, / a,,Typing,, = NONE 
