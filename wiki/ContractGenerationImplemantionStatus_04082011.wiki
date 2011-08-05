@@ -48,5 +48,5 @@ C,,Proper,, = `True` *iff*
 
 <font color=red>
 *TO DISCUSS*
-
+  * According to the previous definitions of _light_ and _deep_ matching, should we use a light or a deep matching to perform the checks that compute the value for the `Proper`annotation? 
 </font>
