@@ -20,5 +20,33 @@
       # A _light matching_ that checks just the name without considering the properties. Which would be the element to include in the Contract, the one from P,,1',, or the one from C,,1',,?
       # A _deep matching_ that checks name, type and properties. 
          # If there is complete coincidence (e ≡ e'), the one from P,,1',, is copied to the contract
-         # If there is any difference between their properties, both e and e' are copied to the contract 
+         # If there is any difference between their properties, both e and e' are copied to the contract.
+Currently, we perform a _deep matching_ 
 </font>      
+
+  * Besides, the *ContractGeneration* adds an annotation to the root element of the contract (`ServiceDescription`).
+  * Such annottaion is called `Proper` and serves to check whether the contract has been properly generated.
+  * To that end, `Proper` ∈ {TRUE, FALSE} according to the following:
+<table border=1>
+<tr>
+<td rowspan="2"> 
+C,,Proper,, = `True` *iff*
+</td>
+
+<td>
+∀ e ∈(P,,1',,) / e,,subset,, ∉ {∅} ∧ e,,subset,, {`exp``, `req`} ⇒ e ∈(C)
+</td>
+
+</tr>
+
+<tr>
+<td>
+∀ e' ∈(C,,1',,) / e',,subset,, ∉ {∅} ∧ e',,subset,, {`pro``, `off`} ⇒ e' ∈(C)
+</td>
+</tr>
+</table>
+
+<font color=red>
+*TO DISCUSS*
+
+</font>
