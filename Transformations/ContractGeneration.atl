@@ -1,0 +1,206 @@
+module ContractGeneration;
+create Contract : ASD from Provider : ASD, Client : ASD;
+
+
+helper def: ProviderElements : Sequence(ASD!NamedElement) = ASD!NamedElement.allInstancesFrom('Provider');
+
+helper def: ClientElements : Sequence(ASD!NamedElement) = ASD!NamedElement.allInstancesFrom('Client');
+
+helper context ASD!NamedElement def: containsAnnotation(value:String) : Boolean=
+	if self.annotations->collect(e| e.value)->first()= value then
+		true
+	else 
+		false
+	endif;
+
+helper context ASD!NamedElement def: isFulfilledConditions() : Boolean=
+	if ((self.oclIsTypeOf(ASD!Message)) or (self.oclIsTypeOf(ASD!InfoType)) or (self.oclIsTypeOf(ASD!InfoTypeImported)) or (self.oclIsTypeOf(ASD!Assertion))) then
+		if ((self.containsAnnotation('SUB') or self.containsAnnotation('EQUIV')) and (thisModule.ClientElements->includes(self))) then
+			if not (self.subset.oclIsUndefined()) then
+				if (self.subset<>#exp) then 
+					true
+				else
+					false
+				endif
+			else
+				false
+			endif
+		else
+			if((self.containsAnnotation('SUPER') or self.containsAnnotation('EQUIV')) and (thisModule.ProviderElements->includes(self)))then
+				if not (self.subset.oclIsUndefined()) then
+					if (self.subset<>#off) then 
+						true
+					else
+						false
+					endif
+				else
+					false
+				endif
+			else
+				false
+			endif
+		endif
+	else
+		false
+	endif;
+
+helper def: getElementByName(namemodel: String, nameele:String): ASD!NamedElement =
+	ASD!NamedElement.allInstancesFrom(namemodel)->select(i|i.name=nameele)->first();
+
+helper context ASD!NamedElement def: isMatching(eleContract: ASD!NamedElement): Boolean =
+	if (eleContract <> OclUndefined) then
+		if((eleContract.oclIsTypeOf(ASD!Message))and (self.oclIsTypeOf(ASD!Message))) then
+			if((eleContract.role=self.role) and (eleContract.subset=self.subset))then
+				true
+			else
+				false
+			endif
+		else
+			if((eleContract.oclIsTypeOf(ASD!InfoType)) and (self.oclIsTypeOf(ASD!InfoType))) then
+				if((eleContract.valueType=self.valueType) and (eleContract.valueRange=self.valueRange)
+					and (eleContract.subset=self.subset))then
+					true
+				else
+					false
+				endif
+			else
+				if((eleContract.oclIsTypeOf(ASD!InfoTypeImported)) and (self.oclIsTypeOf(ASD!InfoTypeImported))) then
+					if((eleContract.valueType=self.valueType) and (eleContract.valueRange=self.valueRange)
+						and (eleContract.subset=self.subset) and (eleContract.url=self.url))then
+						true
+					else
+						false
+					endif
+				else
+					if((eleContract.oclIsTypeOf(ASD!Assertion)) and (self.oclIsTypeOf(ASD!Assertion))) then
+						if((eleContract.dimension=self.dimension) and (eleContract.dimensionType=self.dimensionType)
+							and (eleContract.intention=self.intention) and (eleContract.minVal=self.minVal)
+							and (eleContract.maxVal=self.maxVal)and (eleContract.lType=self.lType)
+							and(eleContract.subset=self.subset))then
+							true
+						else
+							false
+						endif
+					else
+						false
+					endif
+				endif
+			endif
+		endif
+	else
+		false
+	endif;
+
+--helper context ASD!NamedElement def: notExistElementProvider(): Boolean =
+--	if ((thisModule.ClientElements->includes(self)) and (thisModule.ProviderElements->select(aux |aux.name = self.name)->first()<> OclUndefined)) then
+--		if((self.isFulfilledConditions())and (thisModule.ProviderElements->select(aux |aux.name = self.name)->first().isFulfilledConditions()))then
+--			false
+--		else
+--			true
+--		endif
+--	else
+--		true
+--	endif;
+
+helper context ASD!NamedElement def: notExistElement(): Boolean =
+	if ((thisModule.ClientElements->includes(self)) and (thisModule.ProviderElements->select(aux |aux.name = self.name)->first()<> OclUndefined)) then
+		if(self.isMatching(thisModule.ProviderElements->select(aux |aux.name = self.name)->first()))then
+			false
+		else
+			true
+		endif
+	else
+		true
+	endif;
+
+--------------------
+------Rules---------
+--------------------
+
+rule Service2Service {
+	from
+		s1 : ASD!ServiceDescription	in Provider
+	to
+		s : ASD!ServiceDescription (
+			name <- 'Contract'+s1.name+'&'+ ASD!ServiceDescription.allInstancesFrom('Client')->first().name
+		)
+}
+
+rule Message2Message {
+	from
+		m1 : ASD!Message ((m1.isFulfilledConditions()) and (m1.notExistElement()))
+	to
+		m : ASD!Message (
+			name <- m1.name,
+			role <- m1.role,
+			subset <- m1.subset
+		)
+}
+
+rule InfoType2InfoType {
+	from
+		it1 : ASD!InfoType ((it1.isFulfilledConditions()) and (it1.oclIsTypeOf(ASD!InfoType)) and (it1.notExistElement())) 
+	to
+		it : ASD!InfoType (
+			name <- it1.name,
+			subset <- it1.subset,
+			valueType <- it1.valueType,
+			valueRange <- it1.valueRange
+	)
+}
+
+rule InfoTypeImported2InfoTypeImported {
+	from
+		it1 : ASD!InfoTypeImported (it1.isFulfilledConditions() and (it1.oclIsTypeOf(ASD!InfoTypeImported)) and (it1.notExistElement())) 
+	to
+		it : ASD!InfoTypeImported (
+			name <- it1.name,
+			subset <- it1.subset,
+			valueType <- it1.valueType,
+			valueRange <- it1.valueRange,
+			url <- it1.url
+		)
+}
+
+rule Assertion2Assertion {
+	from
+		as1 : ASD!Assertion (as1.isFulfilledConditions()) 
+	to
+		as : ASD!Assertion (
+			name <- as1.name,
+			dimension <- as1.dimension,
+			dimensionType <- as1.dimensionType,
+			minVal <- as1.minVal,
+			maxVal <- as1.maxVal,
+			intention <- as1.intention,
+			lType <- as1.lType,
+			subset <- as1.subset
+		)
+}
+
+endpoint rule ProperContract(){
+	using
+		{
+			proper : Boolean = true;
+			messagesProvider : Sequence(ASD!Message) = ASD!Message.allInstancesFrom('Provider')->select(e|e.subset= #req or e.subset= #exp);
+			messagesClient : Sequence(ASD!Message) = ASD!Message.allInstancesFrom('Client')->select(e|e.subset= #pro or e.subset= #off);
+			infoTypesProvider : Sequence(ASD!InfoType) = ASD!InfoType.allInstancesFrom('Provider')->select(e|e.subset= #req or e.subset= #exp);
+			infoTypesClient : Sequence(ASD!InfoType) = ASD!InfoType.allInstancesFrom('Client')->select(e|e.subset= #pro or e.subset= #off);
+			assertsProvider : Sequence(ASD!Assertion) = ASD!Assertion.allInstancesFrom('Provider')->select(e|e.subset= #req or e.subset= #exp);
+			assertsClient : Sequence(ASD!Assertion) = ASD!Assertion.allInstancesFrom('Client')->select(e|e.subset= #pro or e.subset= #off);
+			elements : Sequence(ASD!NamedElement)= Sequence{messagesProvider,messagesClient,infoTypesProvider,infoTypesClient,assertsProvider,assertsClient}->flatten();
+		}
+
+	to
+		a : ASD!Annotation (
+			owner <- ASD!ServiceDescription.allInstancesFrom('Contract')->first()
+		)
+	do {
+		for (ele in elements) {
+ 			proper <- proper and ele.isMatching(thisModule.getElementByName('Contract',ele.name));
+ 		}	              						 
+ 		a.key <- 'Proper';
+ 		a.value <- proper.toString();
+ 		
+	}
+}

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<ASD:ServiceDescription xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ASD="http://ASD" name="POPClient">
+  <operations name="receivePO">
+    <annotations key="Typing" value="EQUIV"/>
+    <contents name="POMessage" infoType="//@infotypes.1">
+      <annotations key="Typing" value="EQUIV"/>
+    </contents>
+  </operations>
+  <operations name="receivePOCallBack" messagePattern="notification">
+    <annotations key="Typing" value="EQUIV"/>
+    <contents name="POMessageAck" role="output" subset="pro" infoType="//@infotypes.0">
+      <annotations key="Typing" value="EQUIV"/>
+    </contents>
+  </operations>
+  <infotypes xsi:type="ASD:InfoTypeImported" name="string" valueType="string" subset="pro" message="//@operations.1/@contents.0" url="http://www.w3.org/2001/XMLSchema">
+    <annotations key="Typing" value="EQUIV"/>
+  </infotypes>
+  <infotypes name="PODocument" message="//@operations.0/@contents.0">
+    <annotations key="Typing" value="EQUIV"/>
+    <infoType name="OrderInfo" valueType="string" valueRange="">
+      <annotations key="Typing" value="EQUIV"/>
+    </infoType>
+    <infoType name="DeliveryInfo" valueType="string" valueRange="">
+      <annotations key="Typing" value="EQUIV"/>
+    </infoType>
+  </infotypes>
+  <profiles name="pfl1">
+    <annotations key="Typing" value="SUB"/>
+    <sets name="aset1">
+      <annotations key="Typing" value="SUB"/>
+      <assertions name="availability" dimension="assert1" minVal="80.0" maxVal="90.0" subset="off">
+        <annotations key="Typing" value="SUB"/>
+      </assertions>
+      <assertions name="latency" dimension="assert2" dimensionType="antitonic" minVal="0.2" maxVal="1.0" subset="off">
+        <annotations key="Typing" value="SUB"/>
+      </assertions>
+      <assertions name="performance" dimension="assert3" minVal="75.0" maxVal="75.0" subset="off">
+        <annotations key="Typing" value="SUB"/>
+      </assertions>
+      <assertions name="capacity" dimension="assert4" maxVal="3.0" subset="off">
+        <annotations key="Typing" value="SUB"/>
+      </assertions>
+    </sets>
+  </profiles>
+</ASD:ServiceDescription>
