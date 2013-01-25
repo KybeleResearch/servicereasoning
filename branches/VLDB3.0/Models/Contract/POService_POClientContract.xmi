@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ASD="http://ASD">
+  <ASD:ServiceDescription name="ContractPOPService&amp;POPClient">
+    <annotations key="Proper" value="true"/>
+  </ASD:ServiceDescription>
+  <ASD:Message name="POMessage"/>
+  <ASD:Message name="POMessageAck" role="output" subset="pro"/>
+  <ASD:InfoType name="PODocument"/>
+  <ASD:InfoType name="OrderInfo" valueType="string" valueRange=""/>
+  <ASD:InfoType name="DeliveryInfo" valueType="string" valueRange="0-?"/>
+  <ASD:InfoType name="DeliveryInfo" valueType="string" valueRange=""/>
+  <ASD:InfoTypeImported name="string" valueType="string" subset="pro" url="http://www.w3.org/2001/XMLSchema"/>
+  <ASD:Assertion name="availability" dimension="assert1" minVal="80.0" maxVal="90.0" subset="off"/>
+  <ASD:Assertion name="latency" dimension="assert2" dimensionType="antitonic" minVal="0.2" maxVal="1.0" subset="off"/>
+  <ASD:Assertion name="performance" dimension="assert3" minVal="75.0" maxVal="75.0" subset="off"/>
+  <ASD:Assertion name="capacity" dimension="assert4" maxVal="3.0" subset="off"/>
+</xmi:XMI>
