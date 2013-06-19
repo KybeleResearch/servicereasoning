@@ -1,0 +1,399 @@
+import "operationsEOL.eol";
+
+-- ***********************************************************************************
+--	GMFgraph
+-- ***********************************************************************************
+
+var canvas = GmfGraph!Canvas.all.selectOne(n|n.name='ASD'); 
+var figureGallery = GmfGraph!FigureGallery.all.first();
+
+var nameLabel= getLabelInherited('NamedElementNameLabelFigure');
+
+----------- OperationFigure -----------
+
+var opFont= createFont(10,'BOLD');
+var opColor= createColor(0,0,0);
+var opLabel= getLabel('OperationLabelFigure',opFont,opColor);
+
+var mplFont = createFont(8,'NORMAL');
+var mplColor= createColor(0,0,0);
+var messagePatternLabel= getLabel('OperationMessagePatternLabelFigure',mplFont,mplColor);
+
+var opColorBor= createColor(102,205,170);
+var opBorder= createBorder(2,opColorBor);
+
+var opColor2= createColor(204,255,255);
+var opsize= createPoint(200,220);
+
+var figureDescripOp= getFigureDescriptor('OperationFigure');
+
+var operationFig= new GmfGraph!Rectangle;
+	operationFig.name= 'OperationFigure';
+	operationFig.border= opBorder;
+	operationFig.backgroundColor= opColor2;
+	operationFig.size= opsize;
+	operationFig.children.add(opLabel);
+	operationFig.children.add(figureDescripOp.actualFigure.children.selectOne(e|e.name='NamedElementNameLabelFigure'));
+	operationFig.children.add(messagePatternLabel);
+	operationFig.children.add(figureDescripOp.actualFigure.children.selectOne(e|e.name='OperationContentsCompartmentFigure'));
+	operationFig.children.add(figureDescripOp.actualFigure.children.selectOne(e|e.name='OperationAnnotationsCompartmentFigure'));
+
+figureDescripOp.actualFigure= operationFig;
+
+----------- MessageFigure -----------
+
+var messagefont= createFont(10,'BOLD');
+var messageColor= createColor(0,0,0);
+var messageLabel= getLabel('MessageLabelFigure',messagefont,messageColor);
+
+var marrowcolor= createColor(0,0,0);
+var mpolyline= getPolylineConnection('MessageInfoTypeFigure',1,marrowcolor,'LINE_SOLID');
+
+var roleFont= createFont(8,'NORMAL');
+var roleColor= createColor(0,0,0);
+var roleLabel= getLabel('MessageRoleLabelFigure',roleFont,roleColor);
+
+var msubsetColor= createColor(0,0,0);
+var msubsetfont= createFont(8,'NORMAL');
+var msubsetLabel= getLabel('MessageSubsetLabelFigure',msubsetfont,msubsetColor);
+
+var mes2info= createColor(0,0,0);
+var messageInfoTypeFigureTargetDecoration= createPolylineDecoration('MessageInfoTypeFigureTargetDecoration',1,mes2info,'LINE_SOLID');
+figureGallery.figures.add(messageInfoTypeFigureTargetDecoration);
+
+var polylineMess= GmfGraph!PolylineConnection.all.selectOne(e| e.name= 'MessageInfoTypeFigure');
+	polylineMess.targetDecoration= messageInfoTypeFigureTargetDecoration;
+	
+var messageColorBor= createColor(0,152,255);
+var messageBorder= createBorder(2,messageColorBor);
+
+var messageColor2= createColor(185,242,255);
+var msize= createPoint(200,220);
+
+var figureDescripMess= getFigureDescriptor('MessageFigure');
+	
+var messageFig= new GmfGraph!Rectangle;
+	messageFig.name= 'MessageFigure';
+	messageFig.border= messageBorder;
+	messageFig.backgroundColor= messageColor2;
+	messageFig.size= msize;
+	messageFig.children.add(messageLabel);
+	messageFig.children.add(figureDescripMess.actualFigure.children.selectOne(e|e.name='NamedElementNameLabelFigure'));
+	messageFig.children.add(roleLabel);
+	messageFig.children.add(msubsetLabel);
+	messageFig.children.add(figureDescripMess.actualFigure.children.selectOne(e|e.name='MessageAnnotationsCompartmentFigure'));
+	
+figureDescripMess.actualFigure= messageFig;
+	
+----------- InfoTypeFigure -----------
+
+var infoTypefont= createFont(10,'BOLD');
+var infoTypeColor= createColor(0,0,0);
+var infoTypeLabel= getLabel('InfoTypeLabelFigure',infoTypefont,infoTypeColor);
+
+var itsubsetLabel= getLabelInherited('InfoTypeSubsetLabelFigure');
+
+var vRangeLabel= getLabelInherited('InfoTypeValueRangeLabelFigure');
+
+var vTypeLabel= getLabelInherited('InfoTypeValueTypeLabelFigure');
+
+var itarrowcolor= createColor(0,0,0);
+var itpolyline= getPolylineConnection('InfoTypeRefFigure',1,itarrowcolor,'LINE_SOLID');
+
+var info2info= createColor(0,0,0);
+var InfoTypeRefFigureTargetDecoration= createPolylineDecoration('InfoTypeRefFigureTargetDecoration',1,info2info,'LINE_SOLID');
+figureGallery.figures.add(InfoTypeRefFigureTargetDecoration);
+var polylineIt= GmfGraph!PolylineConnection.all.selectOne(e| e.name= 'InfoTypeRefFigure');
+	polylineIt.targetDecoration= InfoTypeRefFigureTargetDecoration;
+	
+var infoTypeColorBor= createColor(51,153,102);
+var infoTypeBorder= createBorder(2,infoTypeColorBor);
+
+var infoTypeColor2= createColor(204,255,204);
+var itsize= createPoint(200,220);
+
+
+var figureDescripIT= getFigureDescriptor('InfoTypeFigure');
+
+var infoTypeFig= new GmfGraph!Rectangle;
+	infoTypeFig.name= 'InfoTypeFigure';
+	infoTypeFig.border= infoTypeBorder;
+	infoTypeFig.backgroundColor= infoTypeColor2;
+	infoTypeFig.size= itsize;
+	infoTypeFig.children.add(infoTypeLabel);
+	infoTypeFig.children.add(figureDescripIT.actualFigure.children.selectOne(e|e.name='NamedElementNameLabelFigure'));
+	infoTypeFig.children.add(figureDescripIT.actualFigure.children.selectOne(e|e.name='InfoTypeValueTypeLabelFigure'));
+	infoTypeFig.children.add(figureDescripIT.actualFigure.children.selectOne(e|e.name='InfoTypeValueRangeLabelFigure'));
+	infoTypeFig.children.add(figureDescripIT.actualFigure.children.selectOne(e|e.name='InfoTypeSubsetLabelFigure'));
+	infoTypeFig.children.add(figureDescripIT.actualFigure.children.selectOne(e|e.name='InfoTypeInfoTypeCompartmentFigure'));
+	infoTypeFig.children.add(figureDescripIT.actualFigure.children.selectOne(e|e.name='InfoTypeAnnotationsCompartmentFigure'));
+		
+figureDescripIT.actualFigure= infoTypeFig;
+
+----------- InfoTypeImportedFigure -----------
+
+var infoTypeImportedfont= createFont(10,'BOLD');
+var infoTypeImportedColor= createColor(0,0,0);
+var infoTypeImportedLabel= getLabel('InfoTypeImportedLabelFigure',infoTypeImportedfont,infoTypeImportedColor);
+
+var urlfont= createFont(8,'NORMAL');
+var urlColor= createColor(0,0,0);
+var urlLabel= getLabel('InfoTypeImportedUrlLabelFigure',urlfont,urlColor);
+
+var infoTypeImportedColorBor= createColor(0,102,0);
+var infoTypeImportedBorder= createBorder(2,infoTypeImportedColorBor);
+
+var infoTypeImportedColor= createColor(102,200,153);
+var itisize= createPoint(200,220);
+
+var figureDescripITI= getFigureDescriptor('InfoTypeImportedFigure');
+
+var infoTypeImportedFig= new GmfGraph!Rectangle;
+	infoTypeImportedFig.name= 'InfoTypeImportedFigure';
+	infoTypeImportedFig.border= infoTypeImportedBorder;
+	infoTypeImportedFig.backgroundColor= infoTypeImportedColor;
+	infoTypeImportedFig.size= itisize;
+	infoTypeImportedFig.children.add(infoTypeImportedLabel);
+	infoTypeImportedFig.children.add(figureDescripITI.actualFigure.children.selectOne(e|e.name='NamedElementNameLabelFigure'));
+	infoTypeImportedFig.children.add(figureDescripITI.actualFigure.children.selectOne(e|e.name='InfoTypeValueTypeLabelFigure'));
+	infoTypeImportedFig.children.add(figureDescripITI.actualFigure.children.selectOne(e|e.name='InfoTypeValueRangeLabelFigure'));
+	infoTypeImportedFig.children.add(figureDescripITI.actualFigure.children.selectOne(e|e.name='InfoTypeSubsetLabelFigure'));
+	infoTypeImportedFig.children.add(urlLabel);	
+    infoTypeImportedFig.children.add(figureDescripITI.actualFigure.children.selectOne(e|e.name='InfoTypeImportedInfoTypeCompartmentFigure'));
+	infoTypeImportedFig.children.add(figureDescripITI.actualFigure.children.selectOne(e|e.name='InfoTypeImportedAnnotationsCompartmentFigure'));
+	
+		
+figureDescripITI.actualFigure= infoTypeImportedFig;
+
+----------- Profile -----------
+
+var profilefont= createFont(10,'BOLD');
+var profileColor= createColor(0,0,0);
+var profileLabel= getLabel('ProfileLabelFigure',profilefont,profileColor);
+
+var proarrowcolor= createColor(0,0,0);
+var propolyline= getPolylineConnection('ProfileRefersFigure',1,proarrowcolor,'LINE_SOLID');
+
+var profile2op= createColor(0,0,0);
+var ProfileRefersFigureTargetDecoration= createPolylineDecoration('ProfileRefersFigureTargetDecoration',1,profile2op,'LINE_SOLID');
+figureGallery.figures.add(ProfileRefersFigureTargetDecoration);
+var polylinePro= GmfGraph!PolylineConnection.all.selectOne(e| e.name= 'ProfileRefersFigure');
+	polylinePro.targetDecoration= ProfileRefersFigureTargetDecoration;
+	
+var profileColorBor= createColor(0,0,128);
+var profileBorder= createBorder(2,profileColorBor);
+
+var profileColor2= createColor(198,198,236);
+var prosize= createPoint(200,220);
+
+var figureDescripPro= getFigureDescriptor('ProfileFigure');
+
+var profileFig= new GmfGraph!Rectangle;
+	profileFig.name= 'ProfileFigure';
+	profileFig.border= profileBorder;
+	profileFig.backgroundColor= profileColor2;
+	profileFig.size= prosize;
+	profileFig.children.add(profileLabel);
+	profileFig.children.add(figureDescripPro.actualFigure.children.selectOne(e|e.name='NamedElementNameLabelFigure'));
+	profileFig.children.add(figureDescripPro.actualFigure.children.selectOne(e|e.name='ProfileSetsCompartmentFigure'));
+	profileFig.children.add(figureDescripPro.actualFigure.children.selectOne(e|e.name='ProfileAnnotationsCompartmentFigure'));
+		
+figureDescripPro.actualFigure= profileFig;
+	
+----------- AssertionSet -----------
+var assertionSetfont= createFont(10,'BOLD');
+var assertionSetColor= createColor(0,0,0);
+var assertionSetLabel= getLabel('AssertionSetLabelFigure',assertionSetfont,assertionSetColor);
+
+var lTypefont= createFont(8,'NORMAL');
+var lTypeColor= createColor(0,0,0);
+var lTypeLabel= getLabel('AssertionSetLTypeLabelFigure',lTypefont,lTypeColor);
+
+var assertionSetColorBor= createColor(255,153,255);
+var assertionSetBorder= createBorder(2,assertionSetColorBor);
+
+var assertionSetColor2= createColor(255,204,255);
+var asssize= createPoint(200,220);
+
+var figureDescripAssSet= getFigureDescriptor('AssertionSetFigure');
+
+var assertionSetFig= new GmfGraph!Rectangle;
+	assertionSetFig.name= 'AssertionSetFigure';
+	assertionSetFig.border= assertionSetBorder;
+	assertionSetFig.backgroundColor= assertionSetColor2;
+	assertionSetFig.size= asssize;
+	assertionSetFig.children.add(assertionSetLabel);
+	assertionSetFig.children.add(figureDescripAssSet.actualFigure.children.selectOne(e|e.name='NamedElementNameLabelFigure'));
+	assertionSetFig.children.add(lTypeLabel);
+	assertionSetFig.children.add(figureDescripAssSet.actualFigure.children.selectOne(e|e.name='AssertionSetAssertionsCompartmentFigure'));
+	assertionSetFig.children.add(figureDescripAssSet.actualFigure.children.selectOne(e|e.name='AssertionSetAnnotationsCompartmentFigure'));
+
+figureDescripAssSet.actualFigure= assertionSetFig;
+
+----------- Assertion -----------
+
+var assertionfont= createFont(10,'BOLD');
+var assertionColor= createColor(0,0,0);
+var assertionLabel= getLabel('AssertionLabelFigure',assertionfont,assertionColor);
+
+var dimensionfont= createFont(8,'NORMAL');
+var dimensionColor= createColor(0,0,0);
+var dimensionLabel= getLabel('AssertionDimensionLabelFigure',dimensionfont,dimensionColor);
+
+var dimensionTypefont= createFont(8,'NORMAL');	
+var dimensionTypeColor= createColor(0,0,0);
+var dimensionTypeLabel= getLabel('AssertionDimensionTypeLabelFigure',dimensionTypefont,dimensionTypeColor);
+
+var intentionfont= createFont(8,'NORMAL');
+var intentionColor= createColor(0,0,0);
+var intentionLabel= getLabel('AssertionIntentionLabelFigure',intentionfont,intentionColor);
+
+var minValfont= createFont(8,'NORMAL');
+var minValColor= createColor(0,0,0);
+var minValLabel= getLabel('AssertionMinValLabelFigure',minValfont,minValColor);
+
+var maxValfont= createFont(8,'NORMAL');
+var maxValColor= createColor(0,0,0);
+var maxValLabel= getLabel('AssertionMaxValLabelFigure',maxValfont,maxValColor);
+
+var lTypefont2= createFont(8,'NORMAL');
+var lTypeColor2= createColor(0,0,0);
+var lTypeLabel2= getLabel('AssertionLTypeLabelFigure',lTypefont2,lTypeColor2);
+
+var assubsetfont= createFont(8,'NORMAL');
+var assubsetColor= createColor(0,0,0);
+var assubsetLabel= getLabel('AssertionSubsetLabelFigure',assubsetfont,assubsetColor);
+
+
+var assertionColorBor= createColor(255,204,204);
+var assertionBorder= createBorder(2,assertionColorBor);
+
+var assertionColor2= createColor(255,230,255);
+var assize= createPoint(200,220);
+
+var figureDescripAss= getFigureDescriptor('AssertionFigure');	
+
+var assertionFig= new GmfGraph!Rectangle;
+	assertionFig.name= 'AssertionFigure';
+	assertionFig.border= assertionBorder;
+	assertionFig.backgroundColor= assertionColor2;
+	assertionFig.size= assize;
+	assertionFig.children.add(assertionLabel);
+	assertionFig.children.add(figureDescripAss.actualFigure.children.selectOne(e|e.name='NamedElementNameLabelFigure'));
+	assertionFig.children.add(dimensionLabel);
+	assertionFig.children.add(dimensionTypeLabel);
+	assertionFig.children.add(intentionLabel);
+	assertionFig.children.add(minValLabel);
+	assertionFig.children.add(maxValLabel);
+	assertionFig.children.add(lTypeLabel2);
+	assertionFig.children.add(assubsetLabel);
+	assertionFig.children.add(figureDescripAss.actualFigure.children.selectOne(e|e.name='AssertionAnnotationsCompartmentFigure'));
+	
+figureDescripAss.actualFigure= assertionFig;
+
+----------- Annotation -----------
+
+var annotationfont= createFont(10,'BOLD');
+var annotationColor= createColor(0,0,0);
+var annotationLabel= getLabel('AnnotationLabelFigure',annotationfont,annotationColor);
+
+var keyfont= createFont(8,'NORMAL');
+var keyColor= createColor(0,0,0);
+var keyLabel= getLabel('AnnotationKeyLabelFigure',keyfont,keyColor);
+
+var valuefont= createFont(8,'NORMAL');
+var valueColor= createColor(0,0,0);
+var valueLabel= getLabel('AnnotationValueLabelFigure',valuefont,valueColor);
+
+var annotationColorBor= createColor(112,128,144);
+var annotationBorder= createBorder(2,annotationColorBor);
+
+var annotationColor2= createColor(211,211,211);
+var ansize= createPoint(200,220);
+
+var annotationFig= new GmfGraph!Rectangle;
+	annotationFig.name= 'AnnotationFigure';
+	annotationFig.border= annotationBorder;
+	annotationFig.backgroundColor= annotationColor2;
+	annotationFig.size= ansize;
+	annotationFig.children.add(annotationLabel);
+	annotationFig.children.add(keyLabel);
+	annotationFig.children.add(valueLabel);
+	
+var figureDescripAnn= getFigureDescriptor('AnnotationFigure');	
+figureDescripAnn.actualFigure= annotationFig;
+
+-- ***********************************************************************************
+--	GMFmap
+-- ***********************************************************************************
+
+var featureLabelName= getFeatureLabelMappingInherited('NamedElementNameLabel','- Name: {0}');
+var ecoreAttrName= ECore!EClass.all.selectOne(e|e.name='NamedElement').eStructuralFeatures.selectOne(e|e.name='name');
+
+-- Operation --
+
+var featureLabelOp= getFeatureLabelMapping('OperationLabel','Operation: {0}');
+	featureLabelOp.features.add(ecoreAttrName);
+var featureLabelMessagePattern= getFeatureLabelMapping('OperationMessagePatternLabel','- MessagePattern: {0}');
+
+-- Message --
+
+var featureLabelMessage= getFeatureLabelMapping('MessageLabel','Message: {0}');
+	featureLabelMessage.features.add(ecoreAttrName);
+var featureLabelRole= getFeatureLabelMapping('MessageRoleLabel','- Role: {0}');
+var featureLabelMSubset= getFeatureLabelMapping('MessageSubsetLabel','- Subset: {0}');
+
+-- InfoType --
+
+var featureLabelIT= getFeatureLabelMapping('InfoTypeLabel','InfoType: {0}');
+	featureLabelIT.features.add(ecoreAttrName);
+var featureLabelITValueType= getFeatureLabelMappingInherited('InfoTypeValueTypeLabel','- ValueType: {0}');	
+var featureLabelITValueRange= getFeatureLabelMappingInherited('InfoTypeValueRangeLabel','- ValueRange: {0}');	
+var featureLabelITSubset= getFeatureLabelMappingInherited('InfoTypeSubsetLabel','- Subset: {0}');	
+
+-- InfoTypeImported --
+
+var featureLabelITI= getFeatureLabelMapping('InfoTypeImportedLabel','InfoTypeImported: {0}');
+	featureLabelITI.features.add(ecoreAttrName);
+var featureLabelITUrl= getFeatureLabelMapping('InfoTypeImportedUrlLabel','- URL: {0}');
+
+-- Profile --
+
+var featureLabelProfile= getFeatureLabelMapping('ProfileLabel','Profile: {0}');
+	featureLabelProfile.features.add(ecoreAttrName);
+
+-- AssertionSet --
+
+var featureLabelAss= getFeatureLabelMapping('AssertionSetLabel','AssertionSet: {0}');
+	featureLabelAss.features.add(ecoreAttrName);
+var featureLabelAssLType= getFeatureLabelMapping('AssertionSetLTypeLabel','- LType: {0}');
+
+-- Assertion --
+
+var featureLabelAs= getFeatureLabelMapping('AssertionLabel','Assertion: {0}');
+	featureLabelAs.features.add(ecoreAttrName);
+var featureLabelAsDimension= getFeatureLabelMapping('AssertionDimensionLabel','- Dimension: {0}');
+var featureLabelAsDimensionType= getFeatureLabelMapping('AssertionDimensionTypeLabel','- DimensionType: {0}');
+var featureLabelAsIntention= getFeatureLabelMapping('AssertionIntentionLabel','- Intention: {0}');
+var featureLabelAsMinVal= getFeatureLabelMapping('AssertionMinValLabel','- MinVal: {0}');
+var featureLabelAsMaxVal= getFeatureLabelMapping('AssertionMaxValLabel','- MaxVal: {0}');
+var featureLabelAsLType= getFeatureLabelMapping('AssertionLTypeLabel','- LType: {0}');	
+var featureLabelAsSubset= getFeatureLabelMapping('AssertionSubsetLabel','- Subset: {0}');	
+
+-- Annotation --
+var ecoreAttrKey= ECore!EClass.all.selectOne(e|e.name='Annotation').eStructuralFeatures.selectOne(e|e.name='key');
+
+var featureLabelAnnotation= getFeatureLabelMapping('AnnotationLabel','Annotation: {0}');
+	featureLabelAnnotation.features.add(ecoreAttrKey);	
+var featureLabelAnnotationKey= getFeatureLabelMapping('AnnotationKeyLabel','- Key: {0}');	
+var featureLabelAnnotationValue= getFeatureLabelMapping('AnnotationValueLabel','- Value: {0}');	
+
+-- ***********************************************************************************
+--	GMFtool
+-- ***********************************************************************************
+
+var creationToolRef= getCreationTool('Ref','Relationship between Infotype/InfoTypeImported and InfoType/InfoTypeImported');
+var creationToolRefers= getCreationTool('Refers','Relationship between Profile and Operation');
+
+var creationToolInfoType= GmfTool!ToolGroup.all.selectOne(e|e.title='Connections').tools.selectOne(e|e.title='InfoType');
+	creationToolInfoType.description='Relationship between Message and InfoType';		
