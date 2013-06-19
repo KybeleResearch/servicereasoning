@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            adaptable="false"
+            id="Generator - Add InfoTypes"
+            nameFilter="*.xmi"
+            objectClass="org.eclipse.core.resources.IFile">
+         <action
+               class="asdgenerator1.generator1"
+               enablesFor="1"
+               id="Generator - Add InfoType"
+               label="Generator - Add InfoType">
+         </action>
+      </objectContribution>
+      <objectContribution
+            adaptable="false"
+            id="Generator - Add InfoTypes Extension editor"
+            nameFilter="*.asd"
+            objectClass="org.eclipse.core.resources.IFile">
+         <action
+               class="asdgenerator1.generator1"
+               enablesFor="1"
+               id="Generator - Add InfoTypes Extension editor"
+               label="Generator - Add InfoTypes">
+         </action>
+      </objectContribution>
+      <objectContribution
+            adaptable="false"
+            id="Generator - Add InfoTypes Extension ecore"
+            nameFilter="*.ecore"
+            objectClass="org.eclipse.core.resources.IFile">
+         <action
+               class="asdgenerator1.generator1"
+               enablesFor="1"
+               id="Generator - Add InfoTypes Extension ecore"
+               label="Generator - Add InfoTypes">
+         </action>
+      </objectContribution>
+   </extension>
+
+</plugin>
