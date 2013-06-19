@@ -1,0 +1,89 @@
+module conversor;
+
+create OUT : ASD refining IN : ASD;
+
+helper context ASD!Message def: invertRole(): String=
+	if self.role.toString()='input' then 
+		'output' 
+	else 
+		if self.role.toString()='output' then
+			'input' 
+		else
+			'fault'
+		endif
+	endif;
+
+helper context ASD!Operation def: invertMessagePattern(): String=
+	if self.messagePattern.toString()='solicitresponse' then 
+		'requestresponse' 
+	else 
+		if self.messagePattern.toString()='requestresponse' then
+			'solicitresponse' 
+		else
+			if self.messagePattern.toString()='oneway' then
+				'notification'
+			else
+				'oneway'
+			endif
+		endif
+	endif;
+
+helper context ASD!Assertion def: invertIntention(): String=
+	if self.intention.toString()='offering' then 
+		'expectation' 
+	else 
+		'offering'
+	endif;
+
+helper context ASD!NamedElement def: invertSubset(): String=
+	if self.subset.toString()='req' then 
+		'pro' 
+	else 
+		if self.subset.toString()='pro' then 
+			'req'
+		else
+			if self.subset.toString()='exp' then 
+				'off'
+			else
+				'exp'
+			endif
+		endif
+	endif;
+
+rule invertPropertiesOperation{
+	from 
+		op:ASD!Operation
+	to
+		o: ASD!Operation(
+			messagePattern <- op.invertMessagePattern()
+		)	
+}
+
+rule invertPropertiesMsg{
+	from 
+		msg:ASD!Message	
+	to
+		o: ASD!Message(
+			role <- msg.invertRole(),	
+			subset <- msg.invertSubset()
+		)	
+}
+
+rule invertPropertiesIT{
+	from 
+		it:ASD!InfoType
+	to
+		o: ASD!InfoType(
+			subset <- it.invertSubset()
+		)	
+}
+
+rule invertPropertiesAssertion{
+	from 
+		ass:ASD!Assertion
+	to
+		o: ASD!Assertion(
+			intention <- ass.invertIntention(),	
+			subset <- ass.invertSubset()
+		)	
+}
