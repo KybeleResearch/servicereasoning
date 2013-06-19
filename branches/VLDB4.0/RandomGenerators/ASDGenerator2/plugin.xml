@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            adaptable="false"
+            id="Generate different ASD models"
+            nameFilter="*.xmi"
+            objectClass="org.eclipse.core.resources.IFile">
+         <action
+               class="asdgenerator2.generator2"
+               enablesFor="1"
+               id="Generate different ASD models"
+               label="Generate different ASD models">
+         </action>
+      </objectContribution>
+      <objectContribution
+            adaptable="false"
+            id="Generate different ASD models Extension ecore"
+            nameFilter="*.ecore"
+            objectClass="org.eclipse.core.resources.IFile">
+         <action
+               class="asdgenerator2.generator2"
+               enablesFor="1"
+               id="Generate different ASD models Extension ecore"
+               label="Generate different ASD models">
+         </action>
+      </objectContribution>
+      <objectContribution
+            adaptable="false"
+            id="Generate different ASD models Extension editor"
+            nameFilter="*.asd"
+            objectClass="org.eclipse.core.resources.IFile">
+         <action
+               class="asdgenerator2.generator2"
+               enablesFor="1"
+               id="Generate different ASD models Extension editor"
+               label="Generate different ASD models">
+         </action>
+      </objectContribution>
+   </extension>
+
+</plugin>
