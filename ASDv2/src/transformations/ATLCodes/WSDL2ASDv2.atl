@@ -1,0 +1,199 @@
+module WSDL2ASDv2;
+create OUT : ASD from IN : WSDL;
+
+uses ASDHelpersv2;
+
+-- Rule 'Description2ServiceDescription'
+-- Create ASD ServiceDescription from WSDL Root Description
+rule Description2ServiceDescription {
+	from
+		i : WSDL!Description
+	to
+		o : ASD!ServiceDescription (  
+			operations <- if i.interface <> OclUndefined then
+							i.interface->collect(e| e.operation)
+						  else OclUndefined endif,
+			infotypes <-if i.types <> OclUndefined then
+							if i.types.schema<> OclUndefined then
+								i.types.schema->collect(e|e.element)
+							else
+								OclUndefined
+							endif
+						else
+							OclUndefined
+						endif
+		)	
+}
+
+-- Rule 'InterfaceOperation2Operation'
+-- Create ASD Operation from WSDL Interface Operation
+rule InterfaceOperation2Operation {
+	from
+		i : WSDL!InterfaceOperation
+	to
+		o : ASD!Operation (  
+				name <- i.name,
+				messagePattern <- i.getMessagePattern(i.pattern),
+				contents <- Sequence{i.input,i.output,i.infault,i.outfault}
+		)
+}
+
+-- Rule 'InterfaceInput2Message'
+-- Create ASD Message from WSDL Interface Input 
+rule InterfaceInput2Message{
+	from
+		i : WSDL!InterfaceInput
+	to
+		o : ASD!Message(  
+			role <- thisModule.getRole(i.messageLabel),
+			subset <- thisModule.getSubSet(i.messageLabel),
+			infoType <- if i.element = OclUndefined then
+							if i.elementImported.name<>'#none' then
+								i.elementImported
+							else
+								OclUndefined
+							endif
+						else
+							if i.element.name<>'#none' then
+								i.element
+							else
+								OclUndefined
+							endif
+						endif
+		)
+}
+
+-- Rule 'InterfaceOutput2Message'
+-- Create ASD Message from WSDL Interface Output 
+rule InterfaceOutput2Message{
+	from
+		i : WSDL!InterfaceOutput
+	to
+		o : ASD!Message(  
+			role <- thisModule.getRole(i.messageLabel),
+			subset <- thisModule.getSubSet(i.messageLabel),
+			infoType <- if i.element = OclUndefined then
+							if i.elementImported.name<>'#none' then
+								i.elementImported
+							else
+								OclUndefined
+							endif
+						else
+							if i.element.name<>'#none' then
+								i.element
+							else
+								OclUndefined
+							endif
+						endif		
+		)
+}
+
+-- Rule 'InterfaceInfault2Message'
+-- Create ASD Message from WSDL Interface Infault 
+rule InterfaceInfault2Message{
+	from
+		i : WSDL!InterfaceInfault
+	to
+		o : ASD!Message(  
+			role <- thisModule.getRole(i.messageLabel),
+			subset <- thisModule.getSubSet(i.messageLabel),
+			infoType <- if i.ref <> OclUndefined then i.ref.element else OclUndefined
+						endif
+		)
+}
+
+-- Rule 'InterfaceOutfault2Message'
+-- Create ASD Message from WSDL Interface Outfault 
+rule InterfaceOutfault2Message{
+	from
+		i : WSDL!InterfaceOutfault
+	to
+		o : ASD!Message(  
+			role <- thisModule.getRole(i.messageLabel),
+			subset <- thisModule.getSubSet(i.messageLabel),
+			infoType <- if i.ref <> OclUndefined then i.ref.element else OclUndefined
+						endif
+		)
+}
+
+-- Rule 'ElementImported2InfoTypeImported'
+-- Create ASD InfoTypeImported from WSDL ElementImported
+rule ElementImported2InfoTypeImported{
+	from
+		i : WSDL!ElementImported(
+			i.oclType()= WSDL!ElementImported and i.name<>'#none'
+		)
+	to
+		o : ASD!InfoTypeImported(  
+			name <- i.name,
+			url <- i.url,
+			valueType <- thisModule.getType(i.name),
+			service <- WSDL!Description.allInstances().first(),
+			subset <- if o.message->collect(e|e.subset)->first().oclIsUndefined()then 
+						if o.refImmediateComposite().oclType().toString()<> 'ASD!ServiceDescription' and o.refImmediateComposite() <> OclUndefined then
+							o.refImmediateComposite().subset
+						else
+							OclUndefined
+						endif
+					else o.message->collect(e|e.subset)->first() endif
+		)
+}
+
+-- Rule 'ComplexType2InfoType'
+-- Create ASD InfoType from WSDL ComplexType that are children of WSDL Schema
+rule ComplexType2InfoType{
+	from
+		i : WSDL!ComplexType(
+			i.refImmediateComposite().oclType()= WSDL!Schema
+		)
+	to
+		o : ASD!InfoType(  
+			name <- i.name,
+			valueType <- #document, 
+			infoType <- thisModule.getChildrenType(i),
+			service <- WSDL!Definitions.allInstances().first(),
+			subset <-if o.message->collect(e|e.subset)->first().oclIsUndefined()then 
+						if o.refImmediateComposite().oclType().toString()<> 'ASD!ServiceDescription' and o.refImmediateComposite() <> OclUndefined then
+							o.refImmediateComposite().subset
+						else
+							OclUndefined
+						endif
+					else o.message->collect(e|e.subset)->first() endif
+		)
+}
+
+-- Rule 'Element2InfoType'
+-- Create ASD InfoType from WSDL Element 
+rule Element2InfoType{
+	from
+		i : WSDL!Element(
+			i.oclType()= WSDL!Element
+		)
+	to
+		o : ASD!InfoType(  
+			name <- i.name,
+			valueType <- thisModule.getValueType(i),
+			valueRange <- thisModule.getRange(i),
+			infoType <-thisModule.getChildrenType(i.complexType),
+			ref <- if i.ref <> OclUndefined then 
+						i.ref 
+				   else 
+				   		if i.type.oclIsTypeOf(WSDL!ComplexType) then
+							i.type
+						else
+							if i.type.oclIsTypeOf(WSDL!SimpleType) then
+								thisModule.getRefComplexTypeOfSimpleType(i.type)
+							else
+								OclUndefined
+							endif
+						endif
+				   endif,
+			subset <- if o.message->collect(e|e.subset)->first().oclIsUndefined()then 
+						if o.refImmediateComposite().oclType().toString()<> 'ASD!ServiceDescription' and o.refImmediateComposite() <> OclUndefined then
+							o.refImmediateComposite().subset
+						else
+							OclUndefined
+						endif
+					else o.message->collect(e|e.subset)->first() endif
+		)
+}
