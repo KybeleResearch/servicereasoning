@@ -1,0 +1,1973 @@
+module WSDL2XMLv1;
+create OUT : XML from IN : WSDL;
+
+---------------------
+-- XML SCHEMA RULES--
+---------------------
+
+-- WSDL uses a XML Schema types.
+
+-- Rule 'Schema2Element'
+-- Create XML Element from Element Schema(XML SCHEMA)
+rule Schema2Element{
+	from i : WSDL!Schema
+	to 
+	o: XML!Element (
+		name <- 'xsd:schema',
+		children <- Sequence {
+			if i.targetNamespace<>OclUndefined then thisModule.getTargetNamespace(i) else OclUndefined endif,
+			if i.version<>OclUndefined then thisModule.getVersion(i) else OclUndefined endif,
+			if i.nds<>OclUndefined then thisModule.getNds(i) else OclUndefined endif,
+			if i.nsSchema<>OclUndefined then thisModule.getNsSchema(i) else OclUndefined endif,
+			if i.finalDefault<>OclUndefined then thisModule.getFinalDefault(i) else OclUndefined endif,
+			if i.blockDefault<>OclUndefined then thisModule.getBlockDefault(i) else OclUndefined endif,
+			if i.id<>OclUndefined then thisModule.getId(i) else OclUndefined endif,
+			if i.elementFormDefault<>#unset then thisModule.getElementFormDefault(i) else OclUndefined endif,
+			if i.attributeFormDefault<>#unset then thisModule.getAttributeFormDefault(i) else OclUndefined endif,
+			if i.xml_lang<>OclUndefined then thisModule.getXmlLang(i) else OclUndefined endif,
+			i.include,i.import,i.redefine,i.annotation,i.simpleType,i.complexType,i.element,
+			i.attribute,i.attributeGroup,i.group,i.notation}
+	)
+}
+
+-- Rule 'Include2Element'
+-- Create XML Element from Element Include(XML SCHEMA)
+rule Include2Element{
+	from i : WSDL!Include
+	to 
+	o: XML!Element (
+		name <- 'xsd:include',
+		children <- Sequence {
+			schemaLocation,
+			if i.id<>OclUndefined then thisModule.getId(i) else OclUndefined endif,
+			i.annotation}
+	),
+	schemaLocation : XML!Attribute (
+		name <- 'schemaLocation',
+		value <- i.schemaLocation
+	)
+}
+
+-- Rule 'ImportXMLSchema2Element'
+-- Create XML Element from Element Import(XML SCHEMA)
+rule ImportXMLSchema2Element{
+	from i : WSDL!ImportXMLSchema
+	to 
+	o: XML!Element (
+		name <- 'xsd:import',
+		children <- Sequence {
+			if i.namespace<>OclUndefined then thisModule.getNamespace(i) else OclUndefined endif,
+			if i.schemaLocation<>OclUndefined then thisModule.getSchemaLocation(i) else OclUndefined endif,
+			if i.id<>OclUndefined then thisModule.getId(i) else OclUndefined endif,
+			i.annotation}
+	)
+}
+
+-- Rule 'Redefine2Element'
+-- Create XML Element from Element Redefine(XML SCHEMA)
+rule Redefine2Element{
+	from i : WSDL!Redefine
+	to 
+	o: XML!Element (
+		name <- 'xsd:redefine',
+		children <- Sequence {
+			schemaLocation,
+			if i.id<>OclUndefined then thisModule.getId(i) else OclUndefined endif,
+			i.annotation,i.simpleType,i.complexType,i.attributeGroup,i.group}
+	),
+	schemaLocation : XML!Attribute (
+		name <- 'schemaLocation',
+		value <- i.schemaLocation
+	)
+}
+
+-- Rule 'Annotation2Element'
+-- Create XML Element from Element Annotation(XML SCHEMA)
+rule Annotation2Element{
+	from i : WSDL!Annotation
+	to 
+	o: XML!Element (
+		name <- 'xsd:annotation',
+		children <- Sequence {i.appinfo,i.documentation}
+	)
+}
+
+-- Rule 'ComplexType2Element'
+-- Create XML Element from Element ComplexType(XML SCHEMA)
+rule ComplexType2Element{
+	from i : WSDL!ComplexType
+	to 
+	o: XML!Element (
+		name <- 'xsd:complexType',
+		children <- Sequence {
+			if i.name<>OclUndefined then thisModule.getName(i) else OclUndefined endif,
+			if i.id<>OclUndefined then thisModule.getId(i) else OclUndefined endif,
+			if i.abstractDef<>OclUndefined then thisModule.getAbstractDef(i) else OclUndefined endif,
+			if i.final<>OclUndefined then thisModule.getFinal(i) else OclUndefined endif,
+			if i.block<>OclUndefined then thisModule.getBlock(i) else OclUndefined endif,
+			if i.mixed<>OclUndefined then thisModule.getMixed(i) else OclUndefined endif,
+			i.annotation,i.simpleContent,i.complexContent,i.all,i.choice,i.sequenceDef,
+			i.group,i.attribute,i.attributeGroup,i.anyAttribute}
+	)
+}
+
+-- Rule 'Element2Element'
+-- Create XML Element from Element(XML SCHEMA)
+rule Element2Element{
+	from i : WSDL!Element(
+		if i.oclIsTypeOf(WSDL!ElementImported) then 
+			false
+		else
+			true
+		endif
+	)
+	to 
+	o: XML!Element (
+		name <- 'xsd:element',
+		children <- Sequence {
+			if i.name<>OclUndefined then thisModule.getName(i) else OclUndefined endif,
+			if i.id<>OclUndefined then thisModule.getId(i) else OclUndefined endif,
+			if i.ref<>OclUndefined then	thisModule.getRef(i) else OclUndefined endif,
+			if (i.type<>OclUndefined or i.primitiveType<>OclUndefined) then thisModule.getTypeRef(i) else OclUndefined endif,
+			if i.minOccurs<>OclUndefined then thisModule.getMinOccurs(i) else OclUndefined endif,
+			if i.maxOccurs<>OclUndefined then thisModule.getMaxOccurs(i) else OclUndefined endif,
+			if i.nillable<>OclUndefined then thisModule.getNillable(i) else OclUndefined endif,
+			if i.substitutionGroup<>OclUndefined then thisModule.getSubstitutionGroup(i) else OclUndefined endif,
+			if i.abstractDef<>OclUndefined then thisModule.getAbstractDef(i) else OclUndefined endif,
+			if i.final<>OclUndefined then thisModule.getFinal(i) else OclUndefined endif,
+			if i.block<>OclUndefined then thisModule.getBlock(i) else OclUndefined endif,
+			if i.default<>OclUndefined then thisModule.getDefault(i) else OclUndefined endif,
+			if i.fixed<>OclUndefined then thisModule.getFixed(i) else OclUndefined endif,
+			if i.form<>#unset then thisModule.getForm(i) else OclUndefined endif,
+			i.annotation,i.complexType,i.simpleType,i.uniqueDef,i.key,i.keyref}
+	)
+}
+
+-- Rule 'Attribute2Element'
+-- Create XML Element from Attribute(XML SCHEMA)
+rule Attribute2Element{
+	from i : WSDL!Attribute
+	to 
+	o: XML!Element (
+		name <- 'xsd:attribute',
+		children <- Sequence {
+			if i.name<>OclUndefined then thisModule.getName(i) else OclUndefined endif,
+			if i.id<>OclUndefined then thisModule.getId(i) else OclUndefined endif,
+			if i.ref<>OclUndefined then	thisModule.getRef(i) else OclUndefined endif,
+			if (i.type<>OclUndefined or i.primitiveType<>OclUndefined) then thisModule.getTypeRef(i) else OclUndefined endif,
+			if i.use<>#unset then thisModule.getUseEnumeration(i) else OclUndefined endif,
+			if i.default<>OclUndefined then thisModule.getDefault(i) else OclUndefined endif,
+			if i.fixed<>OclUndefined then thisModule.getFixed(i) else OclUndefined endif,
+			if i.form<>#unset then thisModule.getForm(i) else OclUndefined endif,
+			i.annotation,i.simpleType}
+	)
+}
+
+-- Rule 'AttributeGroup2Element'
+-- Create XML Element from AttributeGroup(XML SCHEMA)
+rule AttributeGroup2Element{
+	from i : WSDL!AttributeGroup
+	to 
+	o: XML!Element (
+		name <- 'xsd:attributeGroup',
+		children <- Sequence {
+			if i.name<>OclUndefined then thisModule.getName(i) else OclUndefined endif,
+			if i.id<>OclUndefined then thisModule.getId(i) else OclUndefined endif,
+			if i.ref<>OclUndefined then	thisModule.getRef(i) else OclUndefined endif,
+			i.annotation,i.attribute,i.attributeGroup,i.anyAttribute}
+	)
+}
+
+-- Rule 'Group2Element'
+-- Create XML Element from Group(XML SCHEMA)
+rule Group2Element{
+	from i : WSDL!Group
+	to 
+	o: XML!Element (
+		name <- 'xsd:group',
+		children <- Sequence {
+			if i.name<>OclUndefined then thisModule.getName(i) else OclUndefined endif,
+			if i.ref<>OclUndefined then	thisModule.getRef(i) else OclUndefined endif,
+			if i.minOccurs<>OclUndefined then thisModule.getMinOccurs(i) else OclUndefined endif,
+			if i.maxOccurs<>OclUndefined then thisModule.getMaxOccurs(i) else OclUndefined endif,
+			if i.id<>OclUndefined then thisModule.getId(i) else OclUndefined endif,
+			i.annotation,i.all,i.choice,i.sequenceDef}
+	)
+}
+
+-- Rule 'Notation2Element'
+-- Create XML Element from Notation(XML SCHEMA)
+rule Notation2Element{
+	from i : WSDL!Notation
+	to 
+	o: XML!Element (
+		name <- 'xsd:notation',
+		children <- Sequence {
+			name,public,
+			if i.id<>OclUndefined then thisModule.getId(i) else OclUndefined endif,
+			if i.system<>OclUndefined then thisModule.getSystem(i) else OclUndefined endif,
+			i.annotation}
+	),
+	name : XML!Attribute (
+		name <- 'name',
+		value <- i.name
+	),
+	public: XML!Attribute (
+		name <- 'public',
+		value <- i.public
+	)
+}
+
+-- Rule 'SimpleContent2Element'
+-- Create XML Element from SimpleContent(XML SCHEMA)
+rule SimpleContent2Element{
+	from i : WSDL!SimpleContent
+	to 
+	o: XML!Element (
+		name <- 'xsd:simpleContent',
+		children <- Sequence {
+			if i.id<>OclUndefined then thisModule.getId(i) else OclUndefined endif,
+			i.annotation,i.restriction,i.extension}
+	)
+}
+
+-- Rule 'ComplexContent2Element'
+-- Create XML Element from ComplexContent(XML SCHEMA)
+rule ComplexContent2Element{
+	from i : WSDL!ComplexContent
+	to 
+	o: XML!Element (
+		name <- 'xsd:complexContent',
+		children <- Sequence {
+			if i.mixed<>OclUndefined then thisModule.getMixed(i) else OclUndefined endif,
+			if i.id<>OclUndefined then thisModule.getId(i) else OclUndefined endif,
+			i.annotation,i.restriction,i.extension}
+	)
+}
+
+-- Rule 'Unique2Element'
+-- Create XML Element from Unique(XML SCHEMA)
+rule Unique2Element{
+	from i : WSDL!Unique
+	to 
+	o: XML!Element (
+		name <- 'xsd:unique',
+		children <- Sequence {
+			name,
+			if i.id<>OclUndefined then thisModule.getId(i) else OclUndefined endif,
+			i.annotation,i.selector,i.field}
+	),
+	name: XML!Attribute (
+		name <- 'name',
+		value <- i.name
+	)
+}
+
+-- Rule 'Key2Element'
+-- Create XML Element from Key(XML SCHEMA)
+rule Key2Element{
+	from i : WSDL!Key
+	to 
+	o: XML!Element (
+		name <- 'xsd:key',
+		children <- Sequence {
+			name,
+			if i.id<>OclUndefined then thisModule.getId(i) else OclUndefined endif,
+			i.annotation,i.selector,i.field}
+	),
+	name: XML!Attribute (
+		name <- 'name',
+		value <- i.name
+	)
+}
+
+-- Rule 'KeyRef2Element'
+-- Create XML Element from KeyRef(XML SCHEMA)
+rule KeyRef2Element{
+	from i : WSDL!KeyRef
+	to 
+	o: XML!Element (
+		name <- 'xsd:keyref',
+		children <- Sequence {
+			name,refer,
+			if i.id<>OclUndefined then thisModule.getId(i) else OclUndefined endif,
+			i.annotation,i.selector,i.field}
+	),
+	name: XML!Attribute (
+		name <- 'name',
+		value <- i.name
+	),
+	refer: XML!Attribute (
+		name <- 'refer',
+		value <- if i.refer <> OclUndefined then 
+					if i.refer.name = OclUndefined then 
+						i.refer.id
+					else i.refer.name endif
+				 else OclUndefined
+				 endif
+	)
+}
+
+-- Rule 'AnyAttribute2Element'
+-- Create XML Element from AnyAttribute(XML SCHEMA)
+rule AnyAttribute2Element{
+	from i : WSDL!AnyAttribute
+	to 
+	o: XML!Element (
+		name <- 'xsd:anyAttribute',
+		children <- Sequence {
+			if i.namespace<>OclUndefined then thisModule.getNamespace(i) else OclUndefined endif,
+			if i.processContents<>#unset then thisModule.getProcessContents(i) else OclUndefined endif,
+			if i.id<>OclUndefined then thisModule.getId(i) else OclUndefined endif,
+			i.annotation}
+	)
+}
+
+-- Rule 'Extension2Element'
+-- Create XML Element from Extension(XML SCHEMA)
+rule Extension2Element{
+	from i : WSDL!Extension
+	to 
+	o: XML!Element (
+		name <- 'xsd:extension',
+		children <- Sequence {
+			base,
+			if i.id<>OclUndefined then thisModule.getId(i) else OclUndefined endif,
+			i.annotation,i.all,i.choice,i.sequenceDef,i.group,i.attribute,i.attributeGroup,
+			i.anyAttribute}
+	),
+	base: XML!Attribute (
+		name <- 'base',
+		value <- if i.base<>OclUndefined then
+					if i.base.name <> OclUndefined then
+						i.base.name
+					else
+						i.base.id
+					endif
+				 else
+				 	i.primitiveType
+				 endif
+	)
+}
+
+-- Rule 'Selector2Element'
+-- Create XML Element from Selector(XML SCHEMA)
+rule Selector2Element{
+	from i : WSDL!Selector
+	to 
+	o: XML!Element (
+		name <- 'xsd:selector',
+		children <- Sequence {
+			xpath,
+			if i.id<>OclUndefined then thisModule.getId(i) else OclUndefined endif,
+			i.annotation}
+	),
+	xpath: XML!Attribute (
+		name <- 'xpath',
+		value <- i.xpath
+	)
+}
+
+-- Rule 'Field2Element'
+-- Create XML Element from Field(XML SCHEMA)
+rule Field2Element{
+	from i : WSDL!Field
+	to 
+	o: XML!Element (
+		name <- 'xsd:field',
+		children <- Sequence {
+			xpath,
+			if i.id<>OclUndefined then thisModule.getId(i) else OclUndefined endif,
+			i.annotation}
+	),
+	xpath: XML!Attribute (
+		name <- 'xpath',
+		value <- i.xpath
+	)
+}
+
+-- Rule 'AppInfo2Element'
+-- Create XML Element from AppInfo(XML SCHEMA)
+rule AppInfo2Element{
+	from i : WSDL!AppInfo
+	to 
+	o: XML!Element (
+		name <- 'xsd:appinfo',
+		children <- Sequence {
+			if i.source<>OclUndefined then thisModule.getSource(i) else OclUndefined endif,
+			if i.id<>OclUndefined then thisModule.getId(i) else OclUndefined endif,
+			i.any}
+	)
+}
+
+-- Rule 'DocumentationXMLSchema2Element'
+-- Create XML Element from Documentation(XML SCHEMA)
+rule DocumentationXMLSchema2Element{
+	from i : WSDL!DocumentationXMLSchema
+	to 
+	o: XML!Element (
+		name <- 'xsd:documentation',
+		children <- Sequence {
+			if i.source<>OclUndefined then thisModule.getSource(i) else OclUndefined endif,
+			if i.id<>OclUndefined then thisModule.getId(i) else OclUndefined endif,
+			if i.xml_lang <> OclUndefined then thisModule.getXmlLang(i) else OclUndefined endif,
+			i.any,i.text}
+	)
+}
+
+-- Rule 'Any2Element'
+-- Create XML Element from Any(XML SCHEMA)
+rule Any2Element{
+	from i : WSDL!Any
+	to 
+	o: XML!Element (
+		name <- 'xsd:any',
+		children <- Sequence {
+			if i.namespace<>OclUndefined then thisModule.getNamespace(i) else OclUndefined endif,
+			if i.processContents<>#unset then thisModule.getProcessContents(i) else OclUndefined endif,
+			if i.minOccurs<>OclUndefined then thisModule.getMinOccurs(i) else OclUndefined endif,
+			if i.maxOccurs<>OclUndefined then thisModule.getMaxOccurs(i) else OclUndefined endif,
+			if i.id<>OclUndefined then thisModule.getId(i) else OclUndefined endif,
+			i.annotation}
+	)
+}
+
+-- Rule 'All2Element'
+-- Create XML Element from All(XML SCHEMA)
+rule All2Element{
+	from i : WSDL!All
+	to 
+	o: XML!Element (
+		name <- 'xsd:all',
+		children <- Sequence {
+			if i.minOccurs<>OclUndefined then thisModule.getMinOccurs(i) else OclUndefined endif,
+			if i.maxOccurs<>OclUndefined then thisModule.getMaxOccurs(i) else OclUndefined endif,
+			if i.id<>OclUndefined then thisModule.getId(i) else OclUndefined endif,
+			i.annotation,i.element}
+	)
+}
+
+-- Rule 'Choice2Element'
+-- Create XML Element from Choice(XML SCHEMA)
+rule Choice2Element{
+	from i : WSDL!Choice
+	to 
+	o: XML!Element (
+		name <- 'xsd:choice',
+		children <- Sequence {
+			if i.minOccurs<>OclUndefined then thisModule.getMinOccurs(i) else OclUndefined endif,
+			if i.maxOccurs<>OclUndefined then thisModule.getMaxOccurs(i) else OclUndefined endif,
+			if i.id<>OclUndefined then thisModule.getId(i) else OclUndefined endif,
+			i.annotation,i.element,i.group,i.choice,i.sequenceDef,i.any}
+	)
+}
+
+-- Rule 'SequenceType2Element'
+-- Create XML Element from Sequence(XML SCHEMA)
+rule SequenceType2Element{
+	from i : WSDL!SequenceType
+	to 
+	o: XML!Element (
+		name <- 'xsd:sequence',
+		children <- Sequence {
+			if i.minOccurs<>OclUndefined then thisModule.getMinOccurs(i) else OclUndefined endif,
+			if i.maxOccurs<>OclUndefined then thisModule.getMaxOccurs(i) else OclUndefined endif,
+			if i.id<>OclUndefined then thisModule.getId(i) else OclUndefined endif,
+			i.annotation,i.element,i.group,i.choice,i.sequenceDef,i.any}
+	)
+}
+
+-- Rule 'SimpleType2Element'
+-- Create XML Element from SimpleType(XML SCHEMA)
+rule SimpleType2Element{
+	from i : WSDL!SimpleType
+	to 
+	o: XML!Element (
+		name <- 'xsd:simpleType',
+		children <- Sequence {
+			if i.name<>OclUndefined then thisModule.getName(i) else OclUndefined endif,
+			if i.final<>OclUndefined then thisModule.getFinal(i) else OclUndefined endif,
+			if i.id<>OclUndefined then thisModule.getId(i) else OclUndefined endif,
+			i.annotation,i.restriction,i.list,i.union}
+	)
+}
+
+-- Rule 'List2Element'
+-- Create XML Element from List(XML SCHEMA)
+rule List2Element{
+	from i : WSDL!List
+	to 
+	o: XML!Element (
+		name <- 'xsd:list',
+		children <- Sequence {
+			if (i.itemType<>OclUndefined or i.primitiveType<>OclUndefined) then thisModule.getItemType(i) else OclUndefined endif,
+			if i.id<>OclUndefined then thisModule.getId(i) else OclUndefined endif,
+			i.annotation,i.simpleType}
+	)
+}
+
+-- Rule 'Union2Element'
+-- Create XML Element from Union(XML SCHEMA)
+rule Union2Element{
+	from i : WSDL!Union
+	to 
+	o: XML!Element (
+		name <- 'xsd:union',
+		children <- Sequence {
+			if i.id<>OclUndefined then thisModule.getId(i) else OclUndefined endif,
+			if i.memberTypes<>OclUndefined then thisModule.getMemberTypes(i) else OclUndefined endif,
+			i.annotation,i.simpleType}
+	)
+}
+
+-- Rule 'Restriction2Element'
+-- Create XML Element from Restriction(XML SCHEMA)
+rule Restriction2Element{
+	from i : WSDL!Restriction
+	to 
+	o: XML!Element (
+		name <- 'xsd:restriction',
+		children <- Sequence {
+			if (i.base<>OclUndefined or i.primitiveType<>OclUndefined) then thisModule.getBase(i) else OclUndefined endif,
+			if i.id<>OclUndefined then thisModule.getId(i) else OclUndefined endif,
+			i.annotation,i.all,i.choice,i.sequenceDef,i.group,i.simpleType,i.minExclusive,
+			i.minInclusive,i.maxExclusive,i.maxInclusive,i.totalDigits,i.fractionDigits,i.pattern,
+			i.enumeration,i.whiteSpace,i.length,i.maxLength,i.minLength,i.attribute,i.attributeGroup,
+			i.anyAttribute}
+	)
+}
+
+-- Rule 'MinInclusive2Element'
+-- Create XML Element from MinInclusive(XML SCHEMA)
+rule MinInclusive2Element{
+	from i : WSDL!MinInclusive
+	to 
+	o: XML!Element (
+		name <- 'xsd:minInclusive',
+		children <- Sequence {
+			value,
+			if i.id<>OclUndefined then thisModule.getId(i) else OclUndefined endif,
+			if i.fixed<>OclUndefined then thisModule.getFixedBoolean(i) else OclUndefined endif,
+			i.annotation}
+	),
+	value: XML!Attribute (
+		name <- 'value',
+		value <- i.value
+	)
+}
+
+-- Rule 'MinExclusive2Element'
+-- Create XML Element from MinExclusive(XML SCHEMA)
+rule MinExclusive2Element{
+	from i : WSDL!MinExclusive
+	to 
+	o: XML!Element (
+		name <- 'xsd:minExclusive',
+		children <- Sequence {
+			value,
+			if i.id<>OclUndefined then thisModule.getId(i) else OclUndefined endif,
+			if i.fixed<>OclUndefined then thisModule.getFixedBoolean(i) else OclUndefined endif,
+			i.annotation}
+	),
+	value: XML!Attribute (
+		name <- 'value',
+		value <- i.value
+	)
+}
+
+-- Rule 'MaxInclusive2Element'
+-- Create XML Element from MaxInclusive(XML SCHEMA)
+rule MaxInclusive2Element{
+	from i : WSDL!MaxInclusive
+	to 
+	o: XML!Element (
+		name <- 'xsd:maxInclusive',
+		children <- Sequence {
+			value,
+			if i.id<>OclUndefined then thisModule.getId(i) else OclUndefined endif,
+			if i.fixed<>OclUndefined then thisModule.getFixedBoolean(i) else OclUndefined endif,
+			i.annotation}
+	),
+	value: XML!Attribute (
+		name <- 'value',
+		value <- i.value
+	)
+}
+
+-- Rule 'MaxExclusive2Element'
+-- Create XML Element from MaxExclusive(XML SCHEMA)
+rule MaxExclusive2Element{
+	from i : WSDL!MaxExclusive
+	to 
+	o: XML!Element (
+		name <- 'xsd:maxExclusive',
+		children <- Sequence {
+			value,
+			if i.id<>OclUndefined then thisModule.getId(i) else OclUndefined endif,
+			if i.fixed<>OclUndefined then thisModule.getFixedBoolean(i) else OclUndefined endif,
+			i.annotation}
+	),
+	value: XML!Attribute (
+		name <- 'value',
+		value <- i.value
+	)
+}
+
+-- Rule 'TotalDigits2Element'
+-- Create XML Element from TotalDigits(XML SCHEMA)
+rule TotalDigits2Element{
+	from i : WSDL!TotalDigits
+	to 
+	o: XML!Element (
+		name <- 'xsd:totalDigits',
+		children <- Sequence {
+			value,
+			if i.id<>OclUndefined then thisModule.getId(i) else OclUndefined endif,
+			if i.fixed<>OclUndefined then thisModule.getFixedBoolean(i) else OclUndefined endif,
+			i.annotation}
+	),
+	value: XML!Attribute (
+		name <- 'value',
+		value <- i.value
+	)
+}
+
+-- Rule 'FractionDigits2Element'
+-- Create XML Element from FractionDigits(XML SCHEMA)
+rule FractionDigits2Element{
+	from i : WSDL!FractionDigits
+	to 
+	o: XML!Element (
+		name <- 'xsd:fractionDigits',
+		children <- Sequence {
+			value,
+			if i.id<>OclUndefined then thisModule.getId(i) else OclUndefined endif,
+			if i.fixed<>OclUndefined then thisModule.getFixedBoolean(i) else OclUndefined endif,
+			i.annotation}
+	),
+	value: XML!Attribute (
+		name <- 'value',
+		value <- i.value
+	)
+}
+
+-- Rule 'Pattern2Element'
+-- Create XML Element from Pattern(XML SCHEMA)
+rule Pattern2Element{
+	from i : WSDL!Pattern
+	to 
+	o: XML!Element (
+		name <- 'xsd:pattern',
+		children <- Sequence {
+			value,
+			if i.id<>OclUndefined then thisModule.getId(i) else OclUndefined endif,
+			i.annotation}
+	),
+	value: XML!Attribute (
+		name <- 'value',
+		value <- i.value
+	)
+}
+
+-- Rule 'Enumeration2Element'
+-- Create XML Element from Enumeration(XML SCHEMA)
+rule Enumeration2Element{
+	from i : WSDL!Enumeration
+	to 
+	o: XML!Element (
+		name <- 'xsd:enumeration',
+		children <- Sequence {
+			value,
+			if i.id<>OclUndefined then thisModule.getId(i) else OclUndefined endif,
+			i.annotation}
+	),
+	value: XML!Attribute (
+		name <- 'value',
+		value <- i.value
+	)
+}
+
+-- Rule 'WhiteSpace2Element'
+-- Create XML Element from WhiteSpace(XML SCHEMA)
+rule WhiteSpace2Element{
+	from i : WSDL!WhiteSpace
+	to 
+	o: XML!Element (
+		name <- 'xsd:whiteSpace',
+		children <- Sequence {
+			value,
+			if i.id<>OclUndefined then thisModule.getId(i) else OclUndefined endif,
+			if i.fixed<>OclUndefined then thisModule.getFixedBoolean(i) else OclUndefined endif,
+			i.annotation}
+	),
+	value: XML!Attribute (
+		name <- 'value',
+		value <- i.value
+	)
+}
+
+-- Rule 'Length2Element'
+-- Create XML Element from Length(XML SCHEMA)
+rule Length2Element{
+	from i : WSDL!Length
+	to 
+	o: XML!Element (
+		name <- 'xsd:length',
+		children <- Sequence {
+			value,
+			if i.id<>OclUndefined then thisModule.getId(i) else OclUndefined endif,
+			if i.fixed<>OclUndefined then thisModule.getFixedBoolean(i) else OclUndefined endif,
+			i.annotation}
+	),
+	value: XML!Attribute (
+		name <- 'value',
+		value <- i.value
+	)
+}
+
+-- Rule 'MaxLength2Element'
+-- Create XML Element from MaxLength(XML SCHEMA)
+rule MaxLength2Element{
+	from i : WSDL!MaxLength
+	to 
+	o: XML!Element (
+		name <- 'xsd:maxLength',
+		children <- Sequence {
+			value,
+			if i.id<>OclUndefined then thisModule.getId(i) else OclUndefined endif,
+			if i.fixed<>OclUndefined then thisModule.getFixedBoolean(i) else OclUndefined endif,
+			i.annotation}
+	),
+	value: XML!Attribute (
+		name <- 'value',
+		value <- i.value
+	)
+}
+
+-- Rule 'MinLength2Element'
+-- Create XML Element from MinLength(XML SCHEMA)
+rule MinLength2Element{
+	from i : WSDL!MinLength
+	to 
+	o: XML!Element (
+		name <- 'xsd:minLength',
+		children <- Sequence {
+			value,
+			if i.id<>OclUndefined then thisModule.getId(i) else OclUndefined endif,
+			if i.fixed<>OclUndefined then thisModule.getFixedBoolean(i) else OclUndefined endif,
+			i.annotation}
+	),
+	value: XML!Attribute (
+		name <- 'value',
+		value <- i.value
+	)
+}
+
+--------------------
+-- WSDL SOAP RULES--
+--------------------
+
+-- Rule 'BindingSOAP2Element'
+-- Create XML Element from Binding(SOAP)
+rule BindingSOAP2Element{
+	from i : WSDL!BindingSOAP
+	to 
+	o: XML!Element (
+		name <- 'soap:binding',
+		children <- Sequence {
+			if i.style<>OclUndefined then thisModule.getStyle(i) else OclUndefined endif,
+			if i.transport<>OclUndefined then thisModule.getTransport(i) else OclUndefined endif
+		}
+	)
+}
+
+-- Rule 'OperationSOAP2Element'
+-- Create XML Element from Operation(SOAP)
+rule OperationSOAP2Element{
+	from i : WSDL!OperationSOAP
+	to 
+	o: XML!Element (
+		name <- 'soap:operation',
+		children <- Sequence {
+			if i.soapAction<>OclUndefined then thisModule.getSoapAction(i) else OclUndefined endif,
+			if i.style<>OclUndefined then thisModule.getStyle(i) else OclUndefined endif	
+		}
+	)
+}
+
+-- Rule 'BodySOAP2Element'
+-- Create XML Element from Body(SOAP)
+rule BodySOAP2Element{
+	from i : WSDL!BodySOAP
+	to 
+	o: XML!Element (
+		name <- 'soap:body',
+		children <- Sequence {
+			if i.parts<>OclUndefined then thisModule.getParts(i) else OclUndefined endif,
+			if i.use<>OclUndefined then thisModule.getUse(i) else OclUndefined endif,
+			if i.encodingStyle<>OclUndefined then thisModule.getEncodingStyle(i) else OclUndefined endif,	
+			if i.namespace<>OclUndefined then thisModule.getNamespace(i) else OclUndefined endif
+		}
+	)
+}
+
+-- Rule 'HeaderSOAP2Element'
+-- Create XML Element from Header(SOAP)
+rule HeaderSOAP2Element{
+	from i : WSDL!HeaderSOAP
+	to 
+	o: XML!Element (
+		name <- 'soap:header',
+		children <- Sequence {
+			message,part,use,
+			if i.encodingStyle<>OclUndefined then thisModule.getEncodingStyle(i) else OclUndefined endif,	
+			if i.namespace<>OclUndefined then thisModule.getNamespace(i) else OclUndefined endif,
+			i.headerfault
+		}
+	),
+	message: XML!Attribute (
+		name <- 'message',
+		value <- if i.message <> OclUndefined then
+					i.message.name
+				 else
+				 	OclUndefined
+				 endif
+	),
+	part: XML!Attribute (
+		name <- 'part',
+		value <- i.part
+	),
+	use: XML!Attribute (
+		name <- 'use',
+		value <- i.use
+	)
+}
+
+-- Rule 'HeaderFaultSOAP2Element'
+-- Create XML Element from HeaderFault(SOAP)
+rule HeaderFaultSOAP2Element{
+	from i : WSDL!HeaderFaultSOAP
+	to 
+	o: XML!Element (
+		name <- 'soap:headerfault',
+		children <- Sequence {
+			message,part,use,
+			if i.encodingStyle<>OclUndefined then thisModule.getEncodingStyle(i) else OclUndefined endif,	
+			if i.namespace<>OclUndefined then thisModule.getNamespace(i) else OclUndefined endif
+		}
+	),
+	message: XML!Attribute (
+		name <- 'message',
+		value <- if i.message <> OclUndefined then
+					i.message.name
+				 else
+				 	OclUndefined
+				 endif
+	),
+	part: XML!Attribute (
+		name <- 'part',
+		value <- i.part
+	),
+	use: XML!Attribute (
+		name <- 'use',
+		value <- i.use
+	)
+}
+
+-- Rule 'AddressSOAP2Element'
+-- Create XML Element from Address(SOAP)
+rule AddressSOAP2Element{
+	from i : WSDL!AddressSOAP
+	to 
+	o: XML!Element (
+		name <- 'soap:address',
+		children <- Sequence {location}
+	),
+	location: XML!Attribute (
+		name <- 'location',
+		value <- i.location
+	)
+}
+
+-- Rule 'FaultSOAP2Element'
+-- Create XML Element from Fault(SOAP)
+rule FaultSOAP2Element{
+	from i : WSDL!FaultSOAP
+	to 
+	o: XML!Element (
+		name <- 'soap:fault',
+		children <- Sequence {
+			name,use,
+			if i.encodingStyle<>OclUndefined then thisModule.getEncodingStyle(i) else OclUndefined endif,	
+			if i.namespace<>OclUndefined then thisModule.getNamespace(i) else OclUndefined endif
+		}
+	),
+	name: XML!Attribute (
+		name <- 'name',
+		value <- i.name
+	),
+	use: XML!Attribute (
+		name <- 'use',
+		value <- i.use
+	)
+}
+
+--------------------
+-- WSDL HTTP RULES--
+--------------------
+
+-- Rule 'AddressHTTP2Element'
+-- Create XML Element from Address(HTTP)
+rule AddressHTTP2Element{
+	from i : WSDL!AddressHTTP
+	to 
+	o: XML!Element (
+		name <- 'http:address',
+		children <- Sequence {location}
+	),
+	location: XML!Attribute (
+		name <- 'location',
+		value <- i.location
+	)
+}
+
+-- Rule 'OperationHTTP2Element'
+-- Create XML Element from Operation(HTTP)
+rule OperationHTTP2Element{
+	from i : WSDL!OperationHTTP
+	to 
+	o: XML!Element (
+		name <- 'http:operation',
+		children <- Sequence {location}
+	),
+	location: XML!Attribute (
+		name <- 'location',
+		value <- i.location
+	)
+}
+
+-- Rule 'URLEncoded2Element'
+-- Create XML Element from URLEncoded(HTTP)
+rule URLEncoded2Element{
+	from i : WSDL!URLEncoded
+	to 
+	o: XML!Element (
+		name <- 'http:urlEncoded'
+	)
+}
+
+-- Rule 'URLReplacement2Element'
+-- Create XML Element from URLReplacement(HTTP)
+rule URLReplacement2Element{
+	from i : WSDL!URLReplacement
+	to 
+	o: XML!Element (
+		name <- 'http:urlReplacement'
+	)
+}
+
+-- Rule 'Binding2Element'
+-- Create XML Element from Binding(HTTP)
+rule BindingHTTP2Element{
+	from i : WSDL!BindingHTTP
+	to 
+	o: XML!Element (
+		name <- 'http:binding',
+		children <- Sequence {verb}
+	),
+	verb: XML!Attribute (
+		name <- 'verb',
+		value <- i.verb
+	)
+}
+
+--------------------
+-- WSDL MIME RULES--
+--------------------
+
+-- Rule 'MIMEMultiPartRelated2Element'
+-- Create XML Element from MultiPartRelated(MIME)
+rule MIMEMultiPartRelated2Element{
+	from i : WSDL!MIMEMultiPartRelated
+	to 
+	o: XML!Element (
+		name <- 'mime:multipartRelated',
+		children <- Sequence {i.part}
+	)
+}
+
+-- Rule 'MIMEPart2Element'
+-- Create XML Element from Part(MIME)
+rule MIMEPart2Element{
+	from i : WSDL!MIMEPart
+	to 
+	o: XML!Element (
+		name <- 'mime:part',
+		children <- Sequence {i.content,i.mimeXml,i.body}
+	)
+}
+
+-- Rule 'MIMEContent2Element'
+-- Create XML Element from Content(MIME)
+rule MIMEContent2Element{
+	from i : WSDL!MIMEContent
+	to 
+	o: XML!Element (
+		name <- 'mime:content',
+		children <- Sequence {
+			if i.part<>OclUndefined then thisModule.getPart(i) else OclUndefined endif,	
+			if i.type<>OclUndefined then thisModule.getType(i) else OclUndefined endif
+		}
+	)
+}
+
+-- Rule 'MIMEXml2Element'
+-- Create XML Element from MIMEXml(MIME)
+rule MIMEXml2Element{
+	from i : WSDL!MIMEXml
+	to 
+	o: XML!Element (
+		name <- 'mime:mimeXml',
+		children <- Sequence {
+			if i.part<>OclUndefined then thisModule.getPart(i) else OclUndefined endif
+		}
+	)
+}
+
+---------------
+-- WSDL RULES--
+---------------
+
+-- Rule 'PortTypeFault2Element'
+-- Create XML Element from PortType Fault(WSDL)
+rule PortTypeFault2Element{
+	from i : WSDL!PortTypeFault
+	to 
+	o: XML!Element (
+		name <- 'fault',
+		children <- Sequence {name,message,i.documentation}
+	),
+	name: XML!Attribute (
+		name <- 'name',
+		value <- i.name
+	),
+	message: XML!Attribute (
+		name <- 'message',
+		value <- if i.message <> OclUndefined then
+					i.message.name
+				 else
+				 	OclUndefined
+				 endif
+	)
+}
+
+-- Rule 'Definitions2Root'
+-- Create XML Root from Definitions(WSDL)
+rule Definitions2Root{
+	from i : WSDL!Definitions
+	to 
+	o: XML!Root (
+		name <- 'definitions',
+		children <- Sequence {
+			if i.name<>OclUndefined then thisModule.getName(i) else OclUndefined endif,
+			if i.targetNamespace<>OclUndefined then thisModule.getTargetNamespace(i) else OclUndefined endif,
+			i.binding,i.service,i.portType,i.message,i.types,i.namespace,i.import,i.documentation
+		}
+	)
+}
+
+-- Rule 'ElementType2Element'
+-- Create XML Element from Types(WSDL)
+rule ElementType2Element{
+	from i : WSDL!ElementType
+	to 
+	o: XML!Element (
+		name <- 'types',
+		children <- Sequence {i.schema,i.documentation}
+	)
+}
+
+-- Rule 'Message2Element'
+-- Create XML Element from Message(WSDL)
+rule Message2Element{
+	from i : WSDL!Message
+	to 
+	o: XML!Element (
+		name <- 'message',
+		children <- Sequence {name,i.part,i.documentation}
+	),
+	name: XML!Attribute (
+		name <- 'name',
+		value <- i.name
+	)
+}
+
+-- Rule 'Part2Element'
+-- Create XML Element from Part(WSDL)
+rule Part2Element{
+	from i : WSDL!Part
+	to 
+	o: XML!Element (
+		name <- 'part',
+		children <- Sequence {
+			name,
+			if i.element<>OclUndefined then thisModule.getElement(i) else OclUndefined endif,
+			if i.elementImported<>OclUndefined then thisModule.getElementImported(i) else OclUndefined endif,
+			if i.type<>OclUndefined then thisModule.getTypeRefPart(i) else OclUndefined endif
+		}
+	),
+	name: XML!Attribute (
+		name <- 'name',
+		value <- i.name
+	)
+}
+
+-- Rule 'PortType2Element'
+-- Create XML Element from PortType(WSDL)
+rule PortType2Element{
+	from i : WSDL!PortType
+	to 
+	o: XML!Element (
+		name <- 'portType',
+		children <- Sequence {name,i.operation,i.documentation}
+	),
+	name: XML!Attribute (
+		name <- 'name',
+		value <- i.name
+	)
+}
+
+-- Rule 'PortTypeOperation2Element'
+-- Create XML Element from PortType Operation(WSDL)
+rule PortTypeOperation2Element{
+	from i : WSDL!PortTypeOperation
+	to 
+	o: XML!Element (
+		name <- 'operation',
+		children <- Sequence {name,i.output,i.input,i.fault,i.documentation}
+	),
+	name: XML!Attribute (
+		name <- 'name',
+		value <- i.name
+	)
+}
+
+-- Rule 'PortTypeInput2Element'
+-- Create XML Element from PortType Input(WSDL)
+rule PortTypeInput2Element{
+	from i : WSDL!PortTypeInput
+	to 
+	o: XML!Element (
+		name <- 'input',
+		children <- Sequence {
+			message,
+			if i.name<>OclUndefined then thisModule.getName(i) else OclUndefined endif,
+			i.documentation}
+	),
+	message: XML!Attribute (
+		name <- 'message',
+		value <- if i.message <> OclUndefined then
+					i.message.name
+				 else
+				 	OclUndefined
+				 endif
+	)
+}
+
+-- Rule 'PortTypeOutput2Element'
+-- Create XML Element from PortType Output(WSDL)
+rule PortTypeOutput2Element{
+	from i : WSDL!PortTypeOutput
+	to 
+	o: XML!Element (
+		name <- 'output',
+		children <- Sequence {
+			message,
+			if i.name<>OclUndefined then thisModule.getName(i) else OclUndefined endif,
+			i.documentation}
+	),
+	message: XML!Attribute (
+		name <- 'message',
+		value <- if i.message <> OclUndefined then
+					i.message.name
+				 else
+				 	OclUndefined
+				 endif
+	)
+}
+
+-- Rule 'Binding2Element'
+-- Create XML Element from Binding(WSDL)
+rule Binding2Element{
+	from i : WSDL!Binding
+	to 
+	o: XML!Element (
+		name <- 'binding',
+		children <- Sequence {name,type,i.operation,i.soapbinding,i.httpbinding,i.documentation}
+	),
+	name: XML!Attribute (
+		name <- 'name',
+		value <- i.name
+	),
+	type: XML!Attribute (
+		name <- 'type',
+		value <- if i.type <> OclUndefined then
+					i.type.name
+				 else
+				 	OclUndefined
+				 endif
+	)
+}
+
+-- Rule 'BindingOperation2Element'
+-- Create XML Element from Binding Operation(WSDL)
+rule BindingOperation2Element{
+	from i : WSDL!BindingOperation
+	to 
+	o: XML!Element (
+		name <- 'operation',
+		children <- Sequence {name,i.output,i.input,i.fault,i.soapoperation,i.httpoperation,
+			i.documentation
+		}
+	),
+	name: XML!Attribute (
+		name <- 'name',
+		value <- i.name
+	)
+}
+
+-- Rule 'BindingInput2Element'
+-- Create XML Element from Binding Input(WSDL)
+rule BindingInput2Element{
+	from i : WSDL!BindingInput
+	to 
+	o: XML!Element (
+		name <- 'input',
+		children <- Sequence {i.body,i.header,i.urlReplacement,i.urlEncoded,
+		i.multipartRelated,i.content,i.mimeXml,i.documentation}
+	)
+}
+
+-- Rule 'BindingOutput2Element'
+-- Create XML Element from Binding Output(WSDL)
+rule BindingOutput2Element{
+	from i : WSDL!BindingOutput
+	to 
+	o: XML!Element (
+		name <- 'output',
+		children <- Sequence {i.body,i.header,i.urlReplacement,i.urlEncoded,
+		i.multipartRelated,i.content,i.mimeXml,i.documentation}
+	)
+}
+
+-- Rule 'BindingFault2Element'
+-- Create XML Element from Binding Fault(WSDL)
+rule BindingFault2Element{
+	from i : WSDL!BindingFault
+	to 
+	o: XML!Element (
+		name <- 'fault',
+		children <- Sequence {name,i.fault,i.body,i.header,i.urlReplacement,
+		i.urlEncoded,i.multipartRelated,i.content,i.mimeXml,i.documentation}
+	),
+	name: XML!Attribute (
+		name <- 'name',
+		value <- i.name
+	)
+}
+
+-- Rule 'Service2Element'
+-- Create XML Element from Service(WSDL)
+rule Service2Element{
+	from i : WSDL!Service
+	to 
+	o: XML!Element (
+		name <- 'service',
+		children <- Sequence {name,i.port,i.documentation}
+	),
+	name: XML!Attribute (
+		name <- 'name',
+		value <- i.name
+	)
+}
+
+-- Rule 'Port2Element'
+-- Create XML Element from Port(WSDL)
+rule Port2Element{
+	from i : WSDL!Port
+	to 
+	o: XML!Element (
+		name <- 'port',
+		children <- Sequence {name,binding,i.soapAddress,i.httpAddress,i.documentation}
+	),
+	name: XML!Attribute (
+		name <- 'name',
+		value <- i.name
+	),
+	binding: XML!Attribute (
+		name <- 'binding',
+		value <- if i.binding <> OclUndefined then
+					i.binding.name
+				 else
+				 	OclUndefined
+				 endif
+	)
+}
+
+-- Rule 'Import2Element'
+-- Create XML Element from Import(WSDL)
+rule Import2Element{
+	from i : WSDL!Import
+	to 
+	o: XML!Element (
+		name <- 'import',
+		children <- Sequence {location,namespace}
+	),
+	location: XML!Attribute (
+		name <- 'location',
+		value <- i.location
+	),
+	namespace: XML!Attribute (
+		name <- 'namespace',
+		value <- i.namespace
+	)
+}
+
+-- Rule 'Documentation2Element'
+-- Create XML Element from Documentation(WSDL)
+rule Documentation2Element {
+	from i : WSDL!Documentation
+	to 
+	o: XML!Element (
+		name <- 'documentation',
+		children <- Sequence {i.text}
+	)
+}
+
+-- Rule 'Text2Text'
+-- Create XML Text from Text(WSDL)
+rule Text2Text {
+	from i : WSDL!Text
+	to 
+	text : XML!Text(
+		name <- 'text',
+		value <- i.text
+	)
+}
+
+-- Rule 'Namespace'
+-- Create XML Atribute from Namespace(WSDL)
+rule Namespace{
+	from i : WSDL!Namespace
+	to 
+	o: XML!Attribute (
+		name <- thisModule.getStandarPrefix(i.name,i.value),
+		value <- i.value
+		)
+}
+
+--------------
+--LAZY RULES--
+--------------
+
+-- Rule 'getTargetNamespace'
+-- Create XML Atribute from WSDL Attribute targetNamespace
+lazy rule getTargetNamespace {
+	from i : WSDL!Schema,i_1 : WSDL!Definitions
+	to
+	targetNamespace : XML!Attribute (
+		name <- 'targetNamespace',
+		value <- i.targetNamespace
+	)
+}	
+
+-- Rule 'getVersion'
+-- Create XML Atribute from WSDL Attribute version
+lazy rule getVersion {
+	from i : WSDL!Schema
+	to
+	version : XML!Attribute (
+		name <- 'version',
+		value <- i.version
+	)
+}
+
+-- Rule 'getNds'
+-- Create XML Atribute from WSDL Attribute nds
+lazy rule getNds {
+	from i : WSDL!Schema
+	to
+	nds : XML!Attribute (
+		name <- i.nds.substring(1,i.nds.indexOf('=')),
+		value <- i.nds.substring((i.nds.indexOf('=')+2),i.nds.size())
+	)
+}
+
+-- Rule 'getNsSchema'
+-- Create XML Atribute from WSDL Attribute nsSchema
+lazy rule getNsSchema {
+	from i : WSDL!Schema
+	to
+	nsSchema: XML!Attribute (
+		name <- 'xmlns',
+		value <- i.nsSchema
+	)
+}
+
+-- Rule 'getFinalDefault'
+-- Create XML Atribute from WSDL Attribute finalDefault
+lazy rule getFinalDefault {
+	from i : WSDL!Schema
+	to
+	finalDefault: XML!Attribute (
+		name <- 'finalDefault',
+		value <- i.finalDefault
+	)
+}
+
+-- Rule 'getBlockDefault'
+-- Create XML Atribute from WSDL Attribute blockDefault
+lazy rule getBlockDefault {
+	from i : WSDL!Schema
+	to
+	blockDefault: XML!Attribute (
+		name <- 'blockDefault',
+		value <- i.blockDefault
+	)
+}
+
+-- Rule 'getId'
+-- Create XML Atribute from WSDL Attribute id
+lazy rule getId {
+	from i : WSDL!Schema,i_1: WSDL!Include,i_2: WSDL!ImportXMLSchema,i_3: WSDL!Redefine,
+		i_4: WSDL!ComplexType,i_5: WSDL!Element,i_6: WSDL!Attribute,i_7: WSDL!AttributeGroup,
+		i_8: WSDL!Group,i_9 : WSDL!Notation,i_10: WSDL!SimpleContent,i_11: WSDL!ComplexContent,
+		i_12 : WSDL!Unique,i_13 : WSDL!Key,i_14 : WSDL!KeyRef,i_15: WSDL!AnyAttribute,
+		i_16 : WSDL!Extension,i_17 : WSDL!Selector,i_18 : WSDL!Field,i_19 : WSDL!AppInfo,
+		i_20 : WSDL!DocumentationXMLSchema,i_21 : WSDL!Any,i_22 : WSDL!All,i_23 : WSDL!Choice,
+		i_24 : WSDL!SequenceType,i_25 : WSDL!SimpleType,i_26 : WSDL!List,i_27 : WSDL!Union,
+		i_28 : WSDL!Restriction,i_29 : WSDL!MinInclusive,i_30: WSDL!MinExclusive,
+		i_31 : WSDL!MaxInclusive,i_32 : WSDL!MaxExclusive,i_33 : WSDL!TotalDigits,
+		i_34 : WSDL!FractionDigits,i_35 : WSDL!Pattern,i_36 : WSDL!Enumeration,i_37 : WSDL!WhiteSpace,
+		i_38 : WSDL!Length,i_39 : WSDL!MaxLength,i_40 : WSDL!MinLength
+	to
+	id: XML!Attribute (
+		name <- 'id',
+		value <- i.id
+	)
+}
+
+-- Rule 'getElementFormDefault'
+-- Create XML Atribute from WSDL Attribute elementFormDefault
+lazy rule getElementFormDefault {
+	from i : WSDL!Schema
+	to
+	elementFormDefault: XML!Attribute (
+		name <- 'elementFormDefault',
+		value <- i.elementFormDefault.toString()
+	)
+}
+
+-- Rule 'getAttributeFormDefault'
+-- Create XML Atribute from WSDL Attribute attributeFormDefault
+lazy rule getAttributeFormDefault {
+	from i : WSDL!Schema
+	to
+	attributeFormDefault: XML!Attribute (
+		name <- 'attributeFormDefault',
+		value <- i.attributeFormDefault.toString()
+	)
+}
+
+-- Rule 'getXmlLang'
+-- Create XML Atribute from WSDL Attribute xml:lang
+lazy rule getXmlLang {
+	from i : WSDL!Schema,i_1 : WSDL!DocumentationXMLSchema
+	to
+	xml_lang : XML!Attribute (
+		name <- 'xml:lang',
+		value <- i.xml_lang
+	)
+}
+
+-- Rule 'getNamespace'
+-- Create XML Atribute from WSDL Attribute namespace
+lazy rule getNamespace {
+	from i : WSDL!ImportXMLSchema,i_1 : WSDL!AnyAttribute,i_2 : WSDL!Any,i_3 : WSDL!BodySOAP,
+	i_4 : WSDL!HeaderSOAP,i_5 : WSDL!HeaderFaultSOAP,i_6 : WSDL!FaultSOAP
+	to
+	namespace : XML!Attribute (
+		name <- 'namespace',
+		value <- i.namespace
+	)
+}
+
+-- Rule 'getSchemaLocation'
+-- Create XML Atribute from WSDL Attribute schemaLocation
+lazy rule getSchemaLocation {
+	from i : WSDL!ImportXMLSchema
+	to
+	schemaLocation : XML!Attribute (
+		name <- 'schemaLocation',
+		value <- i.schemaLocation
+	)
+}
+
+-- Rule 'getName'
+-- Create XML Atribute from WSDL Attribute name
+lazy rule getName {
+	from i : WSDL!ComplexType,i_1: WSDL!Element,i_2: WSDL!Attribute,i_3: WSDL!AttributeGroup,
+	i_4: WSDL!Group,i_5 : WSDL!SimpleType,i_6 : WSDL!Definitions,
+	i_7 : WSDL!PortTypeInput,i_8 : WSDL!PortTypeOutput
+	to
+	name : XML!Attribute (
+		name <- 'name',
+		value <- i.name
+	)
+}
+
+-- Rule 'getAbstractDef'
+-- Create XML Atribute from WSDL Attribute abstract
+lazy rule getAbstractDef {
+	from i : WSDL!ComplexType,i_1:WSDL!Element
+	to
+	abstractDef : XML!Attribute (
+		name <- 'abstract',
+		value <- i.abstractDef.toString()
+	)
+}
+
+-- Rule 'getFinal'
+-- Create XML Atribute from WSDL Attribute final
+lazy rule getFinal {
+	from i : WSDL!ComplexType,i_1: WSDL!Element,i_2 : WSDL!SimpleType
+	to
+	final: XML!Attribute (
+		name <- 'final',
+		value <- i.final
+	)
+}
+
+-- Rule 'getBlock'
+-- Create XML Atribute from WSDL Attribute block
+lazy rule getBlock {
+	from i : WSDL!ComplexType,i_1: WSDL!Element
+	to
+	block: XML!Attribute (
+		name <- 'block',
+		value <- i.block
+	)
+}
+
+-- Rule 'getMixed'
+-- Create XML Atribute from WSDL Attribute mixed
+lazy rule getMixed {
+	from i : WSDL!ComplexType,i_1: WSDL!ComplexContent
+	to
+	mixed: XML!Attribute (
+		name <- 'mixed',
+		value <- i.mixed.toString()
+	)
+}
+
+-- Rule 'getRef'
+-- Create XML Atribute from WSDL Attribute ref
+lazy rule getRef {
+	from i : WSDL!Element,i_1: WSDL!Attribute,i_2: WSDL!AttributeGroup,i_3: WSDL!Group
+	to
+	ref: XML!Attribute (
+		name <- 'ref',
+		value <- if i.ref.name = OclUndefined then i.ref.id
+					else i.ref.name endif
+	)
+}
+
+-- Rule 'getType'
+-- Create XML Atribute from WSDL Attribute type
+lazy rule getType{
+	from i : WSDL!MIMEContent
+	to
+	type : XML!Attribute (
+		name <- 'type',
+		value <- i.type
+	)
+}
+
+-- Rule 'getTypeRef'
+-- Create XML Atribute from WSDL Attribute type when is a reference
+lazy rule getTypeRef{
+	from i : WSDL!Element,i_1 : WSDL!Attribute
+	to
+	type : XML!Attribute (
+		name <- 'type',
+		value <- if i.type<>OclUndefined then
+					if i.type.name <> OclUndefined then
+						i.type.name
+					else
+						i.type.id
+					endif
+				 else
+				 	if i.primitiveType <> OclUndefined then
+						i.primitiveType
+					else
+						OclUndefined
+					endif
+				 endif
+	)
+}
+
+-- Rule 'getTypeRefPart'
+-- Create XML Atribute from WSDL Attribute type of Part when is a reference
+lazy rule getTypeRefPart{
+	from i : WSDL!Part
+	to
+	type : XML!Attribute (
+		name <- 'type',
+		value <- if i.type<>OclUndefined then
+					if i.type.name <> OclUndefined then
+						i.type.name
+					else
+						i.type.id
+					endif
+				 else
+					OclUndefined
+				 endif
+	)
+}
+
+-- Rule 'getMinOccurs'
+-- Create XML Atribute from WSDL Attribute minOccurs
+lazy rule getMinOccurs {
+	from i : WSDL!Element,i_1: WSDL!Group,i_2 : WSDL!Any,i_3 : WSDL!All,i_4 : WSDL!Choice,
+	i_5 : WSDL!SequenceType
+	to
+	minOccurs : XML!Attribute (
+		name <- 'minOccurs',
+		value <- i.minOccurs.toString()
+	)
+}
+
+-- Rule 'getMaxOccurs'
+-- Create XML Atribute from WSDL Attribute maxOccurs
+lazy rule getMaxOccurs {
+	from i : WSDL!Element,i_1: WSDL!Group,i_2 : WSDL!Any,i_3 : WSDL!All,i_4 : WSDL!Choice,
+	i_5 : WSDL!SequenceType
+	to
+	maxOccurs : XML!Attribute (
+		name <- 'maxOccurs',
+		value <- i.maxOccurs
+	)
+}
+
+-- Rule 'getNillable'
+-- Create XML Atribute from WSDL Attribute nillable
+lazy rule getNillable {
+	from i : WSDL!Element
+	to
+	nillable : XML!Attribute (
+		name <- 'nillable',
+		value <- i.nillable.toString()
+	)
+}
+
+-- Rule 'getSubstitutionGroup'
+-- Create XML Atribute from WSDL Attribute substitutionGroup
+lazy rule getSubstitutionGroup {
+	from i : WSDL!Element
+	to
+	substitutionGroup : XML!Attribute (
+		name <- 'substitutionGroup',
+		value <- if i.substitutionGroup.name = OclUndefined then i.substitutionGroup.id
+					else i.substitutionGroup.name endif
+	)
+}
+
+-- Rule 'getDefault'
+-- Create XML Atribute from WSDL Attribute default
+lazy rule getDefault {
+	from i : WSDL!Element,i_1 : WSDL!Attribute
+	to
+	default: XML!Attribute (
+		name <- 'default',
+		value <- i.default
+	)
+}
+
+-- Rule 'getFixed'
+-- Create XML Atribute from WSDL Attribute fixed
+lazy rule getFixed {
+	from i : WSDL!Element,i_1 : WSDL!Attribute
+	to
+	fixed: XML!Attribute (
+		name <- 'fixed',
+		value <- i.fixed
+	)
+}
+
+-- Rule 'getForm'
+-- Create XML Atribute from WSDL Attribute form
+lazy rule getForm {
+	from i : WSDL!Element,i_1 : WSDL!Attribute
+	to
+	form: XML!Attribute (
+		name <- 'form',
+		value <- i.form.toString()
+	)
+}
+
+-- Rule 'getUse'
+-- Create XML Atribute from WSDL Attribute use
+lazy rule getUse {
+	from i : WSDL!BodySOAP
+	to
+	use : XML!Attribute (
+		name <- 'use',
+		value <- i.use
+	)
+}
+
+-- Rule 'getUseEnumeration'
+-- Create XML Atribute from WSDL Attribute use that is a reference
+lazy rule getUseEnumeration {
+	from i : WSDL!Attribute
+	to
+	use : XML!Attribute (
+		name <- 'use',
+		value <- i.use.toString()
+	)
+}
+
+-- Rule 'getSystem'
+-- Create XML Atribute from WSDL Attribute system 
+lazy rule getSystem {
+	from i : WSDL!Notation
+	to
+	system: XML!Attribute (
+		name <- 'system',
+		value <- i.system
+	)
+}
+
+-- Rule 'getProcessContents'
+-- Create XML Atribute from WSDL Attribute processContents
+lazy rule getProcessContents {
+	from i : WSDL!AnyAttribute,i_1 : WSDL!Any
+	to
+	processContents: XML!Attribute (
+		name <- 'processContents',
+		value <- i.processContents.toString()
+	)
+}
+
+-- Rule 'getSource'
+-- Create XML Atribute from WSDL Attribute source
+lazy rule getSource {
+	from i : WSDL!AppInfo,i_1 : WSDL!DocumentationXMLSchema
+	to
+	source: XML!Attribute (
+		name <- 'source',
+		value <- i.source
+	)
+}
+
+-- Rule 'getItemType'
+-- Create XML Atribute from WSDL Attribute itemType
+lazy rule getItemType {
+	from i : WSDL!List
+	to
+	itemType: XML!Attribute (
+		name <- 'itemType',
+		value <-  if i.itemType<>OclUndefined then
+					if i.itemType.name <> OclUndefined then
+						i.itemType.name
+					else
+						i.itemType.id
+					endif
+				 else
+				 	if i.primitiveType <> OclUndefined then
+						i.primitiveType
+					else
+						OclUndefined
+					endif
+				 endif
+	)
+}
+
+-- Rule 'getMemberTypes'
+-- Create XML Atribute from WSDL Attribute memberTypes
+lazy rule getMemberTypes {
+	from i : WSDL!Union
+	to
+	memberTypes: XML!Attribute (
+		name <- 'memberTypes',
+		value <- i.memberTypes
+	)
+}
+
+-- Rule 'getBase'
+-- Create XML Atribute from WSDL Attribute base
+lazy rule getBase {
+	from i : WSDL!Restriction
+	to
+	base: XML!Attribute (
+		name <- 'base',
+		value <- if i.base<>OclUndefined then
+					if i.base.name <> OclUndefined then
+						i.base.name
+					else
+						i.base.id
+					endif
+				 else
+				 	if i.primitiveType <> OclUndefined then
+						i.primitiveType
+					else
+						OclUndefined
+					endif
+				 endif
+	)
+}
+
+-- Rule 'getFixedBoolean'
+-- Create XML Atribute from WSDL Attribute fixed that is boolean
+lazy rule getFixedBoolean {
+	from i : WSDL!MinInclusive,i_1: WSDL!MinExclusive,i_2 : WSDL!MaxInclusive,i_3 : WSDL!MaxExclusive,
+	i_4 : WSDL!TotalDigits,i_5 : WSDL!FractionDigits,i_6 : WSDL!WhiteSpace,i_7 : WSDL!Length,
+	i_8 : WSDL!MaxLength,i_9 : WSDL!MinLength
+	to
+	fixed: XML!Attribute (
+		name <- 'fixed',
+		value <- i.fixed.toString()
+	)
+}
+
+-- Rule 'getStyle'
+-- Create XML Atribute from WSDL Attribute style
+lazy rule getStyle {
+	from i : WSDL!BindingSOAP,i_1: WSDL!OperationSOAP
+	to
+	style: XML!Attribute (
+		name <- 'style',
+		value <- i.style
+	)
+}
+
+-- Rule 'getTransport'
+-- Create XML Atribute from WSDL Attribute transport
+lazy rule getTransport {
+	from i :WSDL!BindingSOAP
+	to
+	transport: XML!Attribute (
+		name <- 'transport',
+		value <- i.transport
+	)
+}
+
+-- Rule 'getSoapAction'
+-- Create XML Atribute from WSDL Attribute soapAction
+lazy rule getSoapAction {
+	from i : WSDL!OperationSOAP
+	to
+	soapAction: XML!Attribute (
+		name <- 'soapAction',
+		value <- i.soapAction
+	)
+}
+
+-- Rule 'getParts'
+-- Create XML Atribute from WSDL Attribute parts
+lazy rule getParts {
+	from i : WSDL!BodySOAP
+	to
+	parts: XML!Attribute (
+		name <- 'parts',
+		value <- i.parts
+	)
+}
+
+-- Rule 'getEncodingStyle'
+-- Create XML Atribute from WSDL Attribute encodingStyle
+lazy rule getEncodingStyle {
+	from i : WSDL!BodySOAP,i_1 : WSDL!HeaderSOAP,i_2 : WSDL!HeaderFaultSOAP,i_3 : WSDL!FaultSOAP
+	to
+	encodingStyle: XML!Attribute (
+		name <- 'encodingStyle',
+		value <- i.encodingStyle
+	)
+}
+
+-- Rule 'getPart'
+-- Create XML Atribute from WSDL Attribute part
+lazy rule getPart {
+	from i : WSDL!MIMEContent,i_1 : WSDL!MIMEXml
+	to
+	part: XML!Attribute (
+		name <- 'part',
+		value <- i.part
+	)
+}
+
+-- Rule 'getElement'
+-- Create XML Atribute from WSDL Attribute element
+lazy rule getElement{
+	from i : WSDL!Part
+	to
+	element: XML!Attribute (
+		name <- 'element',
+		value <- if i.element.name<>OclUndefined then
+					i.element.name
+				else
+					i.element.id
+				endif
+	)
+}
+
+-- Rule 'getElementImported'
+-- Create XML Atribute from WSDL Attribute elementImported
+lazy rule getElementImported {
+	from i : WSDL!Part
+	to
+	element: XML!Attribute (
+		name <- i.elementImported.orig,
+		value <- if i.elementImported.name = '#none' or i.elementImported.namespace= OclUndefined then 
+				i.elementImported.name
+			else
+				i.elementImported.namespace+':'+i.elementImported.name
+			endif
+	)
+}
+
+----------
+--HELPER--
+----------
+
+-- HELPER:	getStandarPrefix
+-- Returns 	a string corresponding to the standar prefix if the value that is
+-- 			passed as parameter corresponds to a namespace standar, if not return the
+-- 			same name passed as parameter.
+-- CONTEXT:	ThisModule
+-- IN:		String,String
+-- OUT:		String
+helper def: getStandarPrefix(name:String,value:String):String =
+	if value='http://schemas.xmlsoap.org/wsdl/soap/' then
+		'xmlns:soap'
+	else
+		if value='http://schemas.xmlsoap.org/wsdl/http/' then
+			'xmlns:http'
+		else
+			if value='http://schemas.xmlsoap.org/wsdl/mime/' then
+				'xmlns:mime'
+			else
+				if value='http://schemas.xmlsoap.org/wsdl/' then
+					'xmlns:wsdl'
+				else
+					if value='http://www.w3.org/2001/XMLSchema' or 
+					 value ='http://www.w3.org/2000/10/XMLSchema' then
+					 	'xmlns:xsd'
+					else
+						name
+					endif
+				endif
+			endif
+		endif
+	endif;
+
