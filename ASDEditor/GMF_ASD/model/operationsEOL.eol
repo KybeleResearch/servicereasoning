@@ -1,0 +1,144 @@
+
+-- Returns a GmfGraph!RGBColor
+operation createColor(r:Integer,g:Integer,b:Integer):GmfGraph!RGBColor{
+	var color= new GmfGraph!RGBColor;
+		color.red= r;
+		color.green= g;
+		color.blue= b;
+	
+	return color;
+}
+
+-- Returns a GmfGraph!LineBorder
+operation createBorder(width:Integer,color:GmfGraph!RGBColor):GmfGraph!LineBorder{
+	var border= new GmfGraph!LineBorder;
+		border.width= width;
+		border.color= color;
+	
+	return border;
+}
+
+-- Creates a GmfGraph!Point
+operation createPoint(x:Integer,y:Integer):GmfGraph!Point{
+	var point= new GmfGraph!Point;
+		point.x= x;
+		point.y= y;
+	
+	return point;
+}
+
+-- Creates a GmfGraph!BasicFont
+operation createFont(height:Integer,style:String):GmfGraph!BasicFont{
+	var font= new GmfGraph!BasicFont;
+		font.height= height;
+		if (style='BOLD'){ 
+			font.style= GmfGraph!FontStyle#BOLD;
+		}
+		else{
+			if (style='ITALIC'){
+				font.style= GmfGraph!FontStyle#ITALIC;	
+			}
+			else{
+				font.style= GmfGraph!FontStyle#NORMAL;
+			}
+		}
+	
+	return font;
+}
+
+operation getLabel(name:String,font:GmfGraph!BasicFont,color:GmfGraph!RGBColor):GmfGraph!Label{
+	var label= GmfGraph!Label.all.selectOne(n|n.name=name);
+		label.font= font;
+		label.foregroundColor= color;
+	
+	return label;
+}
+
+operation getPolylineConnection(name:String,width:Integer,color:GmfGraph!RGBColor,kind:String):GmfGraph!PolylineConnection{
+	var polyline= GmfGraph!PolylineConnection.all.selectOne(n|n.name=name);
+	polyline.lineWidth= width;
+	polyline.foregroundColor= color;
+	
+	if (kind='LINE_DASH'){ 
+		polyline.lineKind= GmfGraph!LineKind#LINE_DASH;
+	}
+	if (kind='LINE_SOLID'){ 
+		polyline.lineKind= GmfGraph!LineKind#LINE_SOLID;
+	}
+	if (kind='LINE_DOT'){ 
+		polyline.lineKind= GmfGraph!LineKind#LINE_DOT;
+	}
+	if (kind='LINE_DASHDOT'){ 
+		polyline.lineKind= GmfGraph!LineKind#LINE_DASHDOT;
+	}
+	if (kind='LINE_DASHDOTDOT'){ 
+		polyline.lineKind= GmfGraph!LineKind#LINE_DASHDOTDOT;
+	}
+	if (kind='LINE_CUSTOM'){ 
+		polyline.lineKind= GmfGraph!LineKind#LINE_CUSTOM;
+	}
+	return polyline;
+}
+
+operation getLabelInherited(name:String):Sequence(GmfGraph!Label){
+	var label: Sequence(GmfGraph!Label)= GmfGraph!Label.all.select(n|n.name=name);
+	for(i:GmfGraph!Label in label){
+		var font= createFont(8,'NORMAL');
+		var color= createColor(0,0,0);
+		i.font= font;
+		i.foregroundColor= color;
+	}
+	return label;
+}
+
+operation getFeatureLabelMapping(name:String,pattern:String):GmfMap!FeatureLabelMapping{
+	var featureLabel=GmfMap!FeatureLabelMapping.all.selectOne(e|e.diagramLabel.name=name);
+	featureLabel.viewPattern=pattern;
+	return featureLabel;
+}
+
+operation getFeatureLabelMappingInherited(name:String,pattern:String):Sequence(GmfMap!FeatureLabelMapping){
+	var featureLabel=GmfMap!FeatureLabelMapping.all.select(e|e.diagramLabel.name=name);
+	for(i:GmfMap!FeatureLabelMapping in featureLabel){
+		i.viewPattern=pattern;
+	}
+	return featureLabel;
+}
+
+operation getCreationTool(title:String,description:String):GmfTool!CreationTool{
+	var ct=GmfTool!CreationTool.all.selectOne(e|e.title=title);
+		ct.description=description;
+	return ct;
+}
+
+operation createPolylineDecoration(name:String,width:Integer,color:GmfGraph!RGBColor,kind:String):GmfGraph!PolylineDecoration{
+	var polyline= new GmfGraph!PolylineDecoration;
+	polyline.name=name;
+	polyline.lineWidth= width;
+	polyline.foregroundColor= color;
+	
+	if (kind='LINE_DASH'){ 
+		polyline.lineKind= GmfGraph!LineKind#LINE_DASH;
+	}
+	if (kind='LINE_SOLID'){ 
+		polyline.lineKind= GmfGraph!LineKind#LINE_SOLID;
+	}
+	if (kind='LINE_DOT'){ 
+		polyline.lineKind= GmfGraph!LineKind#LINE_DOT;
+	}
+	if (kind='LINE_DASHDOT'){ 
+		polyline.lineKind= GmfGraph!LineKind#LINE_DASHDOT;
+	}
+	if (kind='LINE_DASHDOTDOT'){ 
+		polyline.lineKind= GmfGraph!LineKind#LINE_DASHDOTDOT;
+	}
+	if (kind='LINE_CUSTOM'){ 
+		polyline.lineKind= GmfGraph!LineKind#LINE_CUSTOM;
+	}
+	return polyline;
+}
+
+-- Returns a FigureDescriptor
+operation getFigureDescriptor(name:String):GmfGraph!FigureDescriptor{
+	return GmfGraph!FigureDescriptor.all.selectOne(n|n.name=name);
+}

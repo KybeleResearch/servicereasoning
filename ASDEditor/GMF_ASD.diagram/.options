@@ -1,0 +1,7 @@
+# Tracing options for the GMF_ASD.diagram plug-in
+
+# Common issues
+GMF_ASD.diagram/debug=false
+
+# Visual IDs
+GMF_ASD.diagram/debug/visualID=false
