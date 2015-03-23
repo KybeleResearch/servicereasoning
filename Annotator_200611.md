@@ -1,0 +1,30 @@
+# Introduction #
+
+Created the **ServiceAnnotation** transformation (see [r91](https://code.google.com/p/servicereasoning/source/detail?r=91)) that returns the first model passed as parameter with [sub/super]typing annotations.
+To that end we use the refining mode of ATL that allows returning the very same source model with some changes. Those changes are specified in the transformation rules.
+
+Besides, it's worth noting that we have added some minor changes in the ASD metamodel:
+  * The InfoType element owns a reference to other InfoType objects (relationship ref), because sometimes defined types are global and can be used by other InfoType objects.
+  * The InfoType relationship is now used when a type is complex and may contain some subtypes within it. In this case, these types are valid in a reduced context (local): they can only be used within the containing InfoType.
+
+In the following we comment the different elements of the annotating transformation.
+
+# Helpers #
+
+  * `ProvElements`: returns a sequence with all the elements that belong to `Prov`
+  * `ConsElements`: returns a sequence with all the elements that belong to `Cons`
+  * `getMatchingElementByName(): ASD!NamedElement`: returns an element with the same name from the other model
+  * `isSubTypeOf_Operation(aux: ASD!Operation): Boolean`: informs if a given (`self`) operation is subtype of another operation (`aux`). It checks whether they own the same name, the number of messages of `self` is <= that the numer of messages of `aux` and the `messagePattern` of `self` is a subtype of the `messagePattern` of `aux`
+  * `isSubTypeOf_MessagePattern(aux: String): Boolean`: checks whether a `self` is a subtype of `aux`
+  * `isSubTypeOf_Message(aux: ASD!Message): Boolean`: checks if a message is subtype of another message. To that end it checks that the name, subset and role are the same and that the number of InfoType objects included in `self` is less or equal that that of `aux`
+  * `isSubTypeOf_InfoType(aux: ASD!InfoType): Boolean`: checks if a given InfoType is subtype of another. To taht end, it checks whether the name and the subset are the same; the number of InfoType included in `self` is less or equal than that included in `aux`; the number of refeferences to InfoType objects are less or equal than that of `aux`; and the valueType of `self` is a subtype of that of `aux`
+  * ` isSubtypeOf_ValueType(aux: String): Boolean`: checks if given valueType is a subtype of another
+  * `isSubtypeOf_Assertion(aux: ASD!Assertion): Boolean`: checks if a given `Assertion` is subtype of other Assertion, for this taking into account that the name, the role, the dimension an dimensionType are the same and the value is subtype the other value.
+  * `isSubtypeOf_Value(aux: ASD!Assertion): Boolean`: checks if a given value is a subtype of another value.
+  * `isSubtypeOf_AssertionSet(aux: ASD!AssertionSet)Sequence(Boolean)`: checks if the assertion objects included in `self` are all subtypes of the assertions in the other model. If so and the number of the assertions from the other model (Cons) is <= of the number of Assertions of the first model(Pro) the `self` AssertionSet is a subtype.
+  * `isSubtypeOf_Profile(aux: ASD!Profile): Sequence(Boolean)`: checks if the assertionSet objects included in `self` are all sutypes of the assertionSet objects from the other model. If so and the number of assertionSet from the other model (Cons) is <= of the number of assertionSet of the first model(Pro) the `self` profile is a subtype.
+
+# Rules #
+
+  * `AnnotatedOperation`: adds an annotation object to every Operation objects to indicate whether it is a subtype or supertype of another operation with the same name in the other model (Cons).
+  * `AnnotatedMessage`, `AnnotatedInfoType`, `AnnotatedAssertion`, `AnnotatedAssertionSet`, `AnnotatedProfile` support the samen fucntionality for the respective type of objects (namely, Message, InfoType, etc.)
